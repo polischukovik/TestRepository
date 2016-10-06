@@ -67,8 +67,7 @@ public class Main{
 		questionRawHandler = new QuestioRawnHandlerImpl();
 		List<QuestionRaw> questions = questionRawHandler.parseSource(sourceFilePath, prop);
 		
-		testFactory = new TestFactoryImpl(questions);
-		 
+		testFactory = new TestFactoryImpl(questions);		 
 		Test test = testFactory.createTest(prop);
 		
 		if(test == null){
@@ -77,11 +76,8 @@ public class Main{
 		}		
 
 		documentFactory = new SimpleDocumentFactoryImpl(test, prop);
-
-		try(OutputStream os = new FileOutputStream(new File("file.docx"))){
-		
-			documentFactory.write(os);
-
+		try(OutputStream os = new FileOutputStream(new File("file.docx"))){		
+			DocumentTools.write(os, documentFactory.createDocument());
 		}catch(Exception e){
 			System.err.println("Error occured");
 			e.printStackTrace();

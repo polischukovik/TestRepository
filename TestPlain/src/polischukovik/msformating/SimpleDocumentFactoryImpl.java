@@ -25,20 +25,12 @@ public class SimpleDocumentFactoryImpl implements DocumentFactory{
 		this.test = test;
 		this.prop = prop;		
 	}
-
-	public void write(OutputStream os) throws IOException {
-		if(doc == null){
-			System.err.println("document is not created");
-			return;
-		}
-		doc.write(os);		
-	}
 	
-	public void createDocument(){
+	public XWPFDocument createDocument(){		
 		doc = new XWPFDocument();
-		
 		documentTitleComposer.addDocumentTite(test, doc);
 		documentVariantComposer.addVariants(test, doc);		
-		documentKeysComposer.addKeys(test, doc);		
+		documentKeysComposer.addKeys(test, doc);
+		return doc;		
 	}
 }

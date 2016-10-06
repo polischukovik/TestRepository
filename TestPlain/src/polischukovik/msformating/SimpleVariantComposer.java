@@ -13,7 +13,7 @@ import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentVariantComposer;
-import polischukovik.mslibrary.DocumentFormatingTools;
+import polischukovik.mslibrary.DocumentTools;
 import polischukovik.mslibrary.Main;
 import polischukovik.mslibrary.Properties;
 
@@ -44,7 +44,7 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 			for(Question q : questions){
 				XWPFParagraph questionParagpaph = doc.createParagraph();
 
-				DocumentFormatingTools.setSingleLineSpacing(questionParagpaph);
+				DocumentTools.setSingleLineSpacing(questionParagpaph);
 				
 				XWPFRun questionRun = questionParagpaph.createRun();
 				questionRun.setText(String.format("%s%s %s",q.getId(), pQuestionPunctuation, q.getQuestion()));
@@ -61,7 +61,7 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 				 * Remove spacing between paragraphs
 				 */
 				if(pQuestionSpacing){
-					DocumentFormatingTools.setSingleLineSpacing(answerParagraph);
+					DocumentTools.setSingleLineSpacing(answerParagraph);
 				}
 
 				for(int i = 0; i < answers.size(); i++){
