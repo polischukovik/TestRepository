@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
 import polischukovik.domain.QuestionRaw;
@@ -20,41 +22,39 @@ import polischukovik.domain.enums.PropertyNames;
 import polischukovik.services.TestFactory;
 
 public class TestFactoryImpl implements TestFactory {
-	
+	@Autowired
+	private Properties prop;
 	private List<QuestionRaw> questions;
-	private static Properties prop;
-	
-	private int pVariants;
+
 	private String pTestName;	
-	private boolean pShuffleQuestions;
-	private NumeratorType pQuestionNumStyle;
-	private NumeratorType pAnswerNumStyle;
-	private NumeratorType pVariantNumStyle; 
+	private int pVariants;
 	private int pQuestions;
-	private boolean pShuffleAnswers;
+	private String pShuffleQuestions;
+	private String pShuffleAnswers;
+	private String pVariantNumStyle; 
+	private String pQuestionNumStyle;
+	private String pAnswerNumStyle;
 	
 	private Random rnd;
 
 	public TestFactoryImpl(List<QuestionRaw> questions) {
 		this.questions = questions;	
-	}
-
-	public Test createTest(Properties prop) {
-		TestFactoryImpl.prop = prop;
-		
 		/*
 		 * Read properties
 		 */
-		pTestName = TestFactoryImpl.getProperties().get(PropertyNames.RES_TEST_NAME, "Test name default");
-		pVariants = Integer.valueOf(TestFactoryImpl.getProperties().get(PropertyNames.BASIC_VARIANTS, "2"));
-		pQuestions = Integer.valueOf(TestFactoryImpl.getProperties().get(PropertyNames.BASIC_QUESTIONS, "30"));		
-		pShuffleQuestions = TestFactoryImpl.getProperties().getBoolean(PropertyNames.SHUFFLE_QUESTION, true);
-		pShuffleAnswers = TestFactoryImpl.getProperties().getBoolean(PropertyNames.SHUFFLE_ANSWERS, true);
-		pVariantNumStyle = TestFactoryImpl.getProperties().getNumerationStyle(PropertyNames.S_NUMERATION_VARIANT, NumeratorType.ROMAN);
-		pQuestionNumStyle = TestFactoryImpl.getProperties().getNumerationStyle(PropertyNames.S_NUMERATION_QUESTION, NumeratorType.NUMERIC);
-		pAnswerNumStyle = TestFactoryImpl.getProperties().getNumerationStyle( PropertyNames.S_ANSWER_NUMERATION, NumeratorType.ALPHABETIC);
+		pTestName = prop.get(PropertyNames.BASIC_TEST_NAME);
+		pVariants = Integer.valueOf(prop.get(PropertyNames.BASIC_VARIANTS));
+		pQuestions = Integer.valueOf(prop.get(PropertyNames.BASIC_QUESTIONS));		
+		pShuffleQuestions = prop.get(PropertyNames.P_SHUFFLE_QUESTION);
+		pShuffleAnswers = prop.get(PropertyNames.P_SHUFFLE_ANSWERS);
+		pVariantNumStyle = prop.get(PropertyNames.S_NUMERATION_VARIANT);
+		pQuestionNumStyle = prop.get(PropertyNames.S_NUMERATION_QUESTION);
+		pAnswerNumStyle = prop.get( PropertyNames.S_ANSWER_NUMERATION);
+	}
+
+	public Test createTest() {		
 						
-		if(pShuffleQuestions || pShuffleAnswers){
+		if(Boolean.valueOf(pShuffleQuestions) || Boolean.valueOf(pShuffleAnswers)){
 			rnd = new Random(System.nanoTime());
 		}		
 		
@@ -69,7 +69,7 @@ public class TestFactoryImpl implements TestFactory {
 		/*
 		 * Set variant numeration style
 		 */
-		Numerator numsVariant = new Numerator(pVariantNumStyle);
+		Numerator numsVariant = new Numerator(Numerator.valueOf(pVariantNumStyle));
 					
 		for(int i = 0; i < pVariants; i++){
 			List<Question> questionList = createQuestions();
@@ -85,14 +85,14 @@ public class TestFactoryImpl implements TestFactory {
 		List<QuestionRaw> sortedQuestions = new ArrayList<>(questions);
 		List<Question> result = new ArrayList<>(); 
 		
-		if(pShuffleQuestions){
+		if(Boolean.valueOf(pShuffleQuestions)){
 			Collections.shuffle(sortedQuestions, rnd);
 		}
 		
 		/*
 		 * Set question numeration style
 		 */
-		Numerator nums = new Numerator(pQuestionNumStyle);
+		Numerator nums = new Numerator(Numerator.valueOf(pQuestionNumStyle));
 		
 		for(int j = 0; (j < pQuestions) && (j < sortedQuestions.size()); j++){
 			List<Answer> answers = createAnswers(sortedQuestions.get(j));
@@ -116,14 +116,14 @@ public class TestFactoryImpl implements TestFactory {
 		/*
 		 * Shuffle answers
 		 */
-		if(pShuffleAnswers){
+		if(Boolean.valueOf(pShuffleAnswers)){
 			Collections.shuffle(listAnswer, rnd);
 		}	
 		
 		/*
 		 * Set answer numeration style
 		 */
-		Numerator answerNums = new Numerator(pAnswerNumStyle);
+		Numerator answerNums = new Numerator(Numerator.valueOf(pAnswerNumStyle));
 		
 		for(String s : listAnswer){
 			answers.add(new Answer(answerNums.getNext(), s, answerCorrectMap.get(s)));
@@ -139,9 +139,5 @@ public class TestFactoryImpl implements TestFactory {
 			result.put(q, answers);
 		}
 		return result;
-	}
-	
-	public static Properties getProperties(){
-		return prop;
 	}
 }

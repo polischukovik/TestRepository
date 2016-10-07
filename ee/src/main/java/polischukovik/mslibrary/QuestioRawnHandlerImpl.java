@@ -1,7 +1,11 @@
 package polischukovik.mslibrary;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import polischukovik.domain.QuestionRaw;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.domain.enums.QuestionType;
@@ -17,15 +21,18 @@ import java.util.List;
  * 		parsing results into Question class
  */
 public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
-	private static String filePath;
-	//TODO change access to nio
-	private static Scanner sourceFile;
-	private static String questionData = "";
+	@Autowired
+	private Properties prop;
 	
-	private static Properties prop;
-
-	QuestioRawnHandlerImpl() {
-		
+	//TODO change access to nio
+	private Scanner sourceFile;
+	private String questionData = "";
+	private String pMark;
+	private String sourceFilePath;
+	
+	public QuestioRawnHandlerImpl() {
+		pMark = prop.get(PropertyNames.PARSING_MARK_QUESTION);
+		sourceFilePath = prop.get(PropertyNames.IO_SOURCE_FILE_NAME);
 	}
 
 	@SuppressWarnings("unused")
@@ -34,16 +41,23 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 			throw new IllegalArgumentException("Source file is totally wrong!");
 		}
 	}
-	
-	private static void processRawData(List<QuestionRaw> questions){	
-		String pMark;
-		try {
-			pMark = prop.get(PropertyNames.PARSING_MARK_QUESTION, "&");
-		}catch (Exception e) {
-			e.printStackTrace();
-			return;
+
+	public List<QuestionRaw> parseSource() throws FileNotFoundException {					
+		sourceFile = new Scanner(new File(sourceFilePath));
+		while(sourceFile.hasNext()){
+			questionData += sourceFile.nextLine() + "\n";
 		}
 		
+		List<QuestionRaw> questions = new ArrayList<>();
+		
+		verifySource();
+		processRawData(questions);
+		
+		return questions;
+	}
+	
+	private void processRawData(List<QuestionRaw> questions){	
+
 		String[] rawQ = questionData.split(pMark);
 		
 		//remove whitespaces;
@@ -91,29 +105,4 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 		
 		System.err.println();
 	}
-
-	public List<QuestionRaw> parseSource(String sourceFilePath, Properties prop) {
-		filePath = sourceFilePath;		
-		QuestioRawnHandlerImpl.prop = prop;
-		
-		if(prop == null){
-			return null;
-		}
-			
-		try{
-		sourceFile = new Scanner(new File(filePath));
-		while(sourceFile.hasNext()){
-			questionData += sourceFile.nextLine() + "\n";
-		}
-		}catch(Exception e){
-			throw new IllegalArgumentException("Unable to read source file: " + filePath + "\n" +  e.getMessage());
-		}		
-		List<QuestionRaw> questions = new ArrayList<>();
-		
-		verifySource();
-		processRawData(questions);
-		
-		return questions;
-	}
-
 }

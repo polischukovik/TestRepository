@@ -9,6 +9,8 @@ import polischukovik.domain.enums.PropertyNames;
 public class Properties {
 
 	private Map<PropertyNames, String> properties;
+	private Map<PropertyNames, String> defaults;
+	
 //	private final static TreeMap<String, NAMES> namingMap = new TreeMap<>();
 //	
 //	static{
@@ -32,54 +34,15 @@ public class Properties {
 	public Properties() {
 		super();
 		this.properties = new HashMap<>();
+		this.defaults = new HashMap<>();
 	}
 
-	public void add(PropertyNames nameEnum, String value){
+	public void add(PropertyNames nameEnum, String value, String defaultVal){
 		properties.put(nameEnum, value);
+		defaults.put(nameEnum, defaultVal);
 	}
 
-	public String get(PropertyNames nameEnum, String defaultVal){	
-		String value = properties.get(nameEnum);
-		
-		if(value == null) {
-			value = defaultVal;
-			//logging.err -> InvalidAttributesException(String.format("Option [%s] value not found.", nameEnum.toString()));
-		}
-		
-		return value;		
-	}
-	
-	public boolean getBoolean(PropertyNames prop, boolean defaultVal){
-		String param = this.properties.get(prop);
-		boolean pBool = defaultVal;
-		if(param.toLowerCase().equals("y") || (param.toLowerCase().equals("n"))){
-			pBool = "y".equals(param.toLowerCase());
-		}else{
-			//logging.err -> IllegalArgumentException(String.format("Cannot convert [%s] to boolean(y/n are permited)", prop.toString()));
-		}
-		return pBool;
-		
-	}
-	
-	public NumeratorType getNumerationStyle(PropertyNames property, NumeratorType defaultStyle) {
-		NumeratorType numStyle = defaultStyle; //DEFAULT
-//		try{
-			String propNumerationStyle = this.get(property, defaultStyle.toString());
-//			if(propNumerationStyle == null){
-//				throw new IllegalArgumentException(String.format("Warning: There is no property %s. Using default",property));
-//			}
-		NumeratorType tmpNumerationStyle = Numerator.valueOf(propNumerationStyle); //throws IllegalArgumentException
-		
-		if(tmpNumerationStyle != null) numStyle = tmpNumerationStyle;
-			
-//		}catch(IllegalArgumentException e){
-//			System.err.println(String.format("Warning: The property %s has inaccepable value. Using default",property));
-//			System.err.println(String.format(" Reason:",e.getMessage()));
-//		}
-//		catch(InvalidAttributesException e){		
-//			System.err.println(String.format("Warning: There is no property %s. Using default",property));
-//			System.err.println(String.format(" Reason:",e.getMessage()));
-//		}
-		return numStyle;
+	public String get(PropertyNames nameEnum){
+		return properties.containsKey(nameEnum) ? properties.get(nameEnum) : defaults.get(nameEnum);		
 	}
 }
