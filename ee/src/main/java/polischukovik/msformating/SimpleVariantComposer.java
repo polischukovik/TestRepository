@@ -1,5 +1,7 @@
 package polischukovik.msformating;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -12,12 +14,12 @@ import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.msformating.interfaces.DocumentVariantComposer;
+import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.mslibrary.DocumentTools;
 import polischukovik.mslibrary.Main;
 import polischukovik.mslibrary.Properties;
 
-public class SimpleVariantComposer implements DocumentVariantComposer {
+public class SimpleVariantComposer implements DocumentComponentComposer {
 	private static Properties prop = Main.prop;
 
 	private static final boolean pFQuestionBold = prop.getBoolean(PropertyNames.F_QUESTION_BOLD, false);
@@ -27,7 +29,7 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 	private static final String pMark = prop.get(PropertyNames.RES_VARIANT_NAME, "Variant");
 
 	@Override
-	public void addVariants(Test test, XWPFDocument doc) {
+	public void constructComponent(Test test, XWPFDocument doc) {
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
 			//Add caption
@@ -76,5 +78,16 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 				}
 			}						
 		}
+	}
+	
+	@Override
+	public List<PropertyNames> getRequiredProp() {
+		return new ArrayList<>(Arrays.asList(
+				new PropertyNames[]{
+						PropertyNames.F_QUESTION_BOLD,
+						PropertyNames.P_PUNCTUATION_QUESTION,
+						PropertyNames.P_PUNCTUATION_ANSWER,
+						PropertyNames.RES_VARIANT_NAME, 
+						PropertyNames.F_QUESTION_SPACING}));
 	}
 }
