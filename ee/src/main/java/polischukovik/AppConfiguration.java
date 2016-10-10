@@ -2,7 +2,6 @@ package polischukovik;
 
 import javax.annotation.Resource;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +11,12 @@ import org.springframework.core.env.Environment;
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.mslibrary.Properties;
+import polischukovik.mslibrary.QuestioRawnHandlerImpl;
+import polischukovik.mslibrary.TestFactoryImpl;
+import polischukovik.services.QuestioRawnHandler;
 
 @Configuration
+@ComponentScan(basePackages={"polischukovik.msformating","polischukovik.mslibrary","polischukovik"})
 @PropertySource("classpath:/app.properties")
 public class AppConfiguration {
 	private final static String IO_SOURCE				= "io.source";

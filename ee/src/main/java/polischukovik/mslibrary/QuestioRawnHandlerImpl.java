@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.QuestionRaw;
 import polischukovik.domain.enums.PropertyNames;
@@ -20,7 +21,9 @@ import java.util.List;
  * 		verifying it's integrity
  * 		parsing results into Question class
  */
+@Component
 public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
+	
 	@Autowired
 	private Properties prop;
 	
@@ -31,8 +34,6 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 	private String sourceFilePath;
 	
 	public QuestioRawnHandlerImpl() {
-		pMark = prop.get(PropertyNames.PARSING_MARK_QUESTION);
-		sourceFilePath = prop.get(PropertyNames.IO_SOURCE_FILE_NAME);
 	}
 
 	@SuppressWarnings("unused")
@@ -42,7 +43,11 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 		}
 	}
 
-	public List<QuestionRaw> parseSource() throws FileNotFoundException {					
+	public List<QuestionRaw> parseSource() throws FileNotFoundException {		
+
+		pMark = prop.get(PropertyNames.PARSING_MARK_QUESTION);
+		sourceFilePath = prop.get(PropertyNames.IO_SOURCE_FILE_NAME);
+		
 		sourceFile = new Scanner(new File(sourceFilePath));
 		while(sourceFile.hasNext()){
 			questionData += sourceFile.nextLine() + "\n";

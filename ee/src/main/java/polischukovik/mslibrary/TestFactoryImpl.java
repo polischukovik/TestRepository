@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
@@ -20,7 +21,7 @@ import polischukovik.domain.Variant;
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.services.TestFactory;
-
+@Component
 public class TestFactoryImpl implements TestFactory {
 	@Autowired
 	private Properties prop;
@@ -37,7 +38,10 @@ public class TestFactoryImpl implements TestFactory {
 	
 	private Random rnd;
 
-	public TestFactoryImpl(List<QuestionRaw> questions) {
+	public TestFactoryImpl() {
+	}
+
+	public Test createTest(List<QuestionRaw> questions) {	
 		this.questions = questions;	
 		/*
 		 * Read properties
@@ -50,9 +54,6 @@ public class TestFactoryImpl implements TestFactory {
 		pVariantNumStyle = prop.get(PropertyNames.S_NUMERATION_VARIANT);
 		pQuestionNumStyle = prop.get(PropertyNames.S_NUMERATION_QUESTION);
 		pAnswerNumStyle = prop.get( PropertyNames.S_ANSWER_NUMERATION);
-	}
-
-	public Test createTest() {		
 						
 		if(Boolean.valueOf(pShuffleQuestions) || Boolean.valueOf(pShuffleAnswers)){
 			rnd = new Random(System.nanoTime());

@@ -17,7 +17,6 @@ import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.mslibrary.DocumentTools;
-import polischukovik.Application;
 import polischukovik.mslibrary.Properties;
 
 public class SimpleVariantComposer implements DocumentComponentComposer {

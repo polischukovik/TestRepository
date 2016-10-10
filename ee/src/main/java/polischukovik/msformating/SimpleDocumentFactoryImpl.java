@@ -13,6 +13,8 @@ import polischukovik.mslibrary.Properties;
 public class SimpleDocumentFactoryImpl implements DocumentFactory{
 	@Autowired
 	private Properties prop;//unused here
+	@Autowired
+	private List<Class<? extends DocumentComponentComposer>> domponentComposers;
 	
 	private Test test;
 	private XWPFDocument doc;
@@ -22,7 +24,7 @@ public class SimpleDocumentFactoryImpl implements DocumentFactory{
 	}
 
 	@Override
-	public XWPFDocument createDocument(List<Class<? extends DocumentComponentComposer>> domponentComposers) throws ClassNotFoundException {
+	public XWPFDocument createDocument() throws ClassNotFoundException {
 		doc = new XWPFDocument();
 		
 		for(Class<? extends DocumentComponentComposer> clazz: domponentComposers){

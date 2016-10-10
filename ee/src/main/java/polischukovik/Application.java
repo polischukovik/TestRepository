@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.boot.ExitCodeGenerator;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.QuestionRaw;
 import polischukovik.domain.Test;
@@ -17,34 +17,30 @@ import polischukovik.msformating.SimpleKeysComposer;
 import polischukovik.msformating.SimpleTitleComposer;
 import polischukovik.msformating.SimpleVariantComposer;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
+import polischukovik.msformating.interfaces.DocumentFactory;
 import polischukovik.mslibrary.DocumentTools;
 import polischukovik.mslibrary.QuestioRawnHandlerImpl;
 import polischukovik.mslibrary.TestFactoryImpl;
 import polischukovik.services.QuestioRawnHandler;
 import polischukovik.services.TestFactory;
 
-@SpringBootApplication
-@ComponentScan({ "polischukovik" })
-public class Application{
-	private static ConfigurableApplicationContext context;
-	
-	private static List<Class<? extends DocumentComponentComposer>> domponentComposers;
+public class Application{	
+	private static List<Class<? extends DocumentComponentComposer>> componentComposers;
 
 	private static QuestioRawnHandler questionRawHandler;
 	private static TestFactory testFactory;
-	private static SimpleDocumentFactoryImpl documentFactory;
+	private static DocumentFactory documentFactory;
 
 	public static void main(String[] args) throws IOException {
-
-		context = SpringApplication.run(Application.class, args);
-	
-		questionRawHandler = new QuestioRawnHandlerImpl();
-
-		//throw new IllegalArgumentException("Unable to read source file: " + filePath + "\n" +  e.getMessage());	
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfiguration.class);
+		
+		questionRawHandler = ctx.getBean(QuestioRawnHandler.class);
+		testFactory = ctx.getBean(TestFactory.class);
+		documentFactory = ctx.getBean(DocumentFactory.class);
+		
 		List<QuestionRaw> questions = questionRawHandler.parseSource();
 		
-		testFactory = new TestFactoryImpl(questions);		 
-		Test test = testFactory.createTest();
+		Test test = testFactory.createTest(questions);
 		
 		if(test == null){
 			System.err.println("Failed to generate test. Exiting");
@@ -53,38 +49,24 @@ public class Application{
 		/*
 		 * Those composers would sequentially be applied to doc
 		 */
-		domponentComposers = new ArrayList<>();
-		domponentComposers.add(SimpleTitleComposer.class);
-		domponentComposers.add(SimpleVariantComposer.class);
-		domponentComposers.add(SimpleKeysComposer.class);
+		componentComposers = new ArrayList<>();
+		componentComposers.add(SimpleTitleComposer.class);
+		componentComposers.add(SimpleVariantComposer.class);
+		componentComposers.add(SimpleKeysComposer.class);
 
 		documentFactory = new SimpleDocumentFactoryImpl(test);		
 		
 		try {
-			new DocumentTools().write(documentFactory.createDocument(domponentComposers));
+
+			XWPFDocument doc = documentFactory.createDocument(componentComposers);
+			new DocumentTools().write(doc);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		
-		System.err.println("done");
+		ctx.close();
 	
 	}
-	
-	 public static ConfigurableApplicationContext getAppCtx(){
-	    	return context;
-	    }
-	    
-	    public static void exit(){
-	    	SpringApplication.exit(Application.getAppCtx(), new ExitCodeGenerator() {
-
-			    @Override
-			    public int getExitCode() {
-			      return 0;
-			    }
-			  });
-	    }
-
 }
