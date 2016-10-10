@@ -1,26 +1,32 @@
 package polischukovik.msformating;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.msformating.interfaces.DocumentKeysComposer;
-import polischukovik.mslibrary.Main;
+import polischukovik.msformating.interfaces.DocumentComponentComposer;
+import polischukovik.Application;
 import polischukovik.mslibrary.Properties;
 
-public class SimpleKeysComposer implements DocumentKeysComposer{
-	private static Properties prop = Main.prop;
+public class SimpleKeysComposer implements DocumentComponentComposer{
+	@Autowired
+	private static Properties prop;
 	
-	private static final String pPunctuationKeyAnswer = prop.get(PropertyNames.P_PUNCTUATION_KEY_ANSWER, "-");
-	private static final String resKeyTytle = prop.get(PropertyNames.RES_KEY_TITLE, "Key title");
+	private static final String pPunctuationKeyAnswer = prop.get(PropertyNames.P_PUNCTUATION_KEY_ANSWER);
+	private static final String resKeyTytle = prop.get(PropertyNames.T_KEY_TITLE);
 	
 	@Override
-	public void addKeys(Test test, XWPFDocument doc) {
+	public void constructComponent(Test test, XWPFDocument doc) {
 		//Add title
 		XWPFParagraph p = doc.createParagraph();
 		p.setAlignment(ParagraphAlignment.CENTER);
@@ -46,5 +52,13 @@ public class SimpleKeysComposer implements DocumentKeysComposer{
 				rQuestion.addBreak();
 			}
 		}
+	}
+
+	@Override
+	public List<PropertyNames> getRequiredProp() {
+		return new ArrayList<>(Arrays.asList(
+				new PropertyNames[]{
+						PropertyNames.P_PUNCTUATION_KEY_ANSWER, 
+						PropertyNames.T_KEY_TITLE}));
 	}
 }

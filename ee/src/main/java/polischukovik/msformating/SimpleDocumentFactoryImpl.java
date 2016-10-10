@@ -1,34 +1,40 @@
 package polischukovik.msformating;
 
+import java.util.List;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import polischukovik.domain.Test;
+import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.msformating.interfaces.DocumentFactory;
-import polischukovik.msformating.interfaces.DocumentKeysComposer;
-import polischukovik.msformating.interfaces.DocumentTitleComposer;
-import polischukovik.msformating.interfaces.DocumentVariantComposer;
 import polischukovik.mslibrary.Properties;
 
 public class SimpleDocumentFactoryImpl implements DocumentFactory{
-	@SuppressWarnings("unused")
+	@Autowired
 	private Properties prop;//unused here
+	@Autowired
+	private List<Class<? extends DocumentComponentComposer>> domponentComposers;
 	
 	private Test test;
 	private XWPFDocument doc;
 	
-	private DocumentTitleComposer documentTitleComposer = new SimpleTitleComposer();
-	private DocumentVariantComposer documentVariantComposer = new SimpleVariantComposer();
-	private DocumentKeysComposer documentKeysComposer = new SimpleKeysComposer();
-
-	public SimpleDocumentFactoryImpl(Test test, Properties prop) {
+	public SimpleDocumentFactoryImpl(Test test) {
 		this.test = test;
-		this.prop = prop;		
 	}
-	
-	public XWPFDocument createDocument(){		
+
+	@Override
+	public XWPFDocument createDocument() throws ClassNotFoundException {
 		doc = new XWPFDocument();
-		documentTitleComposer.addDocumentTite(test, doc);
-		documentVariantComposer.addVariants(test, doc);		
-		documentKeysComposer.addKeys(test, doc);
-		return doc;		
+		
+		for(Class<? extends DocumentComponentComposer> clazz: domponentComposers){
+			try {
+				clazz.newInstance().constructComponent(test, doc);
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new ClassNotFoundException(String.format("Cannot instantiate required class: %s", clazz.getName()));
+			}
+		}
+	
+		return doc;
 	}
 }

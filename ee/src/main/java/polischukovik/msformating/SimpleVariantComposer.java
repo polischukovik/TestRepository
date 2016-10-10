@@ -1,33 +1,36 @@
 package polischukovik.msformating;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.msformating.interfaces.DocumentVariantComposer;
+import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.mslibrary.DocumentTools;
-import polischukovik.mslibrary.Main;
 import polischukovik.mslibrary.Properties;
 
-public class SimpleVariantComposer implements DocumentVariantComposer {
-	private static Properties prop = Main.prop;
+public class SimpleVariantComposer implements DocumentComponentComposer {
+	@Autowired
+	private static Properties prop;
 
-	private static final boolean pFQuestionBold = prop.getBoolean(PropertyNames.F_QUESTION_BOLD, false);
-	private static final boolean pQuestionSpacing = prop.getBoolean(PropertyNames.F_QUESTION_SPACING, false);
-	private static final String pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION, ".");
-	private static final String pAnswerPuncuation = prop.get(PropertyNames.P_PUNCTUATION_ANSWER, ")");
-	private static final String pMark = prop.get(PropertyNames.RES_VARIANT_NAME, "Variant");
+	private static final String pFQuestionBold = prop.get(PropertyNames.F_QUESTION_BOLD);
+	private static final String pQuestionSpacing = prop.get(PropertyNames.F_QUESTION_SPACING);
+	private static final String pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION);
+	private static final String pAnswerPuncuation = prop.get(PropertyNames.P_PUNCTUATION_ANSWER);
+	private static final String pMark = prop.get(PropertyNames.T_VARIANT_TITLE);
 
 	@Override
-	public void addVariants(Test test, XWPFDocument doc) {
+	public void constructComponent(Test test, XWPFDocument doc) {
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
 			//Add caption
@@ -52,7 +55,7 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 				/*
 				 * Set question Run to bold if parameter presented
 				 */							
-				questionRun.setBold(pFQuestionBold);
+				questionRun.setBold(Boolean.valueOf(pFQuestionBold));
 				
 				List<Answer> answers = q.getAnswers();		
 				XWPFParagraph answerParagraph = doc.createParagraph();
@@ -60,7 +63,7 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 				/*
 				 * Remove spacing between paragraphs
 				 */
-				if(pQuestionSpacing){
+				if(Boolean.valueOf(pQuestionSpacing)){
 					DocumentTools.setSingleLineSpacing(answerParagraph);
 				}
 
@@ -76,5 +79,16 @@ public class SimpleVariantComposer implements DocumentVariantComposer {
 				}
 			}						
 		}
+	}
+	
+	@Override
+	public List<PropertyNames> getRequiredProp() {
+		return new ArrayList<>(Arrays.asList(
+				new PropertyNames[]{
+						PropertyNames.F_QUESTION_BOLD,
+						PropertyNames.P_PUNCTUATION_QUESTION,
+						PropertyNames.P_PUNCTUATION_ANSWER,
+						PropertyNames.T_VARIANT_TITLE, 
+						PropertyNames.F_QUESTION_SPACING}));
 	}
 }
