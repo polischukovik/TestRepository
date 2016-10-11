@@ -12,20 +12,22 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.enums.PropertyNames;
 
+@Component
 public class DocumentTools {
 	@Autowired
 	private Properties prop;
 	
 	private String pDestFileName;
 	
-	public DocumentTools() {
-		pDestFileName = prop.get(PropertyNames.IO_DEST_FILE_NAME);
+	public DocumentTools() {		
 	}
 
 	public void write(XWPFDocument doc) throws IOException {
+		pDestFileName = prop.get(PropertyNames.IO_DEST_FILE_NAME);
 		OutputStream os = new FileOutputStream(new File(pDestFileName));
 
 		if(doc == null){

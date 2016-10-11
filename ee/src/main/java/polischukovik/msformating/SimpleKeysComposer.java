@@ -9,24 +9,31 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.Application;
 import polischukovik.mslibrary.Properties;
 
+@Component
 public class SimpleKeysComposer implements DocumentComponentComposer{
 	@Autowired
-	private static Properties prop;
+	private Properties prop;
 	
-	private static final String pPunctuationKeyAnswer = prop.get(PropertyNames.P_PUNCTUATION_KEY_ANSWER);
-	private static final String resKeyTytle = prop.get(PropertyNames.T_KEY_TITLE);
+	private String pPunctuationKeyAnswer;
+	private String resKeyTytle;
+	
+	public SimpleKeysComposer() {
+	}
 	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+		pPunctuationKeyAnswer = prop.get(PropertyNames.P_PUNCTUATION_KEY_ANSWER);
+		resKeyTytle = prop.get(PropertyNames.T_KEY_TITLE);
+		
 		//Add title
 		XWPFParagraph p = doc.createParagraph();
 		p.setAlignment(ParagraphAlignment.CENTER);

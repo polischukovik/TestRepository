@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
@@ -19,18 +20,29 @@ import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.mslibrary.DocumentTools;
 import polischukovik.mslibrary.Properties;
 
+@Component
 public class SimpleVariantComposer implements DocumentComponentComposer {
+	
 	@Autowired
-	private static Properties prop;
+	private Properties prop;
 
-	private static final String pFQuestionBold = prop.get(PropertyNames.F_QUESTION_BOLD);
-	private static final String pQuestionSpacing = prop.get(PropertyNames.F_QUESTION_SPACING);
-	private static final String pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION);
-	private static final String pAnswerPuncuation = prop.get(PropertyNames.P_PUNCTUATION_ANSWER);
-	private static final String pMark = prop.get(PropertyNames.T_VARIANT_TITLE);
+	private String pFQuestionBold;
+	private String pQuestionSpacing;
+	private String pQuestionPunctuation;
+	private String pAnswerPuncuation;
+	private String pMark;
 
+	public SimpleVariantComposer() {
+	}
+	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+		pFQuestionBold = prop.get(PropertyNames.F_QUESTION_BOLD);
+		pQuestionSpacing = prop.get(PropertyNames.F_QUESTION_SPACING);
+		pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION);
+		pAnswerPuncuation = prop.get(PropertyNames.P_PUNCTUATION_ANSWER);
+		pMark = prop.get(PropertyNames.T_VARIANT_TITLE);
+		
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
 			//Add caption

@@ -9,15 +9,20 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import polischukovik.domain.Test;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.mslibrary.Properties;
 
+@Component
 public class SimpleTitleComposer implements DocumentComponentComposer {
 	@Autowired
-	private static Properties prop;
+	private Properties prop;
+
+	public SimpleTitleComposer() {
+	}
 
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
