@@ -31,7 +31,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 	private String pQuestionSpacing;
 	private String pQuestionPunctuation;
 	private String pAnswerPuncuation;
-	private String pMark;
+	private String pVariantTitle;
 
 	public SimpleVariantComposer() {
 	}
@@ -43,7 +43,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 		pQuestionSpacing = prop.get(PropertyNames.F_QUESTION_SPACING);
 		pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION);
 		pAnswerPuncuation = prop.get(PropertyNames.P_PUNCTUATION_ANSWER);
-		pMark = prop.get(PropertyNames.T_VARIANT_TITLE);
+		pVariantTitle = prop.get(PropertyNames.T_VARIANT_TITLE);
 		
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
@@ -54,7 +54,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 			p0.setPageBreak(true);
 			
 			String vLabel = v.getName();		
-			r0.setText(String.format("%s %s", pMark, vLabel));
+			r0.setText(String.format("%s %s", pVariantTitle, vLabel));
 			r0.setBold(true);
 						
 			List<Question> questions = v.getQuestions();
