@@ -87,21 +87,22 @@ public class AppConfiguration {
     
     @Bean
     @Autowired
+    public List<DocumentComponentComposer> getComponentComposers(SimpleTitleComposer st, SimpleVariantComposer sv, SimpleKeysComposer sk){
+    	List<DocumentComponentComposer> list = new ArrayList<>();
+    	list.add(new SimpleVariantComposer());
+
+
+    	return list;
+    }
+    
+    @Bean
+    @Autowired
     public XWPFDocument getDocument(DocumentFactory df, Test test, List<? extends DocumentComponentComposer> componentComposers) throws ClassNotFoundException{
     	/*
 		 * Those composers would sequentially be applied to doc
 		 */
     	return df.createDocument(test, componentComposers);
     }
-    
-    @Bean
-    @Autowired
-    public List<DocumentComponentComposer> getComponentComposers(SimpleTitleComposer st, SimpleVariantComposer sv, SimpleKeysComposer sk){
-    	List<DocumentComponentComposer> list = new ArrayList<>();
-    	list.add(new SimpleTitleComposer());
-    	list.add(new SimpleVariantComposer());
-    	list.add(new SimpleKeysComposer());
-    	return list;
-    }
+
     
 }

@@ -18,7 +18,6 @@ import polischukovik.domain.Question;
 import polischukovik.domain.QuestionRaw;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
-import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.services.TestFactory;
 @Component

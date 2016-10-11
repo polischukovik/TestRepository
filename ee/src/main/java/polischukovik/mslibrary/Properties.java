@@ -3,9 +3,6 @@ package polischukovik.mslibrary;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
-import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyNames;
 
 public class Properties {

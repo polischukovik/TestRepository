@@ -13,6 +13,7 @@ import polischukovik.mslibrary.Properties;
 
 @Component
 public class SimpleDocumentFactoryImpl implements DocumentFactory{
+	@SuppressWarnings("unused")
 	@Autowired
 	private Properties prop;//unused here	
 	private XWPFDocument doc;

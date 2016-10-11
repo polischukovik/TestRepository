@@ -18,6 +18,7 @@ import polischukovik.mslibrary.Properties;
 
 @Component
 public class SimpleTitleComposer implements DocumentComponentComposer {
+	@SuppressWarnings("unused")
 	@Autowired
 	private Properties prop;
 
