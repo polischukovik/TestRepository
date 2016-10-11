@@ -1,7 +1,5 @@
 package polischukovik.msformating;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import polischukovik.domain.Test;
 import polischukovik.msformating.interfaces.DocumentFactory;
