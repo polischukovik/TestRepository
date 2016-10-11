@@ -11,6 +11,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
@@ -37,6 +38,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+
 		pFQuestionBold = prop.get(PropertyNames.F_QUESTION_BOLD);
 		pQuestionSpacing = prop.get(PropertyNames.F_QUESTION_SPACING);
 		pQuestionPunctuation = prop.get(PropertyNames.P_PUNCTUATION_QUESTION);
