@@ -1,30 +1,16 @@
 package polischukovik;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
-import polischukovik.domain.Test;
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.msformating.SimpleKeysComposer;
-import polischukovik.msformating.SimpleTitleComposer;
-import polischukovik.msformating.SimpleVariantComposer;
-import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.msformating.interfaces.DocumentFactory;
 import polischukovik.mslibrary.Properties;
-import polischukovik.services.QuestioRawnHandler;
-import polischukovik.services.TestFactory;
 
 @Configuration
 @ComponentScan(basePackages={"polischukovik.msformating","polischukovik.mslibrary","polischukovik"})
@@ -77,32 +63,5 @@ public class AppConfiguration {
 		prop.add(PropertyNames.S_ANSWER_NUMERATION, 		env.getProperty(P_ANSWER_NUMERATION), 		NumeratorType.ALPHABETIC.toString());
 
 		return prop;
-	}
-
-    @Bean
-    @Autowired
-    public Test getTests(TestFactory tf, QuestioRawnHandler qh) throws FileNotFoundException{
-    	return tf.createTest(qh.parseSource());
-    }
-    
-    @Bean
-    @Autowired
-    public List<DocumentComponentComposer> getComponentComposers(SimpleTitleComposer st, SimpleVariantComposer sv, SimpleKeysComposer sk){
-    	List<DocumentComponentComposer> list = new ArrayList<>();
-    	list.add(new SimpleVariantComposer());
-
-
-    	return list;
-    }
-    
-    @Bean
-    @Autowired
-    public XWPFDocument getDocument(DocumentFactory df, Test test, List<? extends DocumentComponentComposer> componentComposers) throws ClassNotFoundException{
-    	/*
-		 * Those composers would sequentially be applied to doc
-		 */
-    	return df.createDocument(test, componentComposers);
-    }
-
-    
+	}    
 }
