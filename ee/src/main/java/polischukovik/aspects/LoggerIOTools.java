@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.mslibrary.IOTools;
-import polischukovik.mslibrary.TestFactoryImpl;
 
 @Aspect
 @Component

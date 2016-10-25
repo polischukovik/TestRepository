@@ -17,7 +17,6 @@ import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.mslibrary.IOTools;
 import polischukovik.mslibrary.Properties;
 
 @Component

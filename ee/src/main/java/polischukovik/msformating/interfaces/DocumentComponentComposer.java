@@ -1,8 +1,6 @@
 package polischukovik.msformating.interfaces;
 
 import java.math.BigInteger;
-import java.util.List;
-
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -10,7 +8,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 
 import polischukovik.domain.Test;
-import polischukovik.domain.enums.PropertyNames;
 
 public interface DocumentComponentComposer {
 	public void constructComponent(Test test, XWPFDocument doc);

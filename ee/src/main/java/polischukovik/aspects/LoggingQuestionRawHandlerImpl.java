@@ -9,19 +9,14 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.mslibrary.Properties;
 import polischukovik.mslibrary.QuestioRawnHandlerImpl;
-import polischukovik.services.QuestioRawnHandler;
 
 @Aspect
 @Component
 public class LoggingQuestionRawHandlerImpl {
-	@Autowired
-	private Properties prop;
 	
 	private Logger logger = LogManager.getLogger(QuestioRawnHandlerImpl.class.getName());
 	

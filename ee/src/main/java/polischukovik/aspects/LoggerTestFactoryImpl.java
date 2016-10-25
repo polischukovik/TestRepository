@@ -9,13 +9,10 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import polischukovik.domain.enums.PropertyNames;
-import polischukovik.mslibrary.Properties;
 import polischukovik.mslibrary.TestFactoryImpl;
-import polischukovik.services.TestFactory;
 
 @Aspect
 @Component
