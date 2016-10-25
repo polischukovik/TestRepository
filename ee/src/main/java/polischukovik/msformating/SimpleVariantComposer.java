@@ -11,14 +11,13 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import polischukovik.domain.Answer;
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyNames;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.mslibrary.DocumentTools;
+import polischukovik.mslibrary.IOTools;
 import polischukovik.mslibrary.Properties;
 
 @Component
@@ -27,12 +26,21 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 	@Autowired
 	private Properties prop;
 
+	private static List<PropertyNames> requiredProps = Arrays.asList(
+			 PropertyNames.F_QUESTION_BOLD
+			 ,PropertyNames.F_QUESTION_SPACING
+			 ,PropertyNames.P_PUNCTUATION_QUESTION
+			 ,PropertyNames.P_PUNCTUATION_ANSWER
+			 ,PropertyNames.T_VARIANT_TITLE);
+
 	private String pFQuestionBold;
 	private String pQuestionSpacing;
 	private String pQuestionPunctuation;
 	private String pAnswerPuncuation;
 	private String pVariantTitle;
-
+	
+	private final String composerName = this.getClass().getName();
+	
 	public SimpleVariantComposer() {
 	}
 	
@@ -61,7 +69,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 			for(Question q : questions){
 				XWPFParagraph questionParagpaph = doc.createParagraph();
 
-				DocumentTools.setSingleLineSpacing(questionParagpaph);
+				DocumentComponentComposer.setSingleLineSpacing(questionParagpaph);
 				
 				XWPFRun questionRun = questionParagpaph.createRun();
 				questionRun.setText(String.format("%s%s %s",q.getId(), pQuestionPunctuation, q.getQuestion()));
@@ -78,7 +86,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 				 * Remove spacing between paragraphs
 				 */
 				if(Boolean.valueOf(pQuestionSpacing)){
-					DocumentTools.setSingleLineSpacing(answerParagraph);
+					DocumentComponentComposer.setSingleLineSpacing(answerParagraph);
 				}
 
 				for(int i = 0; i < answers.size(); i++){
@@ -96,13 +104,11 @@ public class SimpleVariantComposer implements DocumentComponentComposer {
 	}
 	
 	@Override
-	public List<PropertyNames> getRequiredProp() {
-		return new ArrayList<>(Arrays.asList(
-				new PropertyNames[]{
-						PropertyNames.F_QUESTION_BOLD,
-						PropertyNames.P_PUNCTUATION_QUESTION,
-						PropertyNames.P_PUNCTUATION_ANSWER,
-						PropertyNames.T_VARIANT_TITLE, 
-						PropertyNames.F_QUESTION_SPACING}));
+	public String getComposerName() {
+		return composerName;
+	}
+
+	public static List<PropertyNames> getRequiredProperties() {
+		return new ArrayList<>(requiredProps);
 	}
 }

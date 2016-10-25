@@ -22,9 +22,20 @@ import polischukovik.domain.enums.PropertyNames;
 import polischukovik.services.TestFactory;
 @Component
 public class TestFactoryImpl implements TestFactory {
+	
 	@Autowired
 	private Properties prop;
 	private List<QuestionRaw> questions;
+	
+	private static List<PropertyNames> requiredProps = Arrays.asList(
+			 PropertyNames.BASIC_TEST_NAME
+			,PropertyNames.BASIC_VARIANTS
+			,PropertyNames.BASIC_QUESTIONS
+			,PropertyNames.P_SHUFFLE_QUESTION
+			,PropertyNames.P_SHUFFLE_ANSWERS
+			,PropertyNames.S_NUMERATION_VARIANT
+			,PropertyNames.S_NUMERATION_QUESTION
+			,PropertyNames.S_ANSWER_NUMERATION);
 
 	private String pTestName;	
 	private int pVariants;
@@ -139,5 +150,9 @@ public class TestFactoryImpl implements TestFactory {
 			result.put(q, answers);
 		}
 		return result;
+	}
+	
+	public static List<PropertyNames> getRequiredProperties(){
+		return requiredProps;
 	}
 }

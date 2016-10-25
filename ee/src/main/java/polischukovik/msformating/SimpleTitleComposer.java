@@ -20,7 +20,11 @@ import polischukovik.mslibrary.Properties;
 public class SimpleTitleComposer implements DocumentComponentComposer {
 	@SuppressWarnings("unused")
 	@Autowired
-	private Properties prop;
+	private Properties prop;	
+	
+	private static List<PropertyNames> requiredProps = Arrays.asList();
+	
+	private final String composerName = this.getClass().getName();
 
 	public SimpleTitleComposer() {
 	}
@@ -37,10 +41,13 @@ public class SimpleTitleComposer implements DocumentComponentComposer {
 		r.setText(test.getCaption());		
 		r.addBreak();		
 	}
-	
+
 	@Override
-	public List<PropertyNames> getRequiredProp() {
-		return new ArrayList<>(Arrays.asList(
-				new PropertyNames[]{}));
+	public String getComposerName() {
+		return composerName;
+	}
+
+	public static List<PropertyNames> getRequiredProperties() {
+		return new ArrayList<>(requiredProps);
 	}
 }

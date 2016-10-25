@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
@@ -13,7 +14,8 @@ import polischukovik.domain.enums.PropertyNames;
 import polischukovik.mslibrary.Properties;
 
 @Configuration
-@ComponentScan(basePackages={"polischukovik.msformating","polischukovik.mslibrary","polischukovik"})
+@EnableAspectJAutoProxy
+@ComponentScan(basePackages={"polischukovik.msformating","polischukovik.mslibrary","polischukovik.aspects","polischukovik"})
 @PropertySource("classpath:/app.properties")
 public class AppConfiguration {
 	private final static String IO_SOURCE				= "io.source";

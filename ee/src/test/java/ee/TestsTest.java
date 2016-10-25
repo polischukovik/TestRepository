@@ -22,7 +22,7 @@ import polischukovik.msformating.SimpleTitleComposer;
 import polischukovik.msformating.SimpleVariantComposer;
 import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.msformating.interfaces.DocumentFactory;
-import polischukovik.mslibrary.DocumentTools;
+import polischukovik.mslibrary.IOTools;
 import polischukovik.mslibrary.Properties;
 import polischukovik.services.QuestioRawnHandler;
 import polischukovik.services.TestFactory;
@@ -46,7 +46,7 @@ public class TestsTest {
 	@Autowired
 	private SimpleKeysComposer simpleKeysComposer;
 	@Autowired
-	private DocumentTools documentTools;
+	private IOTools documentTools;
 	
 	private List<QuestionRaw> questions;
 	private polischukovik.domain.Test test;
@@ -66,7 +66,7 @@ public class TestsTest {
 	}
 	@Test
 	public void documentCreated() throws IOException {
-		questions = questioRawnHandler.parseSource();
+		questions = questioRawnHandler.parseSource(prop.get(PropertyNames.IO_SOURCE_FILE_NAME));
 		test = testFactory.createTest(questions);
 		
 		componentComposers = new ArrayList<>();
@@ -84,8 +84,12 @@ public class TestsTest {
 		if(file.exists()){
 			assertEquals(true, file.delete());
 		}	
-		
-		documentTools.write(doc);
+				
+		try {
+			documentTools.write(doc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		assertEquals(true, file.exists());		
 	}

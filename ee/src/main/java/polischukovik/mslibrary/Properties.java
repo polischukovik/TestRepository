@@ -24,4 +24,8 @@ public class Properties {
 	public String get(PropertyNames nameEnum){
 		return properties.containsKey(nameEnum) ? properties.get(nameEnum) : defaults.get(nameEnum);		
 	}
+	
+	public Map<PropertyNames, String> getAllProperties(){
+		return properties;
+	}
 }

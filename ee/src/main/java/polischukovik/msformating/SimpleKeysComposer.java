@@ -11,7 +11,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
@@ -23,6 +22,12 @@ import polischukovik.mslibrary.Properties;
 public class SimpleKeysComposer implements DocumentComponentComposer{
 	@Autowired
 	private Properties prop;
+	
+	private static List<PropertyNames> requiredProps = Arrays.asList(
+			  PropertyNames.P_PUNCTUATION_KEY_ANSWER
+			 ,PropertyNames.T_KEY_TITLE);
+	
+	private final String composerName = this.getClass().getName();
 	
 	private String pPunctuationKeyAnswer;
 	private String resKeyTytle;
@@ -63,10 +68,11 @@ public class SimpleKeysComposer implements DocumentComponentComposer{
 	}
 
 	@Override
-	public List<PropertyNames> getRequiredProp() {
-		return new ArrayList<>(Arrays.asList(
-				new PropertyNames[]{
-						PropertyNames.P_PUNCTUATION_KEY_ANSWER, 
-						PropertyNames.T_KEY_TITLE}));
+	public String getComposerName() {
+		return composerName;
+	}
+	
+	public static List<PropertyNames> getRequiredProperties() {
+		return new ArrayList<>(requiredProps);
 	}
 }

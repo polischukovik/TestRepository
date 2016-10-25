@@ -13,6 +13,7 @@ import polischukovik.domain.enums.QuestionType;
 import polischukovik.services.QuestioRawnHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -27,11 +28,13 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 	@Autowired
 	private Properties prop;
 	
+	private static List<PropertyNames> requiredProps = Arrays.asList(
+			 PropertyNames.PARSING_MARK_QUESTION);
+	
 	//TODO change access to nio
 	private Scanner sourceFile;
 	private String questionData = "";
 	private String pMark;
-	private String sourceFilePath;
 	
 	public QuestioRawnHandlerImpl() {
 	}
@@ -42,13 +45,13 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 			throw new IllegalArgumentException("Source file is totally wrong!");
 		}
 	}
-
-	public List<QuestionRaw> parseSource() throws FileNotFoundException {		
+	
+	@Override
+	public List<QuestionRaw> parseSource(String source) throws FileNotFoundException {		
 
 		pMark = prop.get(PropertyNames.PARSING_MARK_QUESTION);
-		sourceFilePath = prop.get(PropertyNames.IO_SOURCE_FILE_NAME);
 		
-		sourceFile = new Scanner(new File(sourceFilePath));
+		sourceFile = new Scanner(new File(source));
 		while(sourceFile.hasNext()){
 			questionData += sourceFile.nextLine() + "\n";
 		}
@@ -109,5 +112,9 @@ public class QuestioRawnHandlerImpl implements QuestioRawnHandler{
 		}
 		
 		System.err.println();
+	}
+
+	public static List<PropertyNames> getRequiredProperties(){
+		return new ArrayList<>(requiredProps);
 	}
 }

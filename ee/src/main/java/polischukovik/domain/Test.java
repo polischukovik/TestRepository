@@ -19,6 +19,11 @@ public class Test {
 	public List<Variant> getVariants() {
 		return variants;
 	}
+
+	@Override
+	public String toString() {
+		return "Test [caption=" + caption + "]\tNumber of variants:" + variants.size();
+	}
 	
 	
 }
