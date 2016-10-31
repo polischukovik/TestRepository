@@ -1,13 +1,6 @@
 <%@ include file="common/header.jspf"%>
 <c:url value="/login" var="loginUrl"/>
-
-<p>
-	<font color="red">${errorMessage}</font>
-</p>
-
-<div class="container">
-	<div class="row center">
-		<div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-4.5">
+	<div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-4.5">
 			<form action="/login" method="POST">
 				<div class="form-group">
 					<label for="username-id">User:</label>
@@ -32,6 +25,4 @@
 				</c:if>
 			</form>
 		</div>
-	</div>	
-</div>
 <%@ include file="common/footer.jspf"%>
