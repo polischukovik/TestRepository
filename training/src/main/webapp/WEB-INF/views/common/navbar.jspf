@@ -25,7 +25,7 @@
 			<li><a href="/todo-list">Todos</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
-			<li class="disabled"><a href="#">${username}</a></li>
+			<li class="disabled"><a href="#">${pageContext.request.userPrincipal.name}</a></li>
 			<li>	
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
 		 			<a href="javascript:formSubmit()">Logout</a>

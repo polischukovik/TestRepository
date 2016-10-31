@@ -50,8 +50,6 @@ public class TodoController {
 		} else {
 			username = principal.toString();
 		}
-
-		System.out.println(username + "!@@#*&!@*#&!*@#&!*@(#!*@#&(!@#&(*@!#&!*(@#&!(@*#&!(*@&($^)!@^$    (!*@&#$!(@$!_(@$ _&");
 		
 		model.put("todos", service.getTodosByUser(username));
 		return "todo-list";
