@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -34,9 +36,23 @@ public class TodoController {
 				dateFormat, false));
 	}
 	
+	@RequestMapping(value="/")
+	public String getIndex(){
+		return "redirect:/todo-list";
+	}
+	
 	@RequestMapping(value="/todo-list", method =RequestMethod.GET)
 	public String getTodoList(ModelMap model){
-		String username = (String) model.get("username");
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails)principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+
+		System.out.println(username + "!@@#*&!@*#&!*@#&!*@(#!*@#&(!@#&(*@!#&!*(@#&!(@*#&!(*@&($^)!@^$    (!*@&#$!(@$!_(@$ _&");
+		
 		model.put("todos", service.getTodosByUser(username));
 		return "todo-list";
 	}

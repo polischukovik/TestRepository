@@ -17,9 +17,9 @@ public class TodoService {
 	private static int counter = 3;
 	
 	static{
-		todos.add(new Todo(0, "user1", "Hug my wife", new Date(), true));
-		todos.add(new Todo(1, "user1", "Go to sleep", new Date(), true));
-		todos.add(new Todo(2, "user1", "Have fun", new Date(), true));
+		todos.add(new Todo(0, "alex", "Hug my wife", new Date(), true));
+		todos.add(new Todo(1, "alex", "Go to sleep", new Date(), true));
+		todos.add(new Todo(2, "alex", "Have fun", new Date(), true));
 	}
 	
 	public TodoService(){

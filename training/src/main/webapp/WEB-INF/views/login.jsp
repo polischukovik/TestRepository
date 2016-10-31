@@ -1,4 +1,5 @@
 <%@ include file="common/header.jspf"%>
+<c:url value="/login" var="loginUrl"/>
 
 <p>
 	<font color="red">${errorMessage}</font>
@@ -15,8 +16,20 @@
 				<div class="form-group">
 					<label for="password-id">Password:</label>
 					<input id="password-id" name="password" type="password" class="form-control"/>
-				</div>	
+				</div>
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				
 				<button type="submit" class="btn btn-success">Submit</button>
+				<c:if test="${param.error != null}">
+					<p class="text-danger">
+						Invalid username and password.
+					</p>
+				</c:if>
+				<c:if test="${param.logout != null}">
+					<p class="text-muted">
+						You have been logged out.
+					</p>
+				</c:if>
 			</form>
 		</div>
 	</div>	
