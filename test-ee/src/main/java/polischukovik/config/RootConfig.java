@@ -55,25 +55,25 @@ public class RootConfig {
 
 		Properties prop = new Properties();		
 		//															PROPERTY GROUP											
-		prop.addProperty(PropertyName.IO_SOURCE_FILE_NAME,			"Input Output"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.IO_DEST_FILE_NAME,			"Input Output"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.BASIC_TEST_NAME,				"Test Configuration"	,PropertyType.STRING	);
-		prop.addProperty(PropertyName.T_VARIANT_TITLE,				"Test Configuration"	,PropertyType.STRING	);
-		prop.addProperty(PropertyName.T_KEY_TITLE,					"Test Configuration"	,PropertyType.STRING	);
-		prop.addProperty(PropertyName.BASIC_VARIANTS,				"Test Configuration"	,PropertyType.INTEGER	);
-		prop.addProperty(PropertyName.BASIC_QUESTIONS,				"Test Configuration"	,PropertyType.INTEGER	);
-		prop.addProperty(PropertyName.PARSING_MARK_QUESTION,		"Parsing options"		,PropertyType.STRING	);
-		prop.addProperty(PropertyName.PARSING_MARK_CORRECT_ANSWER,	"Parsing options"		,PropertyType.STRING	);
-		prop.addProperty(PropertyName.P_SHUFFLE_ANSWERS,			"Test Configuration"	,PropertyType.BOOLEAN	);
-		prop.addProperty(PropertyName.P_SHUFFLE_QUESTION,			"Test Configuration"	,PropertyType.BOOLEAN	);
-		prop.addProperty(PropertyName.P_PUNCTUATION_ANSWER,			"Formatting"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.P_PUNCTUATION_QUESTION,		"Formatting"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.P_PUNCTUATION_KEY_ANSWER, 	"Formatting"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.F_QUESTION_BOLD, 				"Formatting"			,PropertyType.BOOLEAN	);
-		prop.addProperty(PropertyName.F_QUESTION_SPACING, 			"Formatting"			,PropertyType.BOOLEAN	);
-		prop.addProperty(PropertyName.S_NUMERATION_VARIANT, 		"Formatting"			,PropertyType.SELECT_NT	);
-		prop.addProperty(PropertyName.S_NUMERATION_QUESTION, 		"Formatting"			,PropertyType.SELECT_NT	);
-		prop.addProperty(PropertyName.S_NUMERATION_ANSWER, 			"Formatting"			,PropertyType.SELECT_NT	);
+		prop.addProperty(PropertyName.IO_SOURCE_FILE_NAME,			"input.output"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.IO_DEST_FILE_NAME,			"input.output"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.BASIC_TEST_NAME,				"test.configuration"	,PropertyType.STRING	);
+		prop.addProperty(PropertyName.T_VARIANT_TITLE,				"test.configuration"	,PropertyType.STRING	);
+		prop.addProperty(PropertyName.T_KEY_TITLE,					"test.configuration"	,PropertyType.STRING	);
+		prop.addProperty(PropertyName.BASIC_VARIANTS,				"test.configuration"	,PropertyType.INTEGER	);
+		prop.addProperty(PropertyName.BASIC_QUESTIONS,				"test.configuration"	,PropertyType.INTEGER	);
+		prop.addProperty(PropertyName.PARSING_MARK_QUESTION,		"parsing.options"		,PropertyType.STRING	);
+		prop.addProperty(PropertyName.PARSING_MARK_CORRECT_ANSWER,	"parsing.options"		,PropertyType.STRING	);
+		prop.addProperty(PropertyName.P_SHUFFLE_ANSWERS,			"test.configuration"	,PropertyType.BOOLEAN	);
+		prop.addProperty(PropertyName.P_SHUFFLE_QUESTION,			"test.configuration"	,PropertyType.BOOLEAN	);
+		prop.addProperty(PropertyName.P_PUNCTUATION_ANSWER,			"formatting"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.P_PUNCTUATION_QUESTION,		"formatting"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.P_PUNCTUATION_KEY_ANSWER, 	"formatting"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.F_QUESTION_BOLD, 				"formatting"			,PropertyType.BOOLEAN	);
+		prop.addProperty(PropertyName.F_QUESTION_SPACING, 			"formatting"			,PropertyType.BOOLEAN	);
+		prop.addProperty(PropertyName.S_NUMERATION_VARIANT, 		"formatting"			,PropertyType.SELECT_NT	);
+		prop.addProperty(PropertyName.S_NUMERATION_QUESTION, 		"formatting"			,PropertyType.SELECT_NT	);
+		prop.addProperty(PropertyName.S_NUMERATION_ANSWER, 			"formatting"			,PropertyType.SELECT_NT	);
 		
 		prop.setValue(PropertyName.IO_SOURCE_FILE_NAME,				env.getProperty(IO_SOURCE,					"source.txt"));                       
 		prop.setValue(PropertyName.IO_DEST_FILE_NAME,				env.getProperty(IO_DEST,					"file.docx"));                        
