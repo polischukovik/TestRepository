@@ -27,31 +27,26 @@ public class ServletConfig extends WebMvcConfigurerAdapter{
 		return resolver;
 	}
 	
-	@Bean
+	@Bean(name="messageSource")
 	public ReloadableResourceBundleMessageSource resourceBundleMessageSource(){
         ReloadableResourceBundleMessageSource messageSource=new ReloadableResourceBundleMessageSource();
-        String[] resources= {"classpath:messages"};
-        messageSource.setBasenames(resources);
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setBasenames("classpath:messages");
         return messageSource;
     }
 	
-	@Bean
+	@Bean(name="localeResolver")
 	public SessionLocaleResolver sessionLocaleResolver(){
 	    SessionLocaleResolver localeResolver=new SessionLocaleResolver();
 	    localeResolver.setDefaultLocale(new Locale("en"));
 	    return localeResolver;
 	}   
-	
-	@Bean 
-	public LocaleChangeInterceptor localeChangeInterceptor(){
-	    LocaleChangeInterceptor localeChangeInterceptor=new LocaleChangeInterceptor();
-	    localeChangeInterceptor.setParamName("locale");
-	    return localeChangeInterceptor;
-	}
-	
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-	    registry.addInterceptor(localeChangeInterceptor());
+		LocaleChangeInterceptor localeChangeInterceptor=new LocaleChangeInterceptor();
+		localeChangeInterceptor.setParamName("language");
+	    registry.addInterceptor(localeChangeInterceptor);
 	}
 
 	@Override

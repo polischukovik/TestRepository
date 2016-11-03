@@ -79,6 +79,14 @@ public class UserInterfaceSet {
 
 	public void setComponentComposers(List<DocumentComponentComposer> componentComposers) {
 		this.componentComposers = componentComposers;
+	}	
+	
+	public IOToolsImpl getiOTools() {
+		return iOTools;
+	}
+
+	public void setiOTools(IOToolsImpl iOTools) {
+		this.iOTools = iOTools;
 	}
 
 	public int getId() {

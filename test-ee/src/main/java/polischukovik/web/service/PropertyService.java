@@ -1,4 +1,4 @@
-package polischukovik.web.properties;
+package polischukovik.web.service;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
@@ -28,11 +28,16 @@ public class PropertyService {
 		List<SimpleImmutableEntry<String, List<PropertyComponent>>> categories = new ArrayList<>();
 		
 		//obtain unique group
-		Set<String> listGroup = result.stream().map(y -> y.getGroup()).collect(Collectors.groupingBy(Function.identity())).keySet();
+		Set<String> listGroup = result.stream()
+				.map(y -> y.getGroup())
+				.collect(Collectors.groupingBy(Function.identity()))
+				.keySet();
 		
-		//iterate group adding entries		
+		//iterate group adding entries				
 		for(String group : listGroup){
-			categories.add(new SimpleImmutableEntry<String, List<PropertyComponent>>(group, result.stream().filter(i -> group.equals(i.getGroup())).collect(Collectors.toList())));
+			categories.add(new SimpleImmutableEntry<String, List<PropertyComponent>>(group, result.stream()
+					.filter(i -> group.equals(i.getGroup()))
+					.collect(Collectors.toList())));
 		}
 		return  categories;		
 	}

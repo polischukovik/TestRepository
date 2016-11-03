@@ -19,9 +19,11 @@ public class LoggerIOTools {
 	
 	private Log logger = LogFactory.getLog(IOToolsImpl.class);
 	
-	@Pointcut("execution(* polischukovik.mslibrary.IOTools.write(..))"
+	@Pointcut("execution(* polischukovik.impl.IOToolsImpl.write(..))"
 			+ "&& args(doc)")
 	private void writeDocument(XWPFDocument doc){}
+	
+	@Pointcut("execution(* polischukovik.impl.IOToolsImpl.read(..))")
 	
 	@Before("writeDocument(doc)")
 	private void beforeXWPFDocumentWrite(XWPFDocument doc){

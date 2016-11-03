@@ -3,7 +3,6 @@ package polischukovik.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import polischukovik.domain.PropertyComponent;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.properties.RequiredPropertyNameProvider;
 

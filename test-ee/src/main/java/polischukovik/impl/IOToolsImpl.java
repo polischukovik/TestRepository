@@ -3,6 +3,7 @@ package polischukovik.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,21 +37,25 @@ public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
 	public String read() throws FileNotFoundException{
 		pSrcFileName = prop.get(PropertyName.IO_SOURCE_FILE_NAME);
 		
-		Scanner sourceFile = new Scanner(new File(pSrcFileName));
-		String questionData = "";
-		while(sourceFile.hasNext()){
-			questionData += sourceFile.nextLine() + "\n";
+		try(Scanner sourceFile = new Scanner(new File(pSrcFileName))) {
+			String questionData = "";
+			while(sourceFile.hasNext()){
+				questionData += sourceFile.nextLine() + "\n";
+			}
+			sourceFile.close();
+			return questionData;
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundException(e.getMessage());
 		}
-		return questionData;
 	}
 
-	public void write(XWPFDocument doc) throws Exception {
+	public void write(XWPFDocument doc) throws IllegalStateException, IOException {
 		pDestFileName = prop.get(PropertyName.IO_DEST_FILE_NAME);
 		OutputStream os = new FileOutputStream(new File(pDestFileName));
 
 		if(doc == null){
 			os.close();
-			throw new Exception("Document reference is null");			
+			throw new IllegalStateException("Document reference is null");	
 		}
 		
 		doc.write(os);

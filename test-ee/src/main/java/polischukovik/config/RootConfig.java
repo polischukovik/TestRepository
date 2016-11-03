@@ -24,7 +24,7 @@ import polischukovik.properties.Properties;
 import polischukovik.ui.UserInterfaceSet;
 
 @Configuration
-@ComponentScan("polischukovik.services")
+@ComponentScan("polischukovik")
 @PropertySource("classpath:/app.properties")
 public class RootConfig {
 	private final static String IO_SOURCE				= "io.source";

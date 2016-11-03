@@ -117,6 +117,7 @@
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.2</version>
 					<configuration>
+						<port>8050</port>
 						<path>/</path>
 						<contextReloadable>true</contextReloadable>
 					</configuration>
