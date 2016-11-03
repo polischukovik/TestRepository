@@ -21,8 +21,9 @@ import polischukovik.services.IOTools;
 
 @Component
 public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
+
 	@Autowired
-	private Properties prop;
+	Properties prop;
 	
 	private List<PropertyName> requiredProps = Arrays.asList(
 			 PropertyName.IO_DEST_FILE_NAME,

@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import polischukovik.ui.Response;
 import polischukovik.ui.UserInterfaceSet;
 
 @Service
@@ -13,29 +14,25 @@ public class TestService {
 	@Autowired
 	UserInterfaceSet currentUISet;
 
-	public String createTest() {
-		try {
-//			String s = currentUISet.getiOTools().read();
-//			List<QuestionRaw> q = currentUISet.getQuestionDataSource().parseSource(s);
-//			Test t = currentUISet.getTestFactory().createTest(q);
-//			XWPFDocument d = currentUISet.getDocumentFactory().createDocument(t, currentUISet.getComponentComposers());
-//			currentUISet.getiOTools().write(d);			
+	public Response createTest() {
+		Response response = new Response(0, "Operation completed successfully");
+		try {		
 			currentUISet.getiOTools().write(
 					currentUISet.getDocumentFactory().createDocument(
 							currentUISet.getTestFactory().createTest(
 									currentUISet.getQuestionDataSource().parseSource(
 											currentUISet.getiOTools().read())), currentUISet.getComponentComposers()));			
 		} catch (FileNotFoundException | ClassNotFoundException | IllegalStateException e) {
-			e.printStackTrace();
-			return "Error in Service1: " + e.getMessage();
+			String reason = String.format("Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
+			response = new Response(1, reason);
 		} catch (IOException e) {
-			e.printStackTrace();
-			return "Error in Service2: " + e.getMessage();
+			String reason = String.format("Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
+			response = new Response(1, reason);
 		} catch (Exception e){
-			e.printStackTrace();
-			return "Error in Service3: " + e.getMessage();			
+			String reason = String.format("Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
+			response = new Response(1, reason);
 		}
-		return "Operation completed successfully";
+		return response;
 	}
 
 }

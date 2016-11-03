@@ -1,4 +1,4 @@
-package polischukovik.msformating.interfaces;
+package polischukovik.services;
 
 import java.math.BigInteger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;

@@ -5,10 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import polischukovik.impl.IOToolsImpl;
-import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.msformating.interfaces.DocumentFactory;
 import polischukovik.properties.RequiredPropertyNameProvider;
+import polischukovik.services.DocumentComponentComposer;
+import polischukovik.services.DocumentFactory;
+import polischukovik.services.IOTools;
 import polischukovik.services.QuestionDataSource;
 import polischukovik.services.TestFactory;
 
@@ -17,7 +20,7 @@ public class UserInterfaceSet {
 	private QuestionDataSource questionDataSource;
 	private TestFactory testFactory;
 	private DocumentFactory documentFactory;
-	private IOToolsImpl iOTools;
+	private IOTools iOTools;
 	private List<DocumentComponentComposer> componentComposers;
 
 	
@@ -27,7 +30,7 @@ public class UserInterfaceSet {
 	}
 
 	public UserInterfaceSet(int id, QuestionDataSource questionDataSource, TestFactory testFactory,
-			DocumentFactory documentFactory, IOToolsImpl iOTools, List<DocumentComponentComposer> componentComposers) {
+			DocumentFactory documentFactory, IOTools iOTools, List<DocumentComponentComposer> componentComposers) {
 		super();
 		this.id = id;
 		this.questionDataSource = questionDataSource;
@@ -81,11 +84,11 @@ public class UserInterfaceSet {
 		this.componentComposers = componentComposers;
 	}	
 	
-	public IOToolsImpl getiOTools() {
+	public IOTools getiOTools() {
 		return iOTools;
 	}
 
-	public void setiOTools(IOToolsImpl iOTools) {
+	public void setiOTools(IOTools iOTools) {
 		this.iOTools = iOTools;
 	}
 

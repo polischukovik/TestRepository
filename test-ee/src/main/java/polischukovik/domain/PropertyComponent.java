@@ -1,5 +1,6 @@
 package polischukovik.domain;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +9,7 @@ import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
 
-public class PropertyComponent {
+public class PropertyComponent implements Serializable {
 	
 	private PropertyName name;	
 	private String group;

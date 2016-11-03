@@ -15,9 +15,9 @@ import polischukovik.domain.Question;
 import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyName;
-import polischukovik.msformating.interfaces.DocumentComponentComposer;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
+import polischukovik.services.DocumentComponentComposer;
 
 @Component
 public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPropertyNameProvider{

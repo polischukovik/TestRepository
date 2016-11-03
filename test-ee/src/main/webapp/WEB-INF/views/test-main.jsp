@@ -67,14 +67,28 @@
 			</div>
 			<div id="main-content" class="col-sm-8">
 				<div class="row">
-					<div class="col-sm-2 col-sm-offset-5">
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="input-group">
+			                <input type="text" class="form-control" readonly>
+			                <label class="input-group-btn">
+			                    <span class="btn btn-primary">
+			                    	&hellip; 
+			                    	<input type="file" style="display: none;" multiple>
+			                    </span>
+			                </label>
+			            </div>
 						<a href="/create" class="btn btn-default text-center" role="button">Create document</a>
 					</div>
 				</div>
 			<c:if test="${result ne null}">
 				<div class="row">
-					<div class="col-sm-5 col-sm-offset-2">
-						<label>${result}</label>
+					<div class="col-sm-8 col-sm-offset-2">
+						<c:if test="${result.status == 1}">
+							<label class="text-danger">${result.message}</label>
+						</c:if>
+						<c:if test="${result.status == 0}">
+							<label class="text-success">${result.message}</label>
+						</c:if>
 					</div>
 				</div>
 			</c:if>				

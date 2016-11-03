@@ -10,7 +10,6 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import polischukovik.domain.enums.PropertyName;
 import polischukovik.impl.IOToolsImpl;
 
 @Aspect
@@ -24,34 +23,35 @@ public class LoggerIOTools {
 	private void writeDocument(XWPFDocument doc){}
 	
 	@Pointcut("execution(* polischukovik.impl.IOToolsImpl.read(..))")
+	private void readPointcut(){}
+	
+	@Before("readPointcut()")
+	private void beforeRead(){		
+		logger.debug("Attempting to read file");		
+	}
+	
+	@AfterReturning("readPointcut()")
+	private void afterRead(){
+		logger.debug("Successfully compleated reading file");
+	}
+	
+	@AfterThrowing("readPointcut()")
+	private void exceptionRead(){
+		logger.fatal("Failed to read document");
+	}
 	
 	@Before("writeDocument(doc)")
-	private void beforeXWPFDocumentWrite(XWPFDocument doc){
-		
-		logger.debug("Attempting to create document");
-		
-		IOToolsImpl instance;
-		try {
-			instance = (IOToolsImpl) Class.forName(IOToolsImpl.class.getName()).newInstance();
-			
-			logger.debug(String.format("\tRequired parameters(%d):", instance.getRequiredProperties().size()));
-			for(PropertyName propertyName :  instance.getRequiredProperties()){
-				logger.debug(String.format("\t\t%s", propertyName));
-			}
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}		
+	private void beforeWrite(XWPFDocument doc){		
+		logger.debug("Attempting to create document");		
 	}
 	
 	@AfterReturning("writeDocument(doc)")
-	private void afterXWPFDocumentWrite(XWPFDocument doc){
-		
+	private void afterWrite(XWPFDocument doc){
 		logger.debug("Document has been successfully saved");
 	}
 	
 	@AfterThrowing("writeDocument(doc)")
-	private void afterExceptionXWPFDocumentWrite(XWPFDocument doc){
-		
+	private void exceptiontWrite(XWPFDocument doc){
 		logger.fatal("Failed to create document");
 	}
 

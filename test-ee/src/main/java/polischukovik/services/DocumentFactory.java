@@ -1,4 +1,4 @@
-package polischukovik.msformating.interfaces;
+package polischukovik.services;
 
 import java.util.List;
 

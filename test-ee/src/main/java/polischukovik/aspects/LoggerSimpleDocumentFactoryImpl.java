@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import polischukovik.domain.Test;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.impl.SimpleDocumentFactoryImpl;
-import polischukovik.msformating.interfaces.DocumentComponentComposer;
+import polischukovik.services.DocumentComponentComposer;
 
 @Aspect
 @Component
@@ -22,7 +22,7 @@ public class LoggerSimpleDocumentFactoryImpl {
 	
 	private Log logger = LogFactory.getLog(SimpleDocumentFactoryImpl.class);
 	
-	@Pointcut("execution(* polischukovik.msformating.SimpleDocumentFactoryImpl.createDocument(..))"
+	@Pointcut("execution(* polischukovik.impl.SimpleDocumentFactoryImpl.createDocument(..))"
 			+ "&& args(test, componentComposers)")
 	private void createDocumentPointcut(Test test, List<DocumentComponentComposer> componentComposers){}
 	

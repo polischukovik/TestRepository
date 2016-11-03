@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 
 import polischukovik.domain.Test;
 import polischukovik.domain.enums.PropertyName;
-import polischukovik.msformating.interfaces.DocumentComponentComposer;
-import polischukovik.msformating.interfaces.DocumentFactory;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
+import polischukovik.services.DocumentComponentComposer;
+import polischukovik.services.DocumentFactory;
 
 @Component
 public class SimpleDocumentFactoryImpl implements DocumentFactory, RequiredPropertyNameProvider{

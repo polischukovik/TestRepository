@@ -20,7 +20,7 @@ public class LoggingQuestionRawHandlerImpl {
 	
 	private Log logger = LogFactory.getLog(QuestionDataSourceFileImpl.class);
 	
-	@Pointcut("execution(* polischukovik.mslibrary.QuestioRawnHandlerImpl.parseSource(..))"
+	@Pointcut("execution(* polischukovik.impl.QuestionDataSourceFileImpl.parseSource(..))"
 			+ "&& args(path)")
 	private void parseSource(String path){};
 	

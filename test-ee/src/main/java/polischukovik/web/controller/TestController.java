@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import polischukovik.properties.Properties;
 import polischukovik.ui.UserInterfaceSet;
 import polischukovik.web.service.PropertyService;
 import polischukovik.web.service.TestService;
@@ -15,6 +16,9 @@ import polischukovik.web.service.TestService;
 public class TestController {
 	@Autowired
 	PropertyService propertyService;
+	
+	@Autowired
+	Properties prop;
 	
 	@Autowired
 	TestService testService;
@@ -35,9 +39,7 @@ public class TestController {
 	
 	@RequestMapping("/create")
 	public String createTest(ModelMap model){
-		String s = testService.createTest();
-		System.err.println(s);
-		model.addAttribute("result", s);
+		model.addAttribute("result", testService.createTest());
 		return "test-main";
 	}
 

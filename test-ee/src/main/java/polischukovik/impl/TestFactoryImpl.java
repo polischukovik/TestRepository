@@ -114,7 +114,6 @@ public class TestFactoryImpl implements TestFactory, RequiredPropertyNameProvide
 			Question prep = new Question(nums.getNext(), sortedQuestions.get(j).getType(), sortedQuestions.get(j).getQuestion(), answers);		
 			result.add(prep);
 		}
-		
 		return result;
 	}
 
