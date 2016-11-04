@@ -42,7 +42,7 @@ public class TodoController {
 	}
 	
 	@RequestMapping(value="/todo-list", method =RequestMethod.GET)
-	public String getTodoList(ModelMap model) throws Exception{
+	public String getTodoList(ModelMap model){
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username;
 		if (principal instanceof UserDetails) {
@@ -52,8 +52,7 @@ public class TodoController {
 		}
 		
 		model.put("todos", service.getTodosByUser(username));
-		throw new Exception("Something went wrong!");
-		//return "todo-list";
+		return "todo-list";
 	}
 	
 	@RequestMapping(value = "/todo", method = RequestMethod.GET)
