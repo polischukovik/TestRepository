@@ -1,5 +1,6 @@
 package polischukovik.properties;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,6 +39,10 @@ public class Properties {
 	
 	public List<PropertyComponent> getAll(List<PropertyName> propertyNames){
 		return componentMap.values().stream().filter(u-> propertyNames.contains(u.getName())).collect(Collectors.toList());	
+	}
+	
+	public List<PropertyComponent> getAll(){
+		return new ArrayList<PropertyComponent>(componentMap.values());	
 	}
 	
 }

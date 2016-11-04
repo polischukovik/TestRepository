@@ -35,10 +35,10 @@ public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
 	public IOToolsImpl() {		
 	}
 	
-	public String read() throws FileNotFoundException{
+	public String read() throws IOException{
 		pSrcFileName = prop.get(PropertyName.IO_SOURCE_FILE_NAME);
-		
-		try(Scanner sourceFile = new Scanner(new File(pSrcFileName))) {
+		File file = new File(pSrcFileName);
+		try(Scanner sourceFile = new Scanner(file)) {
 			String questionData = "";
 			while(sourceFile.hasNext()){
 				questionData += sourceFile.nextLine() + "\n";
@@ -46,7 +46,8 @@ public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
 			sourceFile.close();
 			return questionData;
 		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException(e.getMessage());
+			throw new FileNotFoundException(e.getMessage() + ": " + 
+					file.getCanonicalPath());
 		}
 	}
 

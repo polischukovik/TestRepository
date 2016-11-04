@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import polischukovik.properties.Properties;
@@ -31,13 +32,13 @@ public class TestController {
 		return "redirect:/test-main";
 	}
 	
-	@RequestMapping("/test-main")
+	@RequestMapping(name="/test-main", method = RequestMethod.GET)
 	public String testMain(ModelMap model) throws InstantiationException, IllegalAccessException{
 		model.addAttribute("categories", propertyService.getPropertyList(currentInterfaceSet));
 		return "test-main";
 	}
 	
-	@RequestMapping("/create")
+	@RequestMapping(name="/test-main", method = RequestMethod.POST)
 	public String createTest(ModelMap model){
 		model.addAttribute("result", testService.createTest());
 		return "test-main";

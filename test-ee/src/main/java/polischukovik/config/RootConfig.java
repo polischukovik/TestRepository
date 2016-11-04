@@ -58,8 +58,8 @@ public class RootConfig {
 
 		Properties prop = new Properties();		
 		//															PROPERTY GROUP											
-		prop.addProperty(PropertyName.IO_SOURCE_FILE_NAME,			"input.output"			,PropertyType.STRING	);
-		prop.addProperty(PropertyName.IO_DEST_FILE_NAME,			"input.output"			,PropertyType.STRING	);
+		prop.addProperty(PropertyName.IO_SOURCE_FILE_NAME,			"input.output"			,PropertyType.FILE	);
+		prop.addProperty(PropertyName.IO_DEST_FILE_NAME,			"input.output"			,PropertyType.FILE	);
 		prop.addProperty(PropertyName.BASIC_TEST_NAME,				"test.configuration"	,PropertyType.STRING	);
 		prop.addProperty(PropertyName.T_VARIANT_TITLE,				"test.configuration"	,PropertyType.STRING	);
 		prop.addProperty(PropertyName.T_KEY_TITLE,					"test.configuration"	,PropertyType.STRING	);

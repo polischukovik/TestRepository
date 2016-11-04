@@ -1,6 +1,7 @@
 package polischukovik.aspects;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,8 +26,8 @@ public class LoggingQuestionRawHandlerImpl {
 	private void parseSource(String path){};
 	
 	@Before("parseSource(path)")
-	public void startParseSource(String path){
-		logger.debug("Parsing questions from raw file:  " + new File(path).getAbsolutePath());
+	public void startParseSource(String path) throws IOException{
+		logger.debug("Parsing questions from raw file:  " + path + "\n");
 		
 		QuestionDataSourceFileImpl instance;
 		try {
@@ -44,12 +45,12 @@ public class LoggingQuestionRawHandlerImpl {
 	}
 	
 	@AfterReturning("parseSource(path)")
-	public void endParseSource(String path){
-		logger.debug("Successfully finnished parsing raw file:  " + new File(path).getAbsolutePath());
+	public void endParseSource(String path) throws IOException{
+		logger.debug("Successfully finnished parsing raw file:  " + path +"\n");
 	}
 	
 	@AfterThrowing("parseSource(path)")
 	public void startParseSourceException(String path){
-		logger.fatal("Failed to parse:  " + new File(path).getAbsolutePath());
+		logger.fatal("Failed to parse:  "  + path +"\n");
 	}
 }

@@ -34,7 +34,7 @@
 												<input id="checkbox-${prop.name}" type="checkbox" class="" value="${prop.value}"/>
 											</td>
 										</tr>
-									</c:when>
+									</c:when>		         
 									<c:when test="${prop.type == 'SELECT_NT'}">
 										<tr>
 											<td>
@@ -46,6 +46,22 @@
 														<option>${value}</option>
 													</c:forTokens>
 												</select>
+											</td>
+										</tr>
+									</c:when>
+									<c:when test="${prop.type == 'FILE'}">
+										<tr>
+											<td>
+												<label for="select-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
+											</td>
+											<td class="input-group">
+								                <input id="file-data-${prop.name}" type="text" class="form-control" value="${prop.value}" readonly>
+								                <label class="input-group-btn">
+								                    <span class="btn btn-primary">
+								                    	&hellip; 
+								                    	<input id="file-${prop.name}" type="file" style="display: none;">
+								                    </span>
+								                </label>
 											</td>
 										</tr>
 									</c:when>
@@ -67,17 +83,8 @@
 			</div>
 			<div id="main-content" class="col-sm-8">
 				<div class="row">
-					<div class="col-sm-8 col-sm-offset-2">
-						<div class="input-group">
-			                <input type="text" class="form-control" readonly>
-			                <label class="input-group-btn">
-			                    <span class="btn btn-primary">
-			                    	&hellip; 
-			                    	<input type="file" style="display: none;" multiple>
-			                    </span>
-			                </label>
-			            </div>
-						<a href="/create" class="btn btn-default text-center" role="button">Create document</a>
+					<div class="col-sm-8 col-sm-offset-2">						  
+						<button onclick="createClick();" class="btn btn-default text-center" role="button">Create document</button>
 					</div>
 				</div>
 			<c:if test="${result ne null}">
