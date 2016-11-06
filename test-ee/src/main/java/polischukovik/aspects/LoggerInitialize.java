@@ -12,7 +12,7 @@ import polischukovik.domain.PropertyComponent;
 import polischukovik.properties.Properties;
 import polischukovik.web.service.TestService;
 
-@Aspect
+//@Aspect
 @Component
 public class LoggerInitialize {
 	
