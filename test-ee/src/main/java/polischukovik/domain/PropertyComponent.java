@@ -19,6 +19,10 @@ public class PropertyComponent implements Serializable {
 	private boolean bool;
 	private String selectValues;
 	
+	public PropertyComponent() {
+		super();
+	}
+
 	public PropertyComponent(PropertyName name, String group, PropertyType type) {
 		super();
 		this.name = name;
@@ -43,10 +47,6 @@ public class PropertyComponent implements Serializable {
 		}
 	}
 	
-	public void addValue(String value){
-		this.value = value;
-	}
-	
 	public PropertyName getName() {
 		return name;
 	}
@@ -68,6 +68,9 @@ public class PropertyComponent implements Serializable {
 	}
 
 	public void setValue(String value) {
+		if(PropertyType.BOOLEAN.equals(this.type)){
+			this.setBool(Boolean.valueOf(value));
+		}
 		this.value = value;
 	}
 

@@ -26,7 +26,7 @@ public class Properties {
 	}
 	
 	public void setValue(PropertyName name, String value){
-		componentMap.get(name).addValue(value);
+		componentMap.get(name).setValue(value);
 	}
 
 	public String get(PropertyName name){	
