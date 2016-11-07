@@ -1,19 +1,23 @@
 package polischukovik.web.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import polischukovik.properties.Properties;
+import polischukovik.properties.PropertyContainer;
 import polischukovik.ui.UserInterfaceSet;
 import polischukovik.web.service.PropertyService;
 import polischukovik.web.service.TestService;
 
 @Controller
-@SessionAttributes(names={"categories"})
+@SessionAttributes("propertyContainer")
 public class TestController {
 	@Autowired
 	PropertyService propertyService;
@@ -33,15 +37,14 @@ public class TestController {
 	}
 	
 	@RequestMapping(name="/test-main", method = RequestMethod.GET)
-	public String testMain(ModelMap model) throws InstantiationException, IllegalAccessException{
-		model.addAttribute("categories", propertyService.getPropertyList(currentInterfaceSet));
-		return "test-main";
+	@ModelAttribute("propertyContainer")
+	public PropertyContainer testMain() throws InstantiationException, IllegalAccessException{
+		return propertyService.getPropertyList(currentInterfaceSet);
 	}
 	
 	@RequestMapping(name="/test-main", method = RequestMethod.POST)
-	public String createTest(ModelMap model){
-		model.addAttribute("result", testService.createTest());
-		return "test-main";
+	public PropertyContainer createTest( @Valid @ModelAttribute("propertyContainer") PropertyContainer properyContainer, BindingResult result){
+		properyContainer.print();
+		return properyContainer;
 	}
-
 }

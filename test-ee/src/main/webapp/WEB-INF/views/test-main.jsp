@@ -3,83 +3,103 @@
 		<div class="row">
 			<%@include file="common/navbar.jspf" %>
 			<div id="left-side-bar" class="col-sm-4">
-				<c:forEach items="${categories}" var="category">
-					<table class="table">
-						<thead>
-							<tr>
-								<th colspan="2">
-									<spring:message code="property.category.${category.key}"/>									
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${category.value}" var="prop">				
-								<c:choose >
-									<c:when test="${prop.type == 'STRING'}">	
-										<tr>
-											<td>
-												<label for="input-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
-											</td>
-											<td>
-												<input id="input-${prop.name}" type="text" class="form-control" value="${prop.value}"/>
-											</td>
-										</tr>
-									</c:when>
-									<c:when test="${prop.type == 'BOOLEAN'}">
-										<tr>
-											<td>
-												<label for="checkbox-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
-											</td>
-											<td>
-												<input id="checkbox-${prop.name}" type="checkbox" class="" value="${prop.value}"/>
-											</td>
-										</tr>
-									</c:when>		         
-									<c:when test="${prop.type == 'SELECT_NT'}">
-										<tr>
-											<td>
-												<label for="select-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
-											</td>
-											<td>
-												<select class="form-control" id="select-${prop.name}">
-													<c:forTokens items="${prop.selectValues}" delims="," var="value">
-														<option>${value}</option>
-													</c:forTokens>
-												</select>
-											</td>
-										</tr>
-									</c:when>
-									<c:when test="${prop.type == 'FILE'}">
-										<tr>
-											<td>
-												<label for="select-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
-											</td>
-											<td class="input-group">
-								                <input id="file-data-${prop.name}" type="text" class="form-control" value="${prop.value}" readonly>
-								                <label class="input-group-btn">
-								                    <span class="btn btn-primary">
-								                    	&hellip; 
-								                    	<input id="file-${prop.name}" type="file" style="display: none;">
-								                    </span>
-								                </label>
-											</td>
-										</tr>
-									</c:when>
-									<c:otherwise>
-										<tr>
-											<td>
-												<label for="input-${prop.name}"><spring:message code="property.name.${prop.name}"/></label>
-											</td>
-											<td>
-												<input id="input-${prop.name}" type="text" class="form-control" value="${prop.value}"/>
-											</td>
-										</tr>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-						</tbody>
-					</table>
-				</c:forEach>									
+				<form:form id="propForm" commandName="propertyContainer" method="POST">
+				<fieldset class="form-group">
+					<legend>Property List</legend>
+					<form:hidden path="propertyMap"/>
+					
+					<c:forEach items="${propertyContainer.propertyMap}" var="mapEntry" varStatus="mapStatus">
+						<form:hidden path="propertyMap[${mapEntry.key}]"  />						
+						<form:label path="propertyMap[${mapEntry.key}]" cssClass="form-control-label">${mapEntry.key}</form:label>
+						<br>
+						<c:forEach items="${mapEntry.value}" var="listEntry" varStatus="listStatus">
+							<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].name"/>							
+							<form:label path="propertyMap[${mapEntry.key}][${listStatus.index}].name" cssClass="form-control-label">${listEntry.name}</form:label>
+							<form:input path="propertyMap[${mapEntry.key}][${listStatus.index}].value" value="${listEntry.value}" cssErrorClass="has-danger" cssClass="form-control"/>
+							<form:errors path="propertyMap[${mapEntry.key}][${listStatus.index}].value" cssClass="has-warning form-control"/>
+							<br>
+						</c:forEach>
+						<hr>
+					</c:forEach>
+				</fieldset>
+				</form:form>	
+<%-- 				<c:forEach items="${categories}" var="category"> --%>
+<!-- 					<table class="table"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<th colspan="2"> -->
+<%-- 									<spring:message code="property.category.${category.key}"/>									 --%>
+<!-- 								</th> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 						<tbody> -->
+<%-- 							<c:forEach items="${category.value}" var="prop">				 --%>
+<%-- 								<c:choose > --%>
+<%-- 									<c:when test="${prop.type == 'STRING'}">	 --%>
+<!-- 										<tr> -->
+<!-- 											<td> -->
+<%-- 												<label for="input-${prop.name}"><spring:message code="property.name.${prop.name}"/></label> --%>
+<!-- 											</td> -->
+<!-- 											<td> -->
+<%-- 												<input id="input-${prop.name}" type="text" class="form-control" value="${prop.value}"/> --%>
+<!-- 											</td> -->
+<!-- 										</tr> -->
+<%-- 									</c:when> --%>
+<%-- 									<c:when test="${prop.type == 'BOOLEAN'}"> --%>
+<!-- 										<tr> -->
+<!-- 											<td> -->
+<%-- 												<label for="checkbox-${prop.name}"><spring:message code="property.name.${prop.name}"/></label> --%>
+<!-- 											</td> -->
+<!-- 											<td> -->
+<%-- 												<input id="checkbox-${prop.name}" type="checkbox" class="" value="${prop.value}"/> --%>
+<!-- 											</td> -->
+<!-- 										</tr> -->
+<%-- 									</c:when>		          --%>
+<%-- 									<c:when test="${prop.type == 'SELECT_NT'}"> --%>
+<!-- 										<tr> -->
+<!-- 											<td> -->
+<%-- 												<label for="select-${prop.name}"><spring:message code="property.name.${prop.name}"/></label> --%>
+<!-- 											</td> -->
+<!-- 											<td> -->
+<%-- 												<select class="form-control" id="select-${prop.name}"> --%>
+<%-- 													<c:forTokens items="${prop.selectValues}" delims="," var="value"> --%>
+<%-- 														<option>${value}</option> --%>
+<%-- 													</c:forTokens> --%>
+<!-- 												</select> -->
+<!-- 											</td> -->
+<!-- 										</tr> -->
+<%-- 									</c:when> --%>
+<%-- 									<c:when test="${prop.type == 'FILE'}"> --%>
+<!-- 										<tr> -->
+<!-- 											<td> -->
+<%-- 												<label for="select-${prop.name}"><spring:message code="property.name.${prop.name}"/></label> --%>
+<!-- 											</td> -->
+<!-- 											<td class="input-group"> -->
+<%-- 								                <input id="file-data-${prop.name}" type="text" class="form-control" value="${prop.value}" readonly> --%>
+<!-- 								                <label class="input-group-btn"> -->
+<!-- 								                    <span class="btn btn-primary"> -->
+<!-- 								                    	&hellip;  -->
+<%-- 								                    	<input id="file-${prop.name}" type="file" style="display: none;"> --%>
+<!-- 								                    </span> -->
+<!-- 								                </label> -->
+<!-- 											</td> -->
+<!-- 										</tr> -->
+<%-- 									</c:when> --%>
+<%-- 									<c:otherwise> --%>
+<!-- 										<tr> -->
+<!-- 											<td> -->
+<%-- 												<label for="input-${prop.name}"><spring:message code="property.name.${prop.name}"/></label> --%>
+<!-- 											</td> -->
+<!-- 											<td> -->
+<%-- 												<input id="input-${prop.name}" type="text" class="form-control" value="${prop.value}"/> --%>
+<!-- 											</td> -->
+<!-- 										</tr> -->
+<%-- 									</c:otherwise> --%>
+<%-- 								</c:choose> --%>
+<%-- 							</c:forEach> --%>
+<!-- 						</tbody> -->
+<!-- 					</table> -->
+<%-- 				</c:forEach>									 --%>
 			</div>
 			<div id="main-content" class="col-sm-8">
 				<div class="row">

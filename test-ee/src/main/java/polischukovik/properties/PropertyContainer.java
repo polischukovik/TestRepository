@@ -1,16 +1,34 @@
 package polischukovik.properties;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.Factory;
+import org.apache.commons.collections.FactoryUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections.list.LazyList;
 
 import polischukovik.domain.PropertyComponent;
 
 public class PropertyContainer implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Map<String, List<PropertyComponent>> propertyMap;
 
-    public PropertyContainer() {
+    @SuppressWarnings("unchecked")
+	public PropertyContainer() {
+    	this.propertyMap = MapUtils.lazyMap(new HashMap<String,List<Object>>(), new Factory() {    		
+    		public Object create() {
+    			return LazyList.decorate(new ArrayList<PropertyComponent>(), 
+    					FactoryUtils.instantiateFactory(PropertyComponent.class));
+    		}
+    	});
     }
     
     public PropertyContainer(Map<String, List<PropertyComponent>> propertyMap) {
@@ -29,5 +47,13 @@ public class PropertyContainer implements Serializable{
 		return "PropertyContainer [propertyMap=" + propertyMap + "]";
 	}
     
+	public void print(){
+		for(String s : propertyMap.keySet()){
+			System.out.println("\t"+s);
+			for(PropertyComponent p : propertyMap.get(s)){
+				System.out.println("\t\t"+p.getName() + ":" + p.getValue());
+			}
+		}
+	}
     
 }
