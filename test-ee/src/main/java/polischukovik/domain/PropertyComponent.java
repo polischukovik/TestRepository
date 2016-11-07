@@ -12,9 +12,11 @@ import polischukovik.domain.enums.PropertyType;
 public class PropertyComponent implements Serializable {
 	
 	private PropertyName name;	
-	private String group;
-	private String value;
+	private String group;	
 	private PropertyType type;
+	
+	private String value;
+	private boolean bool;
 	private String selectValues;
 	
 	public PropertyComponent(PropertyName name, String group, PropertyType type) {
@@ -30,6 +32,9 @@ public class PropertyComponent implements Serializable {
 					.stream()
 					.map(q->String.valueOf(q))
 					.collect(Collectors.joining(","));
+			break;
+		case BOOLEAN:
+			this.bool = Boolean.valueOf(value);
 			break;
 
 		default:
@@ -85,10 +90,19 @@ public class PropertyComponent implements Serializable {
 	public static List<String> parseSelectProperty(String value){
 		return Arrays.asList(value.split(","));
 	}
+	public boolean isBool() {
+		return bool;
+	}
+
+	public void setBool(boolean bool) {
+		this.bool = bool;
+	}
 
 	@Override
 	public String toString() {
-		return "PropertyComponent [name=" + name + ", group=" + group + ", value=" + value + ", type=" + type
-				+ ", selectValues=" + selectValues + "]";
+		return "PropertyComponent [name=" + name + ", group=" + group + ", type=" + type + ", value=" + value
+				+ ", bool=" + bool + ", selectValues=" + selectValues + "]";
 	}
+
+	
 }
