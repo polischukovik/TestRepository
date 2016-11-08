@@ -41,8 +41,30 @@ public class Properties {
 		return componentMap.values().stream().filter(u-> propertyNames.contains(u.getName())).collect(Collectors.toList());	
 	}
 	
-	public List<PropertyComponent> getAll(){
-		return new ArrayList<PropertyComponent>(componentMap.values());	
+	public Map<PropertyName, PropertyComponent> getComponentMap() {
+		return componentMap;
+	}
+
+	public void print(){
+		System.out.println("\tPrinting Properties");
+		for(PropertyComponent c : componentMap.values()){
+			System.out.println("\t\t" + c);
+		}
+	}
+	
+	public void persistPropertyContainer(PropertyContainer container){
+		List<PropertyComponent> components = new ArrayList<>();
+		for(List<PropertyComponent> c : container.getPropertyMap().values()){
+			components.addAll(c);
+		}
+		for(PropertyComponent component : components){
+			if(PropertyType.BOOLEAN.equals(component.getType())){
+				this.setValue(component.getName(), component.getValue());
+				this.setValue(component.getName(), String.valueOf(component.getBool()));
+			} else {
+				this.setValue(component.getName(), component.getValue());
+			}
+		}
 	}
 	
 }

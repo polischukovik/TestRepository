@@ -17,7 +17,7 @@ public class PropertyComponent implements Serializable {
 	
 	private String value;
 	private boolean bool;
-	private String selectValues;
+	private List<String> selectValues;
 	
 	public PropertyComponent() {
 		super();
@@ -35,14 +35,14 @@ public class PropertyComponent implements Serializable {
 					NumeratorType.class.getEnumConstants())
 					.stream()
 					.map(q->String.valueOf(q))
-					.collect(Collectors.joining(","));
+					.collect(Collectors.toList());
 			break;
 		case BOOLEAN:
 			this.bool = Boolean.valueOf(value);
 			break;
 
 		default:
-			this.selectValues = "";
+			this.selectValues = Arrays.asList("");
 			break;
 		}
 	}
@@ -82,18 +82,18 @@ public class PropertyComponent implements Serializable {
 		this.type = type;
 	}
 
-	public String getSelectValues() {
+	public List<String> getSelectValues() {
 		return selectValues;
 	}
 
-	public void setSelectValues(String selectValues) {
+	public void setSelectValues(List<String> selectValues) {
 		this.selectValues = selectValues;
 	}
 
 	public static List<String> parseSelectProperty(String value){
 		return Arrays.asList(value.split(","));
 	}
-	public boolean isBool() {
+	public boolean getBool() {
 		return bool;
 	}
 

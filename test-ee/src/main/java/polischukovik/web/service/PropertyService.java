@@ -1,5 +1,6 @@
 package polischukovik.web.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import polischukovik.domain.PropertyComponent;
+import polischukovik.domain.enums.PropertyType;
 import polischukovik.properties.Properties;
 import polischukovik.properties.PropertyContainer;
 import polischukovik.ui.UITools;
@@ -41,6 +43,10 @@ public class PropertyService {
 					.collect(Collectors.toList()));
 		}
 		return new PropertyContainer(categories);		
+	}
+	
+	public void persist(PropertyContainer container){
+		prop.persistPropertyContainer(container);
 	}
 
 }

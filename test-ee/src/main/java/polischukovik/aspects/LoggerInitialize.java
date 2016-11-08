@@ -2,6 +2,7 @@ package polischukovik.aspects;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.config.PropertyGetter;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import polischukovik.domain.PropertyComponent;
+import polischukovik.domain.enums.PropertyName;
 import polischukovik.properties.Properties;
 import polischukovik.web.service.TestService;
 
@@ -27,9 +29,8 @@ public class LoggerInitialize {
 	@Before("createTest()")
 	public void beforeCreateTest(){
 		logger.debug("Listing Properties:");
-		for( PropertyComponent pc : prop.getAll()){
-			logger.debug(String.format("Property name[%s]\t\tvalue[%s]", pc.getName(), pc.getValue()));
+		for( PropertyName name : prop.getComponentMap().keySet()){			
+			logger.debug(String.format("Property name[%s]\t\tvalue[%s]", prop.getComponentMap().get(name)));
 		}
-
 	}
 }

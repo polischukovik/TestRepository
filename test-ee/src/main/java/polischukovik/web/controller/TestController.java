@@ -17,7 +17,6 @@ import polischukovik.web.service.PropertyService;
 import polischukovik.web.service.TestService;
 
 @Controller
-@SessionAttributes("propertyContainer")
 public class TestController {
 	@Autowired
 	PropertyService propertyService;
@@ -36,15 +35,15 @@ public class TestController {
 		return "redirect:/test-main";
 	}
 	
-	@RequestMapping(name="/test-main", method = RequestMethod.GET)
+	@RequestMapping(value="/test-main", method = RequestMethod.GET)
 	@ModelAttribute("propertyContainer")
 	public PropertyContainer testMain() throws InstantiationException, IllegalAccessException{
 		return propertyService.getPropertyList(currentInterfaceSet);
 	}
 	
-	@RequestMapping(name="/test-main", method = RequestMethod.POST)
+	@RequestMapping(value="/test-main", method = RequestMethod.POST)
 	public PropertyContainer createTest( @Valid @ModelAttribute("propertyContainer") PropertyContainer properyContainer, BindingResult result){
-		properyContainer.print();
+		propertyService.persist(properyContainer);
 		return properyContainer;
 	}
 }
