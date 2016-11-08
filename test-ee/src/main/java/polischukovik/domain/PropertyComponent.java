@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.Size;
+
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
@@ -15,6 +17,7 @@ public class PropertyComponent implements Serializable {
 	private String group;	
 	private PropertyType type;
 	
+	@Size(max=10)
 	private String value;
 	private boolean bool;
 	private List<String> selectValues;
