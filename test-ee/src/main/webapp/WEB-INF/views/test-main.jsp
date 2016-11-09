@@ -4,24 +4,20 @@
 			<%@include file="common/navbar.jspf" %>
 			<div id="left-side-bar" class="col-sm-4">
 				<form:form id="propForm" commandName="propertyContainer" method="POST">
-				<form:errors path="*">
-					<div class="msg error">
-						<h4>ATTENTION!</h4>
-						<p>Please make the following correction(s) before proceeding.</p>
-					</div>
-				</form:errors>
+				<form:errors path="*" cssClass="text-danger" element="div" />
+<!-- 				<p>Form has errors</p>				 -->
+<%-- 				</form:errors> --%>
 				<fieldset class="form-group">
 					<legend class="h4">Property List</legend>
-					<form:hidden path="propertyMap"/>
+<%-- 					<form:hidden path="propertyMap"/> --%>
 					
 					<c:forEach items="${propertyContainer.propertyMap}" var="mapEntry" varStatus="mapStatus">
 						<table class="table table-condensed">
 						<thead>
 							<tr>
 								<th colspan="2">
-									<form:hidden path="propertyMap[${mapEntry.key}]"  />						
-									<form:label path="propertyMap[${mapEntry.key}]" cssClass="form-control-label"><spring:message code="property.category.${mapEntry.key}"/></form:label>
-									<form:errors path="propertyMap[${mapEntry.key}]">Errorls</form:errors>
+<%-- 									<form:hidden path="propertyMap[${mapEntry.key}]"  />						 --%>
+									<form:label path="propertyMap[${mapEntry.key}]" cssClass="form-control-label"><spring:message code="property.category.${mapEntry.key}"/></form:label>									
 								</th>
 							</tr>
 						</thead>
@@ -32,8 +28,7 @@
 									<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].name"/>
 									<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].group"/>
 									<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].type"/>
-									<form:label path="propertyMap[${mapEntry.key}][${listStatus.index}].name" cssClass="text-muted"><spring:message code="property.name.${listEntry.name}"/></form:label>
-									
+									<form:label path="propertyMap[${mapEntry.key}][${listStatus.index}].name" cssClass="text-muted"><spring:message code="property.name.${listEntry.name}"/></form:label>									
 								</td>
 								<td>
 									<c:choose>
@@ -52,9 +47,6 @@
 										<form:input path="propertyMap[${mapEntry.key}][${listStatus.index}].value" value="${listEntry.value}" cssErrorClass="has-danger" cssClass="form-control"/>
 										<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].bool"/>
 										<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].selectValues"/>
-										<form:errors path="propertyMap[${mapEntry.key}][${listStatus.index}].value">
-										asdsad
-										</form:errors>
 									</c:otherwise>
 									</c:choose>									
 								</td>

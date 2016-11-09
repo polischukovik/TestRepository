@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
@@ -17,7 +19,7 @@ public class PropertyComponent implements Serializable {
 	private String group;	
 	private PropertyType type;
 	
-	@Size(max=10)
+	@NotEmpty
 	private String value;
 	private boolean bool;
 	private List<String> selectValues;
