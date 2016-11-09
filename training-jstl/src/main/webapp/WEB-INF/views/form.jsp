@@ -1,23 +1,22 @@
 <%@include file="common/header.jspf" %>
 <div id="left-side-bar" class="col-sm-4">
-				<form:form id="propForm" commandName="propertyContainer" method="POST">
+				<form:form id="propForm" commandName="propertyComponent" method="POST">
 				<fieldset>
 					<legend>Property List</legend>
-					<form:hidden path="propertyMap"  value="${propertyContainer.propertyMap}" />
-					
-					<c:forEach items="${propertyContainer.propertyMap}" var="mapEntry" varStatus="mapStatus">
-						<form:hidden path="propertyMap[${mapEntry.key}]"  value="${mapEntry.value}" />						
-						<form:label path="propertyMap[${mapEntry.key}]">${mapEntry.key}</form:label>
-						<br>
-						<c:forEach items="${mapEntry.value}" var="listEntry" varStatus="listStatus">
-							<form:hidden path="propertyMap[${mapEntry.key}][${listStatus.index}].name" value="" />							
-							<form:label path="propertyMap[${mapEntry.key}][${listStatus.index}].name" value="${listEntry.name}" >${listEntry.name}</form:label>
-							<form:input path="propertyMap[${mapEntry.key}][${listStatus.index}].value" value="${listEntry.value}" />
-							<br>
-						</c:forEach>
-						<hr>
-					</c:forEach>
-					
+					<form:errors path="*" element="div"/>
+						
+					<form:label path="name">Property name</form:label>
+					<form:input path="name" value="${propertyContainer.name}"  cssErrorClass="input-text-error" />
+					<br>										
+					<form:label path="value">Property value</form:label>
+					<form:input path="value" value="${propertyContainer.value}" cssErrorClass="input-text-error" />
+					<br>
+					<form:label path="type">Property type</form:label>
+					<form:input path="type" value="${propertyContainer.type}"  cssErrorClass="input-text-error" />
+					<br>
+					<form:label path="selectValues">Select values: </form:label>
+					<form:input path="selectValues" value="${propertyContainer.selectValues}" cssErrorClass="input-text-error" />
+					<br>
 				</fieldset>
 				<input type="submit" class="button primary" form="propForm" value="Save" />
 				</form:form>	
