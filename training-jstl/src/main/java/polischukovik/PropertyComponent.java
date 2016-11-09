@@ -5,9 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class PropertyComponent implements Serializable {
 	
 	private PropertyName name;	
+	@NotEmpty
 	private String value;
 	private PropertyType type;
 	private String selectValues;
@@ -36,10 +39,6 @@ public class PropertyComponent implements Serializable {
 			this.selectValues = "";
 			break;
 		}
-	}
-	
-	public void addValue(String value){
-		this.value = value;
 	}
 	
 	public PropertyName getName() {
@@ -80,7 +79,9 @@ public class PropertyComponent implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PropertyComponent [name=" + name + ", value=" + value + ", type=" + type
-				+ ", selectValues=" + selectValues + "]";
+		return "PropertyComponent [name=" + name + ", value=" + value + ", type=" + type + ", selectValues="
+				+ selectValues + "]";
 	}
+
+	
 }
