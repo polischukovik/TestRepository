@@ -21,7 +21,7 @@ public class PropertyComponent implements Serializable {
 	
 	@NotEmpty
 	private String value;
-	private boolean bool;
+	private Boolean bool;
 	private List<String> selectValues;
 	
 	public PropertyComponent() {
@@ -98,11 +98,12 @@ public class PropertyComponent implements Serializable {
 	public static List<String> parseSelectProperty(String value){
 		return Arrays.asList(value.split(","));
 	}
-	public boolean getBool() {
-		return bool;
+	public Boolean getBool() {
+		return bool == null ? false : bool;
 	}
 
-	public void setBool(boolean bool) {
+	public void setBool(Boolean bool) {
+		this.value = String.valueOf(bool);
 		this.bool = bool;
 	}
 

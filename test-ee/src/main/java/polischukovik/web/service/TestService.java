@@ -15,7 +15,7 @@ public class TestService {
 	UserInterfaceSet currentUISet;
 
 	public Response createTest() {
-		Response response = new Response(0, "Operation completed successfully");
+		Response response = new Response(0, "success");
 		try {		
 			currentUISet.getiOTools().write(
 					currentUISet.getDocumentFactory().createDocument(
