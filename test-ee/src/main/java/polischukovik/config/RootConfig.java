@@ -1,6 +1,8 @@
 package polischukovik.config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -14,15 +16,16 @@ import org.springframework.core.env.Environment;
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
+import polischukovik.impl.IOToolsImpl;
+import polischukovik.impl.QuestionDataSourceFileImpl;
+import polischukovik.impl.SimpleDocumentFactoryImpl;
 import polischukovik.impl.SimpleKeysComposer;
 import polischukovik.impl.SimpleTitleComposer;
 import polischukovik.impl.SimpleVariantComposer;
+import polischukovik.impl.TestFactoryImpl;
 import polischukovik.properties.Properties;
 import polischukovik.services.DocumentComponentComposer;
-import polischukovik.services.DocumentFactory;
-import polischukovik.services.IOTools;
-import polischukovik.services.QuestionDataSource;
-import polischukovik.services.TestFactory;
+import polischukovik.ui.UserInterfaceContainer;
 import polischukovik.ui.UserInterfaceSet;
 
 @Configuration
@@ -103,19 +106,32 @@ public class RootConfig {
 	}
 	
 	@Bean
-	public UserInterfaceSet getInterfaceSet(QuestionDataSource questionDataSource, 
-			TestFactory testFactory, DocumentFactory documentFactory, IOTools ioTools,
-			SimpleTitleComposer titleComposer, SimpleVariantComposer variantComposer,
-			SimpleKeysComposer keysComposer){
-		return new UserInterfaceSet(0
-				, questionDataSource
-				, testFactory
-				, documentFactory
-				, ioTools
+	public UserInterfaceContainer getInterfaceContainer(){
+		List<UserInterfaceSet> list = new ArrayList<>();
+		list.add(new UserInterfaceSet(0
+				, new QuestionDataSourceFileImpl()
+				, new TestFactoryImpl()
+				, new SimpleDocumentFactoryImpl()
+				, new IOToolsImpl()
 				, Arrays.asList(
-						  (DocumentComponentComposer) titleComposer
-						, (DocumentComponentComposer) variantComposer
-						, (DocumentComponentComposer) keysComposer));
+						  (DocumentComponentComposer) new SimpleTitleComposer()
+						, (DocumentComponentComposer) new SimpleVariantComposer()
+						, (DocumentComponentComposer) new SimpleKeysComposer())
+				,"primitive"
+				, "Simple Interface ste created on early stages of development for testing pupruses. Can serve as Demo."));
+		list.add(new UserInterfaceSet(0
+				, new QuestionDataSourceFileImpl()
+				, new TestFactoryImpl()
+				, new SimpleDocumentFactoryImpl()
+				, new IOToolsImpl()
+				, Arrays.asList(
+						  (DocumentComponentComposer) new SimpleTitleComposer()
+						, (DocumentComponentComposer) new SimpleVariantComposer()
+						, (DocumentComponentComposer) new SimpleKeysComposer())
+				, "advanced"
+				, "Advanced Interface Set"));
+		
+		return new UserInterfaceContainer(list);
 	}
 
 }

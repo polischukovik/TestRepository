@@ -6,16 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import polischukovik.ui.Response;
+import polischukovik.ui.UserInterfaceContainer;
 import polischukovik.ui.UserInterfaceSet;
 
 @Service
 public class TestService {
 	
 	@Autowired
-	UserInterfaceSet currentUISet;
+	UserInterfaceContainer container;
 
 	public Response createTest() {
 		Response response = new Response(0, "success");
+		UserInterfaceSet currentUISet = container.getUserInterfaceSets().get(0);		
 		try {		
 			currentUISet.getiOTools().write(
 					currentUISet.getDocumentFactory().createDocument(
