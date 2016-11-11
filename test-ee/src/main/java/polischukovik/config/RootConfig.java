@@ -1,8 +1,8 @@
 package polischukovik.config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -25,7 +25,6 @@ import polischukovik.impl.SimpleVariantComposer;
 import polischukovik.impl.TestFactoryImpl;
 import polischukovik.properties.Properties;
 import polischukovik.services.DocumentComponentComposer;
-import polischukovik.ui.UserInterfaceContainer;
 import polischukovik.ui.UserInterfaceSet;
 
 @Configuration
@@ -100,15 +99,14 @@ public class RootConfig {
 		prop.setValue(PropertyName.S_NUMERATION_VARIANT, 			env.getProperty(P_VARIANT_NUMERATION, 		NumeratorType.ROMAN.toString()));     
 		prop.setValue(PropertyName.S_NUMERATION_QUESTION, 			env.getProperty(P_QUESTION_NUMERATION, 		NumeratorType.NUMERIC.toString()));   
 		prop.setValue(PropertyName.S_NUMERATION_ANSWER, 			env.getProperty(P_ANSWER_NUMERATION, 		NumeratorType.ALPHABETIC.toString()));
-				
 
 		return prop;
 	}
 	
 	@Bean
-	public UserInterfaceContainer getInterfaceContainer(){
-		List<UserInterfaceSet> list = new ArrayList<>();
-		list.add(new UserInterfaceSet(0
+	public Map<String, UserInterfaceSet> getInterfaceContainer(){
+		Map<String, UserInterfaceSet> map = new HashMap<>();
+		map.put("primitive", new UserInterfaceSet(0
 				, new QuestionDataSourceFileImpl()
 				, new TestFactoryImpl()
 				, new SimpleDocumentFactoryImpl()
@@ -117,9 +115,8 @@ public class RootConfig {
 						  (DocumentComponentComposer) new SimpleTitleComposer()
 						, (DocumentComponentComposer) new SimpleVariantComposer()
 						, (DocumentComponentComposer) new SimpleKeysComposer())
-				,"primitive"
 				, "Simple Interface ste created on early stages of development for testing pupruses. Can serve as Demo."));
-		list.add(new UserInterfaceSet(0
+		map.put("advanced", new UserInterfaceSet(0
 				, new QuestionDataSourceFileImpl()
 				, new TestFactoryImpl()
 				, new SimpleDocumentFactoryImpl()
@@ -128,10 +125,8 @@ public class RootConfig {
 						  (DocumentComponentComposer) new SimpleTitleComposer()
 						, (DocumentComponentComposer) new SimpleVariantComposer()
 						, (DocumentComponentComposer) new SimpleKeysComposer())
-				, "advanced"
 				, "Advanced Interface Set"));
 		
-		return new UserInterfaceContainer(list);
+		return map;
 	}
-
 }

@@ -2,22 +2,23 @@ package polischukovik.web.service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import polischukovik.ui.Response;
-import polischukovik.ui.UserInterfaceContainer;
 import polischukovik.ui.UserInterfaceSet;
 
 @Service
 public class TestService {
 	
 	@Autowired
-	UserInterfaceContainer container;
+	Map<String, UserInterfaceSet> userInterfaceList;
 
 	public Response createTest() {
 		Response response = new Response(0, "success");
-		UserInterfaceSet currentUISet = container.getUserInterfaceSets().get(0);		
+		UserInterfaceSet currentUISet = userInterfaceList.get(0);		
 		try {		
 			currentUISet.getiOTools().write(
 					currentUISet.getDocumentFactory().createDocument(
