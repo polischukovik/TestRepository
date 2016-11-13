@@ -2,6 +2,8 @@ package polischukovik.web.controller;
 
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +17,6 @@ import polischukovik.web.service.PropertyService;
 import polischukovik.web.service.TestService;
 
 @Controller
-@SessionAttributes("userInterfaceContainer")
 public class UserInterfaceController {
 	@Autowired
 	PropertyService propertyService;
@@ -26,7 +27,7 @@ public class UserInterfaceController {
 	@Autowired
 	TestService testService;
 	
-	@Autowired
+	@Resource(name="interfaceContainer")
 	Map<String, UserInterfaceSet> userInterfaceList;
 
 	@RequestMapping(value="/", method = RequestMethod.GET)

@@ -2,10 +2,14 @@ package polischukovik.config;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +29,10 @@ import polischukovik.impl.SimpleVariantComposer;
 import polischukovik.impl.TestFactoryImpl;
 import polischukovik.properties.Properties;
 import polischukovik.services.DocumentComponentComposer;
+import polischukovik.services.DocumentFactory;
+import polischukovik.services.IOTools;
+import polischukovik.services.QuestionDataSource;
+import polischukovik.services.TestFactory;
 import polischukovik.ui.UserInterfaceSet;
 
 @Configuration
@@ -102,31 +110,52 @@ public class RootConfig {
 
 		return prop;
 	}
-	
+    
+    @Bean
+    @Autowired
+//    @Qualifier("primitive")
+    public UserInterfaceSet primitiveInterface(QuestionDataSource questionDataSourceFileImpl
+    		, TestFactory testFactory, DocumentFactory documentFactory
+    		, IOTools ioTools, SimpleTitleComposer simpleTitleComposer
+    		, SimpleVariantComposer simpleVariantComposer, SimpleKeysComposer simpleKeysComposer){
+    	return new UserInterfaceSet(0
+				, questionDataSourceFileImpl
+				, testFactory
+				, documentFactory
+				, ioTools
+				, Arrays.asList(
+						  (DocumentComponentComposer) simpleTitleComposer
+						, (DocumentComponentComposer) simpleVariantComposer
+						, (DocumentComponentComposer) simpleKeysComposer)
+				, "primitive"
+				, "Simple Interface ste created on early stages of development for testing pupruses. Can serve as Demo.");
+    }
+    
+    @Bean
+    @Autowired
+    public UserInterfaceSet advancedsInterface(QuestionDataSource questionDataSourceFileImpl
+    		, TestFactory testFactory, DocumentFactory documentFactory
+    		, IOTools ioTools, SimpleTitleComposer simpleTitleComposer
+    		, SimpleVariantComposer simpleVariantComposer, SimpleKeysComposer simpleKeysComposer){
+    	return new UserInterfaceSet(0
+				, questionDataSourceFileImpl
+				, testFactory
+				, documentFactory
+				, ioTools
+				, Arrays.asList(
+						  (DocumentComponentComposer) simpleTitleComposer
+						, (DocumentComponentComposer) simpleVariantComposer
+						, (DocumentComponentComposer) simpleKeysComposer)
+				, "advanced"
+				, "Simple Interface ste created on early stages of development for testing pupruses. Can serve as Demo.");
+    }
+    	
 	@Bean
-	public Map<String, UserInterfaceSet> getInterfaceContainer(){
+	public Map<String, UserInterfaceSet> interfaceContainer(List<UserInterfaceSet> sets){
 		Map<String, UserInterfaceSet> map = new HashMap<>();
-		map.put("primitive", new UserInterfaceSet(0
-				, new QuestionDataSourceFileImpl()
-				, new TestFactoryImpl()
-				, new SimpleDocumentFactoryImpl()
-				, new IOToolsImpl()
-				, Arrays.asList(
-						  (DocumentComponentComposer) new SimpleTitleComposer()
-						, (DocumentComponentComposer) new SimpleVariantComposer()
-						, (DocumentComponentComposer) new SimpleKeysComposer())
-				, "Simple Interface ste created on early stages of development for testing pupruses. Can serve as Demo."));
-		map.put("advanced", new UserInterfaceSet(0
-				, new QuestionDataSourceFileImpl()
-				, new TestFactoryImpl()
-				, new SimpleDocumentFactoryImpl()
-				, new IOToolsImpl()
-				, Arrays.asList(
-						  (DocumentComponentComposer) new SimpleTitleComposer()
-						, (DocumentComponentComposer) new SimpleVariantComposer()
-						, (DocumentComponentComposer) new SimpleKeysComposer())
-				, "Advanced Interface Set"));
-		
+		for(UserInterfaceSet set : sets){
+			map.put(set.getName(), set);
+		}
 		return map;
 	}
 }

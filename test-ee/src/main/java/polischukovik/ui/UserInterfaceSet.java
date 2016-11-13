@@ -19,6 +19,7 @@ public class UserInterfaceSet {
 	private DocumentFactory documentFactory;
 	private IOTools iOTools;
 	private List<DocumentComponentComposer> componentComposers;
+	private String name;
 	private String description;
 	
 	@SuppressWarnings("unused")
@@ -28,7 +29,7 @@ public class UserInterfaceSet {
 
 	public UserInterfaceSet(int id, QuestionDataSource questionDataSource, TestFactory testFactory,
 			DocumentFactory documentFactory, IOTools iOTools, List<DocumentComponentComposer> componentComposers,
-			String description) {
+			String name, String description) {
 		super();
 		this.id = id;
 		this.questionDataSource = questionDataSource;
@@ -36,6 +37,7 @@ public class UserInterfaceSet {
 		this.documentFactory = documentFactory;
 		this.iOTools = iOTools;
 		this.componentComposers = componentComposers;
+		this.name = name;
 		this.description = description;
 	}
 	
@@ -102,4 +104,13 @@ public class UserInterfaceSet {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }
