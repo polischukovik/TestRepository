@@ -4,5 +4,5 @@ public enum QuestionType {
 	OPEN,
 	SINGLE_ANSWER,
 	MULTI_ANSWER,
-	CORRESPONSANCE
+	CORRESPONSANCE	
 }
