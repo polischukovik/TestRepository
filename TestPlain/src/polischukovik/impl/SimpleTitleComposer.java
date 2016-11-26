@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import polischukovik.domain.Test;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.main.Main;
+import polischukovik.mslibrary.MSLib;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
@@ -34,6 +35,7 @@ public class SimpleTitleComposer implements DocumentComponentComposer, RequiredP
 
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+		MSLib.addSection(doc);
 		XWPFParagraph p = doc.createParagraph();
 		p.setAlignment(ParagraphAlignment.CENTER);
 		XWPFRun r = p.createRun();

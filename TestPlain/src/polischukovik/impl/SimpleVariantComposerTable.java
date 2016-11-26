@@ -10,6 +10,9 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,13 +38,15 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 			 ,PropertyName.F_QUESTION_SPACING
 			 ,PropertyName.P_PUNCTUATION_QUESTION
 			 ,PropertyName.P_PUNCTUATION_ANSWER
-			 ,PropertyName.T_VARIANT_TITLE);
+			 ,PropertyName.T_VARIANT_TITLE,
+			 PropertyName.F_QUESTION_A_C_W);
 
 	private String pFQuestionBold;
 	private String pQuestionSpacing;
 	private String pQuestionPunctuation;
 	private String pAnswerPuncuation;
 	private String pVariantTitle;
+	private String fAnswerCellW;
 	
 	private final String composerName = this.getClass().getName();
 	
@@ -51,12 +56,14 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
-
+		MSLib.addSection(doc);
+		
 		pFQuestionBold = prop.get(PropertyName.F_QUESTION_BOLD);
 		pQuestionSpacing = prop.get(PropertyName.F_QUESTION_SPACING);
 		pQuestionPunctuation = prop.get(PropertyName.P_PUNCTUATION_QUESTION);
 		pAnswerPuncuation = prop.get(PropertyName.P_PUNCTUATION_ANSWER);
 		pVariantTitle = prop.get(PropertyName.T_VARIANT_TITLE);
+		fAnswerCellW = prop.get(PropertyName.F_QUESTION_A_C_W);
 		
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
@@ -74,27 +81,32 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 
 	private void addAnswers(XWPFDocument doc, List<Answer> answers) {
 		XWPFTable table = doc.createTable();
-		MSLib.setTableWidthToSection(doc, table);
 		
+		MSLib.setTableWidthToSection(doc, table);
+				
 		XWPFTableRow row = table.getRow(0);
 		row.addNewTableCell();
 		for(int i = 0; i < answers.size(); i++){
 			Answer a = answers.get(i);
-			row.getCell(0).setText(a.getLabel() + pAnswerPuncuation);
-			row.getCell(1).setText(a.getAnswer());			
 			
-			MSLib.setAutofitCell(row.getCell(0));
+			row.getCell(0).setText(a.getLabel() + pAnswerPuncuation);
+			row.getCell(1).setText(a.getAnswer());
+			
+			MSLib.setSingleLineSpacing(row.getCell(0).getParagraphs().get(0));
+			MSLib.setSingleLineSpacing(row.getCell(1).getParagraphs().get(0));
+			
+			MSLib.setCellWidth(row.getCell(0), Double.valueOf(fAnswerCellW));
 			
 			if(i != answers.size() - 1){
 				row = table.createRow();
 			}	
-		}
+		}		
 	}
 
 	private void addQuestion(XWPFDocument doc, Question q) {
 		XWPFParagraph questionParagpaph = doc.createParagraph();
 
-		DocumentComponentComposer.setSingleLineSpacing(questionParagpaph);
+		MSLib.setSingleLineSpacing(questionParagpaph);
 		
 		XWPFRun questionRun = questionParagpaph.createRun();
 		questionRun.setText(String.format("%s%s %s",q.getId(), pQuestionPunctuation, q.getQuestion()));

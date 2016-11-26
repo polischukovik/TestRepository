@@ -17,6 +17,7 @@ import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.main.Main;
+import polischukovik.mslibrary.MSLib;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
@@ -48,6 +49,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+		MSLib.addSection(doc);
 
 		pFQuestionBold = prop.get(PropertyName.F_QUESTION_BOLD);
 		pQuestionSpacing = prop.get(PropertyName.F_QUESTION_SPACING);
@@ -76,7 +78,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 		 * Remove spacing between paragraphs
 		 */
 		if(Boolean.valueOf(pQuestionSpacing)){
-			DocumentComponentComposer.setSingleLineSpacing(answerParagraph);
+			MSLib.setSingleLineSpacing(answerParagraph);
 		}
 
 		for(int i = 0; i < answers.size(); i++){
@@ -94,7 +96,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 	private void addQuestion(XWPFDocument doc, Question q) {
 		XWPFParagraph questionParagpaph = doc.createParagraph();
 
-		DocumentComponentComposer.setSingleLineSpacing(questionParagpaph);
+		MSLib.setSingleLineSpacing(questionParagpaph);
 		
 		XWPFRun questionRun = questionParagpaph.createRun();
 		questionRun.setText(String.format("%s%s %s",q.getId(), pQuestionPunctuation, q.getQuestion()));

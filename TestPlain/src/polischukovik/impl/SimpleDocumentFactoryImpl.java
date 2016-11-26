@@ -1,5 +1,6 @@
 package polischukovik.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +24,16 @@ public class SimpleDocumentFactoryImpl implements DocumentFactory, RequiredPrope
 	@Autowired
 	private Properties prop;//unused here	
 	private XWPFDocument doc;
+	private String pColumnMarging;
+	private String pColumnNum;
+	private String pPageFormat;
+	private String pMargin;
 	
-	private static List<PropertyName> requiredProps = Arrays.asList();
+	private static List<PropertyName> requiredProps = Arrays.asList(
+			PropertyName.F_PAGE_COL_N
+			, PropertyName.F_PAGE_COL_S
+			, PropertyName.F_PAGE_FORMAT
+			, PropertyName.F_PAGE_M);
 	
 	public SimpleDocumentFactoryImpl() {
 		prop = Main.ctx.getBean(Properties.class);
@@ -32,9 +41,14 @@ public class SimpleDocumentFactoryImpl implements DocumentFactory, RequiredPrope
 
 	@Override
 	public XWPFDocument createDocument(Test test, List<? extends DocumentComponentComposer> componentComposers) throws ClassNotFoundException {
-		doc = new XWPFDocument();
+		pColumnNum = prop.get(PropertyName.F_PAGE_COL_N);
+		pColumnMarging = prop.get(PropertyName.F_PAGE_COL_S);
+		pMargin = prop.get(PropertyName.F_PAGE_M);
+		pPageFormat = prop.get(PropertyName.F_PAGE_FORMAT);
 		
-		MSLib.setDocumentParameters(doc);
+		doc = new XWPFDocument();		
+		MSLib.setDocumentParameters(doc, pPageFormat, pMargin.split(" "));
+		MSLib.setPageColumnLayout(doc, Double.valueOf(pColumnMarging), Integer.valueOf(pColumnNum));
 		
 		for(DocumentComponentComposer dc: componentComposers){
 			dc.constructComponent(test, doc);

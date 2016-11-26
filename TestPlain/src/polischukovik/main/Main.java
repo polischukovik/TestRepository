@@ -3,6 +3,9 @@ package polischukovik.main;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -29,10 +32,11 @@ import polischukovik.services.QuestionDataSource;
 import polischukovik.services.TestFactory;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 @ComponentScan
 public class Main {
 
-	@Autowired
+	@Resource
     private Environment env;
 	
 	@Bean
@@ -57,7 +61,13 @@ public class Main {
 		prop.addProperty(PropertyName.S_NUMERATION_VARIANT, 		"formatting"			,PropertyType.SELECT_NT	);
 		prop.addProperty(PropertyName.S_NUMERATION_QUESTION, 		"formatting"			,PropertyType.SELECT_NT	);
 		prop.addProperty(PropertyName.S_NUMERATION_ANSWER, 			"formatting"			,PropertyType.SELECT_NT	);
-		prop.addProperty(PropertyName.FILE_UPLOAD, 					"input.output"			,PropertyType.FILE		);
+		prop.addProperty(PropertyName.FILE_UPLOAD, 					"formatting"			,PropertyType.FILE		);
+		prop.addProperty(PropertyName.F_QUESTION_A_C_W, 			"formatting"			,PropertyType.INTEGER		);
+		prop.addProperty(PropertyName.F_QUESTION_A_C_W, 			"formatting"			,PropertyType.INTEGER		);
+		prop.addProperty(PropertyName.F_PAGE_COL_S, 				"formatting"			,PropertyType.INTEGER		);
+		prop.addProperty(PropertyName.F_PAGE_COL_N, 				"formatting"			,PropertyType.INTEGER		);
+		prop.addProperty(PropertyName.F_PAGE_FORMAT,				"formatting"			,PropertyType.STRING		);
+		prop.addProperty(PropertyName.F_PAGE_M, 					"formatting"			,PropertyType.STRING		);
 		
 		prop.setValue(PropertyName.IO_SOURCE_FILE_NAME,				env.getProperty(IO_SOURCE,					"source.txt"));                       
 		prop.setValue(PropertyName.IO_DEST_FILE_NAME,				env.getProperty(IO_DEST,					"file.docx"));                        
@@ -79,9 +89,13 @@ public class Main {
 		prop.setValue(PropertyName.S_NUMERATION_QUESTION, 			env.getProperty(P_QUESTION_NUMERATION, 		NumeratorType.NUMERIC.toString()));   
 		prop.setValue(PropertyName.S_NUMERATION_ANSWER, 			env.getProperty(P_ANSWER_NUMERATION, 		NumeratorType.ALPHABETIC.toString()));
 		prop.setValue(PropertyName.FILE_UPLOAD, 					env.getProperty(FILE_UPLOAD, 				""));
-
-		return prop;
+		prop.setValue(PropertyName.F_QUESTION_A_C_W, 				env.getProperty(F_QUESTION_A_C_W, 			"0.5"));
+		prop.setValue(PropertyName.F_PAGE_COL_S, 					env.getProperty(F_PAGE_COL_S, 				"1"));
+		prop.setValue(PropertyName.F_PAGE_COL_N, 					env.getProperty(F_PAGE_COL_N, 				"2"));
+		prop.setValue(PropertyName.F_PAGE_FORMAT, 					env.getProperty(F_PAGE_FORMAT, 				"A4"));
+		prop.setValue(PropertyName.F_PAGE_M, 						env.getProperty(F_PAGE_M, 					"1.35 1.35 1.35 1.35"));
 		
+		return prop;		
 	}
 	
 	private final static String IO_SOURCE				= "io.source";
@@ -104,6 +118,11 @@ public class Main {
 	private final static String P_QUESTION_NUMERATION	= "style.question.numeration";
 	private final static String P_ANSWER_NUMERATION		= "style.answer.numeration";
 	private final static String FILE_UPLOAD				= "io.file.input";
+	private final static String F_QUESTION_A_C_W 		= "formatting.question.answer.cell.width";
+	private final static String F_PAGE_COL_N 			= "formatting.page.column.number";
+	private final static String F_PAGE_COL_S 			= "formatting.page.column.spacing";
+	private final static String F_PAGE_FORMAT			= "formatting.page.format";
+	private final static String F_PAGE_M				= "formatting.page.margin";
 	
 	public static Properties prop;
 	public static ApplicationContext ctx;
@@ -113,7 +132,7 @@ public class Main {
 	private static TestFactory testFactory;
 	private static SimpleDocumentFactoryImpl documentFactory;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {		
 		ctx = new AnnotationConfigApplicationContext(Main.class);
 		
 		iOTools = new IOToolsImpl();

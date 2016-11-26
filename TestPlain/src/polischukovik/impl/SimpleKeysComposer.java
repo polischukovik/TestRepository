@@ -16,6 +16,7 @@ import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.main.Main;
+import polischukovik.mslibrary.MSLib;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
@@ -40,6 +41,8 @@ public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPr
 	
 	@Override
 	public void constructComponent(Test test, XWPFDocument doc) {
+		MSLib.addSection(doc);
+		
 		pPunctuationKeyAnswer = prop.get(PropertyName.P_PUNCTUATION_KEY_ANSWER);
 		resKeyTytle = prop.get(PropertyName.T_KEY_TITLE);
 		
