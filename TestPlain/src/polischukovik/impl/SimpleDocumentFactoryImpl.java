@@ -1,6 +1,5 @@
 package polischukovik.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +19,6 @@ import polischukovik.services.DocumentFactory;
 
 @Component
 public class SimpleDocumentFactoryImpl implements DocumentFactory, RequiredPropertyNameProvider{
-	@SuppressWarnings("unused")
 	@Autowired
 	private Properties prop;//unused here	
 	private XWPFDocument doc;

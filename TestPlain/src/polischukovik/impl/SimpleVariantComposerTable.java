@@ -10,9 +10,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +39,7 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 			 PropertyName.F_QUESTION_A_C_W);
 
 	private String pFQuestionBold;
+	@SuppressWarnings("unused")
 	private String pQuestionSpacing;
 	private String pQuestionPunctuation;
 	private String pAnswerPuncuation;

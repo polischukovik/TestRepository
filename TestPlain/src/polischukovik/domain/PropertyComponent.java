@@ -11,6 +11,7 @@ import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
 
+@SuppressWarnings("serial")
 public class PropertyComponent implements Serializable {
 	
 	private PropertyName name;	

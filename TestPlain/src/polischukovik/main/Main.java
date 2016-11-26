@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ import polischukovik.impl.QuestionDataSourceFileImpl;
 import polischukovik.impl.SimpleDocumentFactoryImpl;
 import polischukovik.impl.SimpleKeysComposer;
 import polischukovik.impl.SimpleTitleComposer;
-import polischukovik.impl.SimpleVariantComposer;
 import polischukovik.impl.SimpleVariantComposerTable;
 import polischukovik.impl.TestFactoryImpl;
 import polischukovik.properties.Properties;
