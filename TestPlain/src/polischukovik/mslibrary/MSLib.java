@@ -6,11 +6,13 @@ import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColumns;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
@@ -107,7 +109,7 @@ public class MSLib {
 	    spacing.setAfter(BigInteger.valueOf(0));
 	    spacing.setBefore(BigInteger.valueOf(0));
 	    spacing.setLineRule(STLineSpacingRule.AT_LEAST);
-	    spacing.setLine(BigInteger.valueOf(240));
+	    spacing.setLine(BigInteger.valueOf(200));
 	}
 	
 	public static void setSingleTableSpacing(XWPFTable table) {
@@ -136,6 +138,20 @@ public class MSLib {
 
 	public static void addSection(XWPFDocument doc) {		
 		doc.getDocument().getBody().addNewSectPr();
+	}
+
+	public static void indentTableFromLeft(XWPFTable table, double cm) {
+		CTTblPr tblPr = table.getCTTbl().getTblPr();
+		CTTblWidth tblPrInd = tblPr.addNewTblInd();
+		tblPrInd.setW(cm2dxa(cm));
+	}
+
+	public static void setFontStyle(XWPFRun run, int fontSize, String string) {
+		run.setFontSize(fontSize);
+		run.setFontFamily("Times New Roman");
+		CTFonts rFonts = run.getCTR().getRPr().getRFonts();
+		rFonts.setHAnsi("Times New Roman");
+		rFonts.setCs("Times New Roman");
 	}
 
 }

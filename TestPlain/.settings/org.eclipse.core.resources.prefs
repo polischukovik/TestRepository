@@ -1,7 +1,7 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=branch 'master' of https\://github.com/polischukovik/TestRepository
 eclipse.preferences.version=1
-encoding//resource/application.properties=UTF-8
+encoding//resource/app.properties=UTF-8
 encoding/<project>=UTF-8
-<<<<<<< HEAD
 encoding/src=UTF-8
-=======
->>>>>>> branch 'master' of https://github.com/polischukovik/TestRepository

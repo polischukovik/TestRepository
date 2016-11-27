@@ -1,8 +1,10 @@
 package polischukovik.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -40,16 +42,19 @@ public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
 	public String read() throws IOException{
 		pSrcFileName = prop.get(PropertyName.IO_SOURCE_FILE_NAME);
 		File file = new File(pSrcFileName);
-		try(Scanner sourceFile = new Scanner(file)) {
-			String questionData = "";
-			while(sourceFile.hasNext()){
-				questionData += sourceFile.nextLine() + "\n";
-			}
-			sourceFile.close();
+		System.out.println("Source file path: " + file.getAbsoluteFile());
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(file) );
+			char [] buff = new char[1024 * 30];
+			reader.read(buff);
+			reader.close();
+			
+			String questionData = new String(buff).replace("\\r?\\n","\n");					
 			return questionData;
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException(e.getMessage() + ": " + 
-					file.getCanonicalPath());
+					file.getAbsoluteFile());
 		}
 	}
 

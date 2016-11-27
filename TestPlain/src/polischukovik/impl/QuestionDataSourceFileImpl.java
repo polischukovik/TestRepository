@@ -51,6 +51,9 @@ public class QuestionDataSourceFileImpl implements QuestionDataSource, RequiredP
 		pMark = prop.get(PropertyName.PARSING_MARK_QUESTION);
 		pQustionMark = prop.get(PropertyName.PARSING_MARK_CORRECT_ANSWER);
 		
+//		System.out.println("Parsing file:");
+//		System.out.println(sourceStr);
+		
 		List<QuestionRaw> questionData = new ArrayList<>();
 		String[] rawQ = sourceStr.split(pMark);
 		

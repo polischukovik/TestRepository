@@ -1,7 +1,5 @@
 package polischukovik.main;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 
 import javax.annotation.Resource;
@@ -29,8 +27,9 @@ import polischukovik.services.IOTools;
 import polischukovik.services.QuestionDataSource;
 import polischukovik.services.TestFactory;
 
+
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("file:app.properties")
 @ComponentScan
 public class Main {
 
@@ -72,12 +71,12 @@ public class Main {
 		prop.setValue(PropertyName.BASIC_TEST_NAME,					env.getProperty(TEST_NAME,					"Test name default"));                
 		prop.setValue(PropertyName.T_VARIANT_TITLE,					env.getProperty(T_VARIANT_TITLE,			"Variant"));                          
 		prop.setValue(PropertyName.T_KEY_TITLE,						env.getProperty(T_KEY_TITLE,				"Key title"));                        
-		prop.setValue(PropertyName.BASIC_VARIANTS,					env.getProperty(VARIANTS,					"2"));                                
+		prop.setValue(PropertyName.BASIC_VARIANTS,					env.getProperty(VARIANTS,					"30"));                                
 		prop.setValue(PropertyName.BASIC_QUESTIONS,					env.getProperty(QUESTIONS,					"30"));                               
 		prop.setValue(PropertyName.PARSING_MARK_QUESTION,			env.getProperty(MARK,						"&"));                                
 		prop.setValue(PropertyName.PARSING_MARK_CORRECT_ANSWER,		env.getProperty(MARK_Q,						"*"));                            
-		prop.setValue(PropertyName.P_SHUFFLE_ANSWERS,				env.getProperty(SHUFFLE_ANSWERS,			new Boolean("false").toString()));    
-		prop.setValue(PropertyName.P_SHUFFLE_QUESTION,				env.getProperty(SHUFFLE_QUESTIONS,			new Boolean("false").toString()));    
+		prop.setValue(PropertyName.P_SHUFFLE_ANSWERS,				env.getProperty(SHUFFLE_ANSWERS,			new Boolean("true").toString()));    
+		prop.setValue(PropertyName.P_SHUFFLE_QUESTION,				env.getProperty(SHUFFLE_QUESTIONS,			new Boolean("true").toString()));    
 		prop.setValue(PropertyName.P_PUNCTUATION_ANSWER,			env.getProperty(ANSWER_PUNCTUATION,			")"));                                
 		prop.setValue(PropertyName.P_PUNCTUATION_QUESTION,			env.getProperty(QUESTION_PUNCTUATION,		"."));                                
 		prop.setValue(PropertyName.P_PUNCTUATION_KEY_ANSWER, 		env.getProperty(KEY_ANSWER_PUNCTUATION,		"-"));                                
@@ -88,10 +87,10 @@ public class Main {
 		prop.setValue(PropertyName.S_NUMERATION_ANSWER, 			env.getProperty(P_ANSWER_NUMERATION, 		NumeratorType.ALPHABETIC.toString()));
 		prop.setValue(PropertyName.FILE_UPLOAD, 					env.getProperty(FILE_UPLOAD, 				""));
 		prop.setValue(PropertyName.F_QUESTION_A_C_W, 				env.getProperty(F_QUESTION_A_C_W, 			"0.5"));
-		prop.setValue(PropertyName.F_PAGE_COL_S, 					env.getProperty(F_PAGE_COL_S, 				"1"));
+		prop.setValue(PropertyName.F_PAGE_COL_S, 					env.getProperty(F_PAGE_COL_S, 				"0.75"));
 		prop.setValue(PropertyName.F_PAGE_COL_N, 					env.getProperty(F_PAGE_COL_N, 				"2"));
 		prop.setValue(PropertyName.F_PAGE_FORMAT, 					env.getProperty(F_PAGE_FORMAT, 				"A4"));
-		prop.setValue(PropertyName.F_PAGE_M, 						env.getProperty(F_PAGE_M, 					"1.35 1.35 1.35 1.35"));
+		prop.setValue(PropertyName.F_PAGE_M, 						env.getProperty(F_PAGE_M, 					"1.245 1.245 1.245 1.245"));
 		
 		return prop;		
 	}
@@ -130,32 +129,19 @@ public class Main {
 	private static TestFactory testFactory;
 	private static SimpleDocumentFactoryImpl documentFactory;
 
-	public static void main(String[] args) throws IOException {		
-		ctx = new AnnotationConfigApplicationContext(Main.class);
+	public static void main(String[] args) throws ClassNotFoundException, Exception {	
+		ctx = new AnnotationConfigApplicationContext(Main.class);	
 		
 		iOTools = new IOToolsImpl();
 		questionRawHandler = new QuestionDataSourceFileImpl();
 		testFactory = new TestFactoryImpl();
 		documentFactory = new SimpleDocumentFactoryImpl();
-		
-		try {
-			iOTools.write(
-					documentFactory.createDocument(
-							testFactory.createTest(
-									questionRawHandler.parseSource(
-											iOTools.read())), Arrays.asList(new SimpleTitleComposer(), new SimpleVariantComposerTable(), new SimpleKeysComposer())));			
-		} catch (FileNotFoundException | ClassNotFoundException | IllegalStateException e) {
-			String reason = String.format("2Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
-			System.err.println(reason);
-		} catch (IOException e) {
-			String reason = String.format("3Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
-			System.err.println(reason);
-		} catch (Exception e){
-			e.printStackTrace();
-			String reason = String.format("4Service error: %s is thrown<br>Reason: %s",e.getClass().getName(),e.getMessage());
-			System.err.println(reason);
-		}
-		
+			
+		iOTools.write(
+				documentFactory.createDocument(
+						testFactory.createTest(
+								questionRawHandler.parseSource(
+										iOTools.read())), Arrays.asList(new SimpleTitleComposer(), new SimpleVariantComposerTable(), new SimpleKeysComposer())));			
 		System.err.println("done");
 	
 	}
