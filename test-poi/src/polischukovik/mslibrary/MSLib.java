@@ -1,14 +1,20 @@
 package polischukovik.mslibrary;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColumns;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
@@ -152,6 +158,83 @@ public class MSLib {
 		CTFonts rFonts = run.getCTR().getRPr().getRFonts();
 		rFonts.setHAnsi("Times New Roman");
 		rFonts.setCs("Times New Roman");
+	}	
+	
+	public static void replacePlaceholderWithBody(String placeholder, XWPFDocument template, XWPFDocument sourceDocument){
+		String documentTag =  getDocumentStartTag(template.getDocument().xmlText());
+		String documentEndTag =  getDocumentEndTag();
+		
+		XmlOptions optionsOuter = new XmlOptions();
+	    optionsOuter.setSaveOuter();
+		
+		CTBody aBody = template.getDocument().getBody();
+		String templateString = aBody.xmlText();
+		
+		CTBody bBody = sourceDocument.getDocument().getBody();
+		String sourceString = bBody.xmlText(optionsOuter);
+		
+		List<String> pStrings = MSLib.getParagraphContainingText(placeholder, templateString);
+		
+		for(String p : pStrings){
+			templateString.replaceAll(Pattern.quote(p), sourceString);
+		}
+		
+		CTBody makeBody = null;
+		try {
+			makeBody = CTBody.Factory.parse(documentTag + templateString + documentEndTag);
+		} catch (XmlException e) {
+			e.printStackTrace();
+		}
+		aBody.set(makeBody);		
+	}
+	/*
+	 * Looking a PLACEHOLDER, searches <w:p before and </w:p> after it. 
+	 * Creates A List of paragraphs to replace in future
+	 */
+	public static List<String> getParagraphContainingText(String placeholder, String templateString) {
+		List<Integer[]> ranges = new ArrayList<>();
+		List<String> result = new ArrayList<>(); 
+		String start = "<w:p ";
+		String end = "</w:p>";
+		
+		for(int i = 0; i < templateString.length(); i++){
+			int index = templateString.indexOf(placeholder, i);
+			if(index > 0){
+				Integer[] range = new Integer[]{0, 0};
+				range[0] = templateString.substring(0, index).lastIndexOf(start);
+				range[1] = templateString.indexOf(end, index) + end.length();
+				
+				if(ranges.stream().filter(t -> t[0].equals(range[0]) && t[1].equals(range[1])).collect(Collectors.toList()).size() == 0){
+					ranges.add(range);
+				}
+				i = index + 1;
+			}else{
+				break;
+			}
+		}		
+		for(Integer[] r : ranges){
+			result.add(templateString.substring(r[0], r[1]));
+		}		
+		return result;
+	}
+	
+	private static String getDocumentStartTag(String srcString) {
+		String tagname = "w:document";
+		return extractRootTagElement(srcString).replace("xml-fragment", tagname);
+	}
+	
+	private static String getDocumentEndTag() {
+		String tagname = "w:document";
+		return "</" + tagname + ">";
+	}
+	
+	private static String extractRootTagElement(String srcString) {
+		String startTag = "<";
+		String endTag = ">";
+		String tagname = "xml-fragment";
+		int indexStart = srcString.indexOf(startTag + tagname );
+		int indexEnd = srcString.indexOf(endTag) + 1;
+		return srcString.substring(indexStart, indexEnd);
 	}
 
 }

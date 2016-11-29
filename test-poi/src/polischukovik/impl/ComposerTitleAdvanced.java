@@ -33,7 +33,7 @@ public class ComposerTitleAdvanced implements RequiredPropertyNameProvider {
 		prop = Main.ctx.getBean(Properties.class);
 	}
 
-	public List<XWPFParagraph> constructComponent(Test test) {
+	public XWPFDocument constructComponent(Test test) {
 		XWPFDocument dummyDoc = new XWPFDocument();
 		XWPFParagraph p = dummyDoc.createParagraph();
 		p.setAlignment(ParagraphAlignment.CENTER);
@@ -45,7 +45,7 @@ public class ComposerTitleAdvanced implements RequiredPropertyNameProvider {
 		r.setText(test.getCaption());		
 		r.addBreak();
 		
-		return dummyDoc.getParagraphs(); 
+		return dummyDoc; 
 	}
 
 	public String getComposerName() {
