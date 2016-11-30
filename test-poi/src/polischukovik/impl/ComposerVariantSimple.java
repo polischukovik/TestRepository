@@ -23,7 +23,7 @@ import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
 
 @Component
-public class SimpleVariantComposer implements DocumentComponentComposer, RequiredPropertyNameProvider {
+public class ComposerVariantSimple implements DocumentComponentComposer, RequiredPropertyNameProvider {
 	
 	@Autowired
 	private Properties prop;
@@ -42,21 +42,21 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 	private String pVariantTitle;
 	
 	private final String composerName = this.getClass().getName();
+	private final String placeholder = "{variants}";
 	
-	public SimpleVariantComposer() {
+	public ComposerVariantSimple() {
 		prop = Main.ctx.getBean(Properties.class);
-	}
-	
-	@Override
-	public void constructComponent(Test test, XWPFDocument doc) {
-		MSLib.addSection(doc);
-
 		pFQuestionBold = prop.get(PropertyName.F_QUESTION_BOLD);
 		pQuestionSpacing = prop.get(PropertyName.F_QUESTION_SPACING);
 		pQuestionPunctuation = prop.get(PropertyName.P_PUNCTUATION_QUESTION);
 		pAnswerPuncuation = prop.get(PropertyName.P_PUNCTUATION_ANSWER);
-		pVariantTitle = prop.get(PropertyName.T_VARIANT_TITLE);
-		
+		pVariantTitle = prop.get(PropertyName.T_VARIANT_TITLE);		
+	}
+	
+	@Override
+	public XWPFDocument constructComponent(Test test) {
+		XWPFDocument doc = new XWPFDocument();
+		 
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
 			addCaption(doc, v);
@@ -69,6 +69,7 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 				addAnswers(doc, answers);
 			}						
 		}
+		return doc;
 	}
 
 	private void addAnswers(XWPFDocument doc, List<Answer> answers) {
@@ -123,7 +124,14 @@ public class SimpleVariantComposer implements DocumentComponentComposer, Require
 	public String getComposerName() {
 		return composerName;
 	}
+	
+	
+	@Override
+	public String getPlaceHolder(){
+		return placeholder;
+	}
 
+	@Override
 	public List<PropertyName> getRequiredProperties() {
 		return new ArrayList<>(requiredProps);
 	}

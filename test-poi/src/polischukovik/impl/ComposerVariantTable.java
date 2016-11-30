@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -26,7 +25,7 @@ import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
 
 @Component
-public class SimpleVariantComposerTable implements DocumentComponentComposer, RequiredPropertyNameProvider {
+public class ComposerVariantTable implements DocumentComponentComposer, RequiredPropertyNameProvider {
 	
 	@Autowired
 	private Properties prop;
@@ -48,22 +47,22 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 	private String fAnswerCellW;
 	
 	private final String composerName = this.getClass().getName();
+	private final String placeholder = "{variants}";
 	
-	public SimpleVariantComposerTable() {
+	public ComposerVariantTable() {		
 		prop = Main.ctx.getBean(Properties.class);
-	}
-	
-	@Override
-	public void constructComponent(Test test, XWPFDocument doc) {
-		MSLib.addSection(doc);
-		
 		pFQuestionBold = prop.get(PropertyName.F_QUESTION_BOLD);
 		pQuestionSpacing = prop.get(PropertyName.F_QUESTION_SPACING);
 		pQuestionPunctuation = prop.get(PropertyName.P_PUNCTUATION_QUESTION);
 		pAnswerPuncuation = prop.get(PropertyName.P_PUNCTUATION_ANSWER);
 		pVariantTitle = prop.get(PropertyName.T_VARIANT_TITLE);
-		fAnswerCellW = prop.get(PropertyName.F_QUESTION_A_C_W);
-		
+		fAnswerCellW = prop.get(PropertyName.F_QUESTION_A_C_W);		
+	}
+	
+	@Override
+	public XWPFDocument constructComponent(Test test) {
+		XWPFDocument doc = new XWPFDocument();
+
 		List<Variant> variants = test.getVariants();		
 		for(Variant v : variants){
 			addCaption(doc, v);
@@ -75,33 +74,8 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 				List<Answer> answers = q.getAnswers();		
 				addAnswers(doc, answers);
 			}
-			
-			addTail(doc);
 		}
-	}
-
-	private void addTail(XWPFDocument doc) {
-		XWPFParagraph p = doc.createParagraph();
-		p.setAlignment(ParagraphAlignment.RIGHT);
-		XWPFRun r = p.createRun();
-		r.setText("Затверджено на засіданні кафедри");
-		r.setBold(true);
-		r.setItalic(true);
-
-		XWPFRun r0 = p.createRun();
-		r0.addCarriageReturn();
-		r0.setText("теорії та історії держави і права");
-		r0.setBold(true);
-		r0.setItalic(true);
-		
-		XWPFParagraph p1 = doc.createParagraph();
-		p1.setAlignment(ParagraphAlignment.LEFT);
-		XWPFRun r1 = p1.createRun();
-		r1.setText("Протокол №_____ від «_____» ___________ 2016 року");
-		
-		XWPFRun r2 = p1.createRun();
-		r2.addCarriageReturn();
-		r2.setText("Екзаменатор _______________(Поліщук Н.Р.)");
+		return doc;
 	}
 
 	private void addAnswers(XWPFDocument doc, List<Answer> answers) {
@@ -115,9 +89,7 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 		row.addNewTableCell();
 		for(int i = 0; i < answers.size(); i++){
 			Answer a = answers.get(i);
-			
-//			row.getCell(0).setText(a.getLabel() + pAnswerPuncuation);
-//			row.getCell(1).setText(a.getAnswer());
+
 			XWPFParagraph p1 = row.getCell(0).getParagraphs().get(0);
 			XWPFParagraph p2 = row.getCell(1).getParagraphs().get(0);
 			
@@ -158,71 +130,10 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 	}
 
 	private void addCaption(XWPFDocument doc, Variant v) {
-		//Add caption
-		//Hardcoded
-
-		XWPFParagraph p = doc.createParagraph();
-		p.setAlignment(ParagraphAlignment.RIGHT);
-		p.setPageBreak(true);
-		XWPFRun r = p.createRun();
-		r.setText("Форма № Н-5.05");
-		r.setBold(true);
-		r.setItalic(true);
-		//r.setFontSize(fontSize);
-		
-		XWPFParagraph p1 = doc.createParagraph();
-		p1.setAlignment(ParagraphAlignment.CENTER);
-		XWPFRun r1 = p1.createRun();
-		r1.setText("НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ БІОРЕСУРСІВ ТА ПРИРОДОКОРИСТУВАННЯ УКРАЇНИ");
-		r1.setBold(true);
-		//r1.setFontSize(fontSize);
-		
-		XWPFParagraph p2 = doc.createParagraph();
-		p2.setAlignment(ParagraphAlignment.LEFT);
-		XWPFRun r2 = p2.createRun();
-		r2.setText("ОС «Бакалавр»");
-		r2.setItalic(true);
-		r2.setUnderline(UnderlinePatterns.SINGLE);
-		//r2.setFontSize(fontSize);
-		
-		XWPFParagraph p3 = doc.createParagraph();
-		p3.setAlignment(ParagraphAlignment.LEFT);
-		XWPFRun r3 = p3.createRun();
-		r3.setText("Спеціальність: ");
-		//r3.setFontSize(fontSize);
-		
-		XWPFRun r6 = p3.createRun();
-		r6.setItalic(true);
-		r6.setUnderline(UnderlinePatterns.SINGLE);
-		r6.setText("205 - Лісове господарство");
-		//r6.setFontSize(fontSize);
-		
-		XWPFRun r7 = p3.createRun();
-		r7.addCarriageReturn();
-		r7.setItalic(true);
-		r7.setUnderline(UnderlinePatterns.SINGLE);
-		r7.setText("               206 - Садово-паркове господарство");
-		//r7.setFontSize(fontSize);
-		
-		XWPFParagraph p4 = doc.createParagraph();
-		p4.setAlignment(ParagraphAlignment.LEFT);
-		XWPFRun r4 = p4.createRun();
-		r4.setText("Дисципліна: ");
-		//r4.setFontSize(fontSize);
-		
-		XWPFRun r5 = p4.createRun();
-		r5.setItalic(true);
-		r5.setUnderline(UnderlinePatterns.SINGLE);
-		r5.setFontFamily("Times New Roman");
-		r5.setText("«Правознавство»");
-		//r5.setFontSize(fontSize);
-		
 		XWPFParagraph p0 = doc.createParagraph();
 		XWPFRun r0 = p0.createRun();
-		p0.setAlignment(ParagraphAlignment.CENTER);
-		
-		String vLabel = v.getName();		
-		r0.setText(String.format("%s %s", pVariantTitle, vLabel));
+		p0.setAlignment(ParagraphAlignment.CENTER);	
+		r0.setText(String.format("%s %s", pVariantTitle, v.getName()));
 		r0.setBold(true);
 		
 		for(XWPFParagraph par : doc.getParagraphs()){
@@ -234,10 +145,16 @@ public class SimpleVariantComposerTable implements DocumentComponentComposer, Re
 	}
 	
 	@Override
+	public String getPlaceHolder() {		
+		return placeholder;
+	}
+	
+	@Override
 	public String getComposerName() {
 		return composerName;
 	}
-
+	
+	@Override
 	public List<PropertyName> getRequiredProperties() {
 		return new ArrayList<>(requiredProps);
 	}

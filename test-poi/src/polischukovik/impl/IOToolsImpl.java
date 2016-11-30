@@ -2,7 +2,7 @@ package polischukovik.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,36 +36,51 @@ public class IOToolsImpl implements IOTools, RequiredPropertyNameProvider  {
 		
 	public IOToolsImpl() {
 		prop = Main.ctx.getBean(Properties.class);
+		pSrcFileName = prop.get(PropertyName.IO_SOURCE_FILE_NAME);
+		pDestFileName = prop.get(PropertyName.IO_DEST_FILE_NAME);
 	}
 	
-	public String read() throws IOException{
-		pSrcFileName = prop.get(PropertyName.IO_SOURCE_FILE_NAME);
+	@Override
+	public String read() throws IOException{		
 		File file = new File(pSrcFileName);
+		BufferedReader reader = null;
+		String questionData = null;
 		System.out.println("Source file path: " + file.getAbsoluteFile());
 		try {
-			
-			BufferedReader reader = new BufferedReader(new FileReader(file) );
+			reader = new BufferedReader(new FileReader(file) );
 			char [] buff = new char[1024 * 30];
-			reader.read(buff);
+			reader.read(buff);			
+			questionData = new String(buff).replace("\\r?\\n","\n");
+		} catch (IOException e) {
+			throw e;
+		} finally {
 			reader.close();
-			
-			String questionData = new String(buff).replace("\\r?\\n","\n");					
-			return questionData;
-		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException(e.getMessage() + ": " + 
-					file.getAbsoluteFile());
+		}
+		return questionData;
+	}	
+
+	@Override
+	public XWPFDocument readDoc(String path) throws IOException {
+		FileInputStream fis = null;
+        File file = new File(path);
+		try {
+			fis = new FileInputStream(file.getAbsolutePath());
+			return new XWPFDocument(fis);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			fis.close();
 		}
 	}
-
-	public void write(XWPFDocument doc) throws IllegalStateException, IOException {
-		pDestFileName = prop.get(PropertyName.IO_DEST_FILE_NAME);
+	
+	@Override
+	public void write(XWPFDocument doc) throws IOException {
 		OutputStream os = new FileOutputStream(new File(pDestFileName));
 
 		if(doc == null){
 			os.close();
 			throw new IllegalStateException("Document reference is null");	
 		}
-		
 		doc.write(os);
 		os.close();
 	}

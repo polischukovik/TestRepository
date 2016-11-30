@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -83,19 +84,8 @@ public class MSLib {
 	public static void setCellWidth(XWPFTableCell cell, double cm) {
 		CTTc cTTc = cell.getCTTc();
 		
-		CTTcPr cTTcPr;
-		if (!cTTc.isSetTcPr()) {
-			cTTcPr = cTTc.addNewTcPr();
-		} else {
-			cTTcPr = cTTc.getTcPr();
-		}
-		
-		CTTblWidth cTTblWidth;
-		if (!cTTcPr.isSetTcW()) {
-			cTTblWidth = cTTcPr.addNewTcW();
-		} else {
-			cTTblWidth = cTTcPr.getTcW();
-		}
+		CTTcPr cTTcPr = !cTTc.isSetTcPr() ? cTTc.addNewTcPr() : cTTc.getTcPr();		
+		CTTblWidth cTTblWidth = !cTTcPr.isSetTcW() ? cTTcPr.addNewTcW() : cTTcPr.getTcW();
 			
 		cTTblWidth.setW(cm2dxa(cm));
 	}
@@ -161,9 +151,6 @@ public class MSLib {
 	}	
 	
 	public static void replacePlaceholderWithBody(String placeholder, XWPFDocument template, XWPFDocument sourceDocument){
-		String documentTag =  getDocumentStartTag(template.getDocument().xmlText());
-		String documentEndTag =  getDocumentEndTag();
-		
 		XmlOptions optionsOuter = new XmlOptions();
 	    optionsOuter.setSaveOuter();
 		
@@ -175,13 +162,13 @@ public class MSLib {
 		
 		List<String> pStrings = MSLib.getParagraphContainingText(placeholder, templateString);
 		
-		for(String p : pStrings){
-			templateString.replaceAll(Pattern.quote(p), sourceString);
+		for(String p : pStrings){			 
+			templateString = Pattern.compile(p, Pattern.LITERAL).matcher(templateString).replaceAll(sourceString);
 		}
 		
 		CTBody makeBody = null;
 		try {
-			makeBody = CTBody.Factory.parse(documentTag + templateString + documentEndTag);
+			makeBody = CTBody.Factory.parse( templateString );
 		} catch (XmlException e) {
 			e.printStackTrace();
 		}
@@ -217,24 +204,6 @@ public class MSLib {
 		}		
 		return result;
 	}
-	
-	private static String getDocumentStartTag(String srcString) {
-		String tagname = "w:document";
-		return extractRootTagElement(srcString).replace("xml-fragment", tagname);
-	}
-	
-	private static String getDocumentEndTag() {
-		String tagname = "w:document";
-		return "</" + tagname + ">";
-	}
-	
-	private static String extractRootTagElement(String srcString) {
-		String startTag = "<";
-		String endTag = ">";
-		String tagname = "xml-fragment";
-		int indexStart = srcString.indexOf(startTag + tagname );
-		int indexEnd = srcString.indexOf(endTag) + 1;
-		return srcString.substring(indexStart, indexEnd);
-	}
+
 
 }

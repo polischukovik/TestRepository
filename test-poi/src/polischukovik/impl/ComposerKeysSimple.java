@@ -16,13 +16,12 @@ import polischukovik.domain.Test;
 import polischukovik.domain.Variant;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.main.Main;
-import polischukovik.mslibrary.MSLib;
 import polischukovik.properties.Properties;
 import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.DocumentComponentComposer;
 
 @Component
-public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPropertyNameProvider{
+public class ComposerKeysSimple implements DocumentComponentComposer, RequiredPropertyNameProvider{
 	@Autowired
 	private Properties prop;
 	
@@ -31,25 +30,24 @@ public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPr
 			 ,PropertyName.T_KEY_TITLE);
 	
 	private final String composerName = this.getClass().getName();
+	private final String placeholder = "{keys}";
 	
 	private String pPunctuationKeyAnswer;
 	private String resKeyTytle;
 	
-	public SimpleKeysComposer() {
+	public ComposerKeysSimple(){
 		prop = Main.ctx.getBean(Properties.class);
+		pPunctuationKeyAnswer = prop.get(PropertyName.P_PUNCTUATION_KEY_ANSWER);
+		resKeyTytle = prop.get(PropertyName.T_KEY_TITLE);
 	}
 	
 	@Override
-	public void constructComponent(Test test, XWPFDocument doc) {
-		MSLib.addSection(doc);
-		
-		pPunctuationKeyAnswer = prop.get(PropertyName.P_PUNCTUATION_KEY_ANSWER);
-		resKeyTytle = prop.get(PropertyName.T_KEY_TITLE);
+	public XWPFDocument constructComponent(Test test) {
+		XWPFDocument doc = new XWPFDocument();
 		
 		//Add title
 		XWPFParagraph p = doc.createParagraph();
 		p.setAlignment(ParagraphAlignment.CENTER);
-		p.setPageBreak(true);
 		XWPFRun r = p.createRun();
 		
 		r.setText(resKeyTytle);
@@ -71,6 +69,7 @@ public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPr
 				rQuestion.addBreak();
 			}
 		}
+		return doc;
 	}
 
 	@Override
@@ -78,6 +77,12 @@ public class SimpleKeysComposer implements DocumentComponentComposer, RequiredPr
 		return composerName;
 	}
 	
+	@Override
+	public String getPlaceHolder() {		
+		return placeholder;
+	}
+	
+	@Override
 	public List<PropertyName> getRequiredProperties() {
 		return new ArrayList<>(requiredProps);
 	}

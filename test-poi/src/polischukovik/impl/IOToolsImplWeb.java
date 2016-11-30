@@ -1,6 +1,10 @@
 package polischukovik.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +19,7 @@ import polischukovik.properties.RequiredPropertyNameProvider;
 import polischukovik.services.IOTools;
 
 @Component("advanced")
-public class IOToolsImplAdvanced implements IOTools, RequiredPropertyNameProvider  {
+public class IOToolsImplWeb implements IOTools, RequiredPropertyNameProvider  {
 
 	@Autowired
 	Properties prop;
@@ -25,19 +29,36 @@ public class IOToolsImplAdvanced implements IOTools, RequiredPropertyNameProvide
 
 	private String pSrcString;
 		
-	public IOToolsImplAdvanced() {		
+	public IOToolsImplWeb() {
 		prop = Main.ctx.getBean(Properties.class);
+		pSrcString = prop.get(PropertyName.FILE_UPLOAD);
 	}
 	
-	public String read() throws IOException{
-		pSrcString = prop.get(PropertyName.FILE_UPLOAD);
+	@Override
+	public String read() throws IOException{		
 		return pSrcString;
 	}
 
 	public void write(XWPFDocument doc) throws IllegalStateException, IOException {
-		
+		//....
+	}
+
+	@Override
+	public XWPFDocument readDoc(String path) throws IOException {
+		FileInputStream fis = null;
+        File file = new File(path);
+		try {
+			fis = new FileInputStream(file.getAbsolutePath());
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			fis.close();
+		}
+       
+		return new XWPFDocument(fis);
 	}
 	
+	@Override
 	public List<PropertyName> getRequiredProperties(){
 		return new ArrayList<>(requiredProps);
 	}

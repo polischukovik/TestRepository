@@ -19,17 +19,14 @@ import polischukovik.domain.Test;
 import polischukovik.domain.enums.NumeratorType;
 import polischukovik.domain.enums.PropertyName;
 import polischukovik.domain.enums.PropertyType;
+import polischukovik.impl.ComposerKeysSimple;
 import polischukovik.impl.ComposerTitleAdvanced;
+import polischukovik.impl.ComposerVariantTable;
 import polischukovik.impl.DocumentFactoryTamplateImpl;
 import polischukovik.impl.IOToolsImpl;
 import polischukovik.impl.QuestionDataSourceFileImpl;
-import polischukovik.impl.SimpleDocumentFactoryImpl;
-import polischukovik.impl.SimpleKeysComposer;
-import polischukovik.impl.SimpleTitleComposer;
-import polischukovik.impl.SimpleVariantComposerTable;
 import polischukovik.impl.TestFactoryImpl;
 import polischukovik.properties.Properties;
-import polischukovik.services.DocumentFactory;
 import polischukovik.services.IOTools;
 import polischukovik.services.QuestionDataSource;
 import polischukovik.services.TestFactory;
@@ -44,7 +41,7 @@ public class Main {
     private Environment env;
 	
 	@Bean
-	public Properties getPropp(){
+	public Properties getProp(){
 		prop = new Properties();		
 		prop.addProperty(PropertyName.IO_SOURCE_FILE_NAME,			"input.output"			,PropertyType.FILE	);
 		prop.addProperty(PropertyName.IO_DEST_FILE_NAME,			"input.output"			,PropertyType.FILE	);
@@ -148,7 +145,7 @@ public class Main {
 		List<QuestionRaw> questions = questionRawHandler.parseSource(sourceContent);
 		Test test = testFactory.createTest(questions);
 		
-		XWPFDocument document = documentFactory.createDocument(test, Arrays.asList(new ComposerTitleAdvanced()));
+		XWPFDocument document = documentFactory.createDocument(Arrays.asList(new ComposerTitleAdvanced(), new ComposerKeysSimple(), new ComposerVariantTable()), test, iOTools.readDoc("template.docx"));
 		iOTools.write(document);
 			
 //		iOTools.write(
