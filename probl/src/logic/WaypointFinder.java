@@ -27,18 +27,23 @@ public class WaypointFinder {
 		System.out.println(String.format("---------------------------"));
 		
 		//3) Для кожної точки devisionPoints отримати пряму перпендикулярну основі base: devisionLines[u-1]
-		List<Line> devisionLines = new ArrayList<>();
-		for(Point p : devisionPoints){
-			System.out.println(String.format("\nCreating perpendicular for devision point %s", p));
-			devisionLines.add(ds.getBase().getLine().getPerprndicularAtPoint(p));
-		}		
-		System.out.println(String.format("---------------------------"));
+//		List<Line> devisionLines = new ArrayList<>();
+//		for(Point p : devisionPoints){
+//			System.out.println(String.format("\nCreating perpendicular for devision point %s", p));
+//			devisionLines.add(ds.getBase().getLine().getPerprndicularAtPoint(p));
+//		}		
+//		System.out.println(String.format("---------------------------"));
 		
 		//4) Для кожної з прямих devisionLines[m] для кожної з ліній на яких лежать відрізки formSegments[n] Визначити точки перетину які вони утвоюють...
 		//Для кожної точки перетину визначити чи належить вона відрізку formSegments[n]
-		for(Line dl : devisionLines){
+		for(Point dp : devisionPoints){
+			System.out.println(String.format("\nCreating perpendicular for devision point %s", dp));
+			Line dl = ds.getBase().getLine().getPerprndicularAtPoint(dp);
 			System.out.println(String.format("\nDevision line %s", dl));
 			for(Segment segment : formSegments){
+				if(segment.equals(ds.getBase())){
+					continue; //do not want check base line
+				}
 				System.out.println(String.format("  Find intersection point with segment line %s:\t", segment));
 				Point p = segment.getLine().getInterctionWithLine(dl);
 				if(p == null){
@@ -46,19 +51,21 @@ public class WaypointFinder {
 					continue;
 				}
 				if(segment.contains(p)){
-					System.out.println(String.format("  Belongs to segment"));
-					intersectionPoints.add(p);
+					System.out.println(String.format("  Belongs to segment\n"));
+					waypoints.add(dp);
+					waypoints.add(p);
+					intersectionPoints.add(p);					
+					
 				}else{
-					System.out.println(String.format("  Does not belongs to segment"));
+					System.out.println(String.format("  Does not belongs to segment\n"));
 				}
 			}
 		}
 		System.out.println(String.format("---------------------------"));
-		
-		for(int i = 0; i < ds.getDevidor(); i++){
-			waypoints.add(devisionPoints.get(i));
-			waypoints.add(intersectionPoints.get(i));
-		}
+				
+		for(Point p : waypoints){
+			System.out.println(p);
+		}	
 	}
 
 	public List<Point> getWaypoints() {

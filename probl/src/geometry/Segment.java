@@ -3,6 +3,8 @@ package geometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import logic.WaypointFinder;
+
 public class Segment {
 	private Point a;
 	private Point b;
@@ -17,6 +19,7 @@ public class Segment {
 		this.a = a;
 		this.b = b;
 		length = a.distanceTo(b);
+		System.out.println(String.format("  Segment created: %s", this));
 	}
 	
 	/*
@@ -54,23 +57,17 @@ public class Segment {
 	 */
 	public Line getLine(){
 		System.out.println(String.format("  Geting line for segment %s", this));
-		double A,B,C,k,b;
+		double A,B,C;
 		A=this.a.getY()-this.b.getY();
-		System.out.println(String.format("  A = y1-y2=%f-%f = %f", this.a.getY(), this.b.getY(), A));
+		System.out.println(String.format("  A = y1 - y2 = %f - %f = %f", this.a.getY(), this.b.getY(), A));
 		
 		B=this.b.getX()-this.a.getX();
-		System.out.println(String.format("  B = x2-x1=%f-%f = %f", this.b.getX(), this.a.getX(), B));
+		System.out.println(String.format("  B = x2 - x1 = %f - %f = %f", this.b.getX(), this.a.getX(), B));
 		
 		C=this.a.getX()*this.b.getY() - this.b.getX()*this.a.getY();
-		System.out.println(String.format("  C = x1y2 - x2y1 = %f*%f - %f*%f = %f", this.a.getX(), this.b.getY(), this.b.getX(), this.a.getY(), C));
+		System.out.println(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", this.a.getX(), this.b.getY(), this.b.getX(), this.a.getY(), C));
 		
-		k=(-1)*A/B;
-		System.out.println(String.format("  k = -A/B = -1*(%f)/(%f) = %f", A, B, k));
-		
-		b=(-1)*C/B;
-		System.out.println(String.format("  b = -C/B = -1*(%f)/(%f) = %f", C, B, b));
-		
-		return new Line(k, b);
+		return new Line(A, B, C);
 	}
 	
 	/*
@@ -96,7 +93,10 @@ public class Segment {
 	 */
 	public boolean contains(Point p){
 		System.out.println(String.format("\n  Does %s contains %s?\t", this, p));
-		boolean bool = (length == (p.distanceTo(a)  + p.distanceTo(b)));
+		double da = p.distanceTo(a);
+		double db = p.distanceTo(b);
+		boolean bool = (Point.round(length, WaypointFinder.COORDINATE_PRECISION - 1) == Point.round(da + db, WaypointFinder.COORDINATE_PRECISION - 1));
+		System.out.println(String.format("  %f = %f?", length, da  + db));
 		return bool;
 	}
 	public Point getA() {
@@ -116,6 +116,22 @@ public class Segment {
 	}
 	public void setLength(double length) {
 		this.length = length;
+	}	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Segment other = (Segment) obj;
+		if((this.a.equals(other.a) && this.b.equals(other.b)) || (this.a.equals(other.b) && this.b.equals(other.a)) ){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	@Override
 	public String toString() {

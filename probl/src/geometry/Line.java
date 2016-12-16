@@ -3,66 +3,89 @@ package geometry;
 import logic.WaypointFinder;
 
 public class Line {
-	private double k;
-	private double b;
-	public Line(double k, double b) {
+
+	private double A;
+	private double B;
+	private double C;	
+	
+	public Line(double A, double B, double C) {
 		super();
-		this.k = k;
-		this.b = b;
+		this.A = A;
+		this.B = B;
+		this.C = C;
 	}
 	
+	/*
+	 * http://www.pm298.ru/reshenie/peter.php
+	 * 
+	 * A2=-B1
+	 * B2=A1
+	 * C2=-A2*x-B2*y
+	 */
 	public Line getPerprndicularAtPoint(Point p){
 		System.out.println(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
-		double kx = -1/this.k;
-		double bx = -1/this.k * p.getX() + p.getY();
-		Line res = new Line(kx, bx);
+		double Al = Point.round( -1.0 * this.B , WaypointFinder.COORDINATE_PRECISION);
+		double Bl = Point.round( this.A , WaypointFinder.COORDINATE_PRECISION);
+		double Cl = Point.round( (-1.0) * Al * p.getX() - Bl * p.getY() , WaypointFinder.COORDINATE_PRECISION);
+		Line res = new Line(Al, Bl, Cl);
 		System.out.println(String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
 	/*
 	 * Точка повинна належати обом прямим
+	 * http://e-maxx.ru/algo/lines_intersection
+	 * 
 	 * Отже маємо системк рівнянь
-	 *
-	 *|y=k1x + b1
-	 *|y=k2x + b
-	 *
-	 *k1x+b1 = k2x + b2
-	 *k1x -k2x = b2 - b1
-	 *x(k1-k2) = b2 - b1
-	 *x = (b2 - b1) / (k1 - k2)
-	 *y = k1 * (b2 - b1) / (k1 - k2) + b1
+	 * Если две прямые не параллельны, то они пересекаются. Чтобы найти точку пересечения, достаточно решить систему:
+	 * A1x + B1y + C1 = 0
+     * A2x + B2y + C2 = 0
+     * 
+     * Формула Крамера для систми ріаняь...
+     * 
 	 */
 	public Point getInterctionWithLine(Line l){
 		System.out.println(String.format("\n  Obtaining intersectionpoint for lines:"));
 		System.out.println(String.format("  \\/%s", this));
 		System.out.println(String.format("  /\\%s", l));
-		if(this.getK() == l.getK()){
+		if((this.A * l.getB() - l.getA() * this.B) == 0){
 			System.out.println(String.format("null"));
 			return null; //Parallel
 		}
-		double x = Point.round((l.getB() - this.b) / (this.k - l.getK()), WaypointFinder.COORDINATE_PRECISION);
-		double y = Point.round((this.k * (l.getB() - this.b) / (this.k - this.getK()) + this.b), WaypointFinder.COORDINATE_PRECISION);
+		double x = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
+		double y = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
 		Point p = new Point(x, y);
 		System.out.println(String.format("   =%s", p));
 		return p;			
 	}
-	
-	public double getK() {
-		return k;
+
+	public double getA() {
+		return A;
 	}
-	public void setK(double k) {
-		this.k = k;
+
+	public void setA(double a) {
+		A = a;
 	}
+
 	public double getB() {
-		return b;
+		return B;
 	}
+
 	public void setB(double b) {
-		this.b = b;
+		B = b;
 	}
+
+	public double getC() {
+		return C;
+	}
+
+	public void setC(double c) {
+		C = c;
+	}
+
 	@Override
 	public String toString() {
-		return "Line [k=" + k + ", b=" + b + "]";
+		return "Line [A=" + A + ", B=" + B + ", C=" + C + "]";
 	}
 	
 }

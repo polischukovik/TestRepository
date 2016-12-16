@@ -10,8 +10,9 @@ public class App {
 	public static void main(String[] args) throws IOException{		
 		WaypointFinder waypointFinder = new WaypointFinder(new FileDS("ds.txt"));
 		
-		for(Point p : waypointFinder.getWaypoints()){
-			System.out.println(p);
+		System.out.println(String.format("----------RESULT-----------"));
+		for(Point p : waypointFinder.getWaypoints()){	
+			System.out.println(p.getX() + ", " + p.getY());
 		}
 	}
 }
