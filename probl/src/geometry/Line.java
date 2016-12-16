@@ -16,7 +16,7 @@ public class Line {
 		double kx = -1/this.k;
 		double bx = -1/this.k * p.getX() + p.getY();
 		Line res = new Line(kx, bx);
-		System.out.println(String.format("  Perpendicular is %s: ", res));
+		System.out.println(String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
@@ -34,17 +34,18 @@ public class Line {
 	 *y = k1 * (b2 - b1) / (k1 - k2) + b1
 	 */
 	public Point getInterctionWithLine(Line l){
-		System.out.print(String.format("\nObtaining intersectionpoint for lines %s and %s:\t", this, l));
+		System.out.println(String.format("\n  Obtaining intersectionpoint for lines:"));
+		System.out.println(String.format("  \\/%s", this));
+		System.out.println(String.format("  /\\%s", l));
 		if(this.getK() == l.getK()){
-			System.out.println(String.format("Parallel"));
+			System.out.println(String.format("null"));
 			return null; //Parallel
 		}
 		double x = Point.round((l.getB() - this.b) / (this.k - l.getK()), WaypointFinder.COORDINATE_PRECISION);
 		double y = Point.round((this.k * (l.getB() - this.b) / (this.k - this.getK()) + this.b), WaypointFinder.COORDINATE_PRECISION);
 		Point p = new Point(x, y);
-		System.out.println(String.format("%s", p));
-		return p;	
-				
+		System.out.println(String.format("   =%s", p));
+		return p;			
 	}
 	
 	public double getK() {

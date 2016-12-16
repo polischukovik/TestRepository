@@ -27,7 +27,7 @@ public class Segment {
 		List<Point> subSegment = new ArrayList<>();
 		for(int i = 1; i <= n-1; i++){
 			System.out.println(String.format("  Calculating devition point %d", i));
-			double R = 1.0*i/n;
+			double R = 1.0*i / (n - i);
 			System.out.println(String.format("    Ratio is %d/%d = %f", i, n, R));
 			double xM = (this.a.getX() + R * this.b.getX()) / (1 + R); 
 			double yM = (this.a.getY() + R * this.b.getY()) / (1 + R);
@@ -95,9 +95,8 @@ public class Segment {
 	 * чкщо сума відстаней до початку і кінця відрізку дорівнює довжині відрізку то ледить 
 	 */
 	public boolean contains(Point p){
-		System.out.print(String.format("\nDoes %s contains %s?\t", this, p));
+		System.out.println(String.format("\n  Does %s contains %s?\t", this, p));
 		boolean bool = (length == (p.distanceTo(a)  + p.distanceTo(b)));
-		System.out.println(String.format("%b", bool));
 		return bool;
 	}
 	public Point getA() {

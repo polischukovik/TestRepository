@@ -15,9 +15,9 @@ public class Point {
 	 * d=sqlrt((x2−x1)^2+(y2−y1)^2)
 	 */
 	public double distanceTo(Point p){
-		System.out.println(String.format("  Finding distance from %s to %s", this, p));		
+		System.out.println(String.format("    Finding distance from %s to %s", this, p));		
 		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), WaypointFinder.COORDINATE_PRECISION);
-		System.out.println(String.format("  Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
+		System.out.println(String.format("    Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
 		return d;
 	}
 	
