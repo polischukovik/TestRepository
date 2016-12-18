@@ -1,6 +1,7 @@
 package geometry;
 
 import logic.WaypointFinder;
+import probl.App;
 
 public class Line {
 
@@ -23,12 +24,12 @@ public class Line {
 	 * C2=-A2*x-B2*y
 	 */
 	public Line getPerprndicularAtPoint(Point p){
-		System.out.println(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
+		App.log.info(this.getClass(), String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
 		double Al = Point.round( -1.0 * this.B , WaypointFinder.COORDINATE_PRECISION);
 		double Bl = Point.round( this.A , WaypointFinder.COORDINATE_PRECISION);
 		double Cl = Point.round( (-1.0) * Al * p.getX() - Bl * p.getY() , WaypointFinder.COORDINATE_PRECISION);
 		Line res = new Line(Al, Bl, Cl);
-		System.out.println(String.format("  Perpendicular is %s", res));
+		App.log.info(this.getClass(), String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
@@ -45,17 +46,17 @@ public class Line {
      * 
 	 */
 	public Point getInterctionWithLine(Line l){
-		System.out.println(String.format("\n  Obtaining intersectionpoint for lines:"));
-		System.out.println(String.format("  \\/%s", this));
-		System.out.println(String.format("  /\\%s", l));
+		App.log.info(this.getClass(), String.format("\n  Obtaining intersectionpoint for lines:"));
+		App.log.info(this.getClass(), String.format("  \\/%s", this));
+		App.log.info(this.getClass(), String.format("  /\\%s", l));
 		if((this.A * l.getB() - l.getA() * this.B) == 0){
-			System.out.println(String.format("null"));
+			App.log.info(this.getClass(), String.format("null"));
 			return null; //Parallel
 		}
 		double x = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
 		double y = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
 		Point p = new Point(x, y);
-		System.out.println(String.format("   =%s", p));
+		App.log.info(this.getClass(), String.format("   =%s", p));
 		return p;			
 	}
 

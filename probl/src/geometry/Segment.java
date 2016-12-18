@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logic.WaypointFinder;
+import probl.App;
 
 public class Segment {
 	private Point a;
@@ -19,24 +20,24 @@ public class Segment {
 		this.a = a;
 		this.b = b;
 		length = a.distanceTo(b);
-		System.out.println(String.format("  Segment created: %s", this));
+		App.log.info(this.getClass(), String.format("  Segment created: %s", this));
 	}
 	
 	/*
 	 * 1) Поділити відрізок з координатами x1,x2 на n частин
 	 */
 	public List<Point> devideSegment(int n){
-		System.out.println(String.format("\nDeviding segment %s into %d parts", this, n));
+		App.log.info(this.getClass(), String.format("\nDeviding segment %s into %d parts", this, n));
 		List<Point> subSegment = new ArrayList<>();
 		for(int i = 1; i <= n-1; i++){
-			System.out.println(String.format("  Calculating devition point %d", i));
+			App.log.info(this.getClass(), String.format("  Calculating devition point %d", i));
 			double R = 1.0*i / (n - i);
-			System.out.println(String.format("    Ratio is %d/%d = %f", i, n, R));
+			App.log.info(this.getClass(), String.format("    Ratio is %d/%d = %f", i, n, R));
 			double xM = (this.a.getX() + R * this.b.getX()) / (1 + R); 
 			double yM = (this.a.getY() + R * this.b.getY()) / (1 + R);
 			
 			Point p = new Point(xM, yM);
-			System.out.println(String.format("    Got point %s", p));
+			App.log.info(this.getClass(), String.format("    Got point %s", p));
 			subSegment.add(p);
 			}
 		return subSegment;
@@ -51,21 +52,18 @@ public class Segment {
 	 * A=y1-y2
 	 * B=x2-x1
 	 * C=x1y2 - x2y1
-	 * 
-	 * k=-A/B
-	 * b=-C/B
 	 */
 	public Line getLine(){
-		System.out.println(String.format("  Geting line for segment %s", this));
+		App.log.info(this.getClass(), String.format("  Geting line for segment %s", this));
 		double A,B,C;
 		A=this.a.getY()-this.b.getY();
-		System.out.println(String.format("  A = y1 - y2 = %f - %f = %f", this.a.getY(), this.b.getY(), A));
+		App.log.info(this.getClass(), String.format("  A = y1 - y2 = %f - %f = %f", this.a.getY(), this.b.getY(), A));
 		
 		B=this.b.getX()-this.a.getX();
-		System.out.println(String.format("  B = x2 - x1 = %f - %f = %f", this.b.getX(), this.a.getX(), B));
+		App.log.info(this.getClass(), String.format("  B = x2 - x1 = %f - %f = %f", this.b.getX(), this.a.getX(), B));
 		
 		C=this.a.getX()*this.b.getY() - this.b.getX()*this.a.getY();
-		System.out.println(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", this.a.getX(), this.b.getY(), this.b.getX(), this.a.getY(), C));
+		App.log.info(this.getClass(), String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", this.a.getX(), this.b.getY(), this.b.getX(), this.a.getY(), C));
 		
 		return new Line(A, B, C);
 	}
@@ -77,11 +75,11 @@ public class Segment {
 		List<Segment> result = new ArrayList<>();
 		for(int i=0; i< list.size(); i++){
 			if(i == list.size() -1){
-				System.out.println(String.format("\nCreating segment for %s and %s", list.get(i), list.get(0)));
+				App.log.info(null, String.format("\nCreating segment for %s and %s", list.get(i), list.get(0)));
 				result.add(new Segment(list.get(i),list.get(0)));
 				return result;
 			}
-			System.out.println(String.format("\nCreating segment for %s and %s", list.get(i), list.get(i+1)));
+			App.log.info(null, String.format("\nCreating segment for %s and %s", list.get(i), list.get(i+1)));
 			result.add(new Segment(list.get(i),list.get(i+1)));
 		}
 		return result;
@@ -92,11 +90,11 @@ public class Segment {
 	 * чкщо сума відстаней до початку і кінця відрізку дорівнює довжині відрізку то ледить 
 	 */
 	public boolean contains(Point p){
-		System.out.println(String.format("\n  Does %s contains %s?\t", this, p));
+		App.log.info(this.getClass(), String.format("\n  Does %s contains %s?\t", this, p));
 		double da = p.distanceTo(a);
 		double db = p.distanceTo(b);
 		boolean bool = (Point.round(length, WaypointFinder.COORDINATE_PRECISION - 1) == Point.round(da + db, WaypointFinder.COORDINATE_PRECISION - 1));
-		System.out.println(String.format("  %f = %f?", length, da  + db));
+		App.log.info(this.getClass(), String.format("  %f = %f?", length, da  + db));
 		return bool;
 	}
 	public Point getA() {
