@@ -3,6 +3,7 @@ package logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import datasource.DataSource;
 import datasource.FileDS;
 import geometry.Line;
 import geometry.Point;
@@ -14,7 +15,7 @@ public class WaypointFinder {
 	public final static int COORDINATE_PRECISION = 2;
 	private List<Point> waypoints = new ArrayList<>(); 
 	
-	public WaypointFinder(FileDS ds) {		
+	public WaypointFinder(DataSource ds) {		
 		List<Point> devisionPoints;
 		
 		//1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments

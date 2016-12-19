@@ -9,56 +9,34 @@ import java.util.Scanner;
 import geometry.*;
 import probl.App;
 
-public class FileDS  implements DataSource{
+public class SemiFileDS implements DataSource{
 	private static String separator = ",";
 	
 	private List<Point> formPoints;
 	private Segment base;
 	private int devidor;	
 	
-	public FileDS(String path) throws IOException {
+	public SemiFileDS(File path) throws IOException {
 		formPoints = new ArrayList<>();
 		base = null;
 		devidor = 1;
 		readFile(path);
 	}	
 	
-	private void readFile(String path) throws IOException {
-		try(Scanner sc = new Scanner(new File(path))){			
+	private void readFile(File path) throws IOException {
+		try(Scanner sc = new Scanner(path)){			
 			String line = "-1";
 			
 			App.log.info(this.getClass(), String.format("\nGetting form points"));
-			while(true){
+			while(sc.hasNextLine()){
 				line = sc.nextLine();
-				if("".equals(line)) break;
+				if("".equals(line)) continue;
 				App.log.info(this.getClass(), String.format("Reading line: %s", line));
 				String[] pair = line.split(separator);
 				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
 				App.log.info(this.getClass(), String.format("  Adding point to list: %s", p));
 				formPoints.add(p);
 			}
-
-			App.log.info(this.getClass(), String.format("\nGetting base segment"));		
-			
-			line = sc.nextLine();
-			App.log.info(this.getClass(), String.format("Reading line: %s", line));
-			Point a = new Point(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));			
-			App.log.info(this.getClass(), String.format("Setting point A: %s", a));
-			
-			line = sc.nextLine();
-			App.log.info(this.getClass(), String.format("Reading line: %s", line));
-			Point b = new Point(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));
-			App.log.info(this.getClass(), String.format("Setting point B: %s",b));
-			
-			base = new Segment(a, b);
-			App.log.info(this.getClass(), String.format("Base segment is: %s",base));
-			
-			App.log.info(this.getClass(), String.format("\nGetting devidor"));
-			
-			if(!sc.nextLine().equals("")) throw new NoSuchElementException();
-			line = sc.nextLine();
-			devidor = Integer.parseInt(line);					
-			App.log.info(this.getClass(), String.format("Devidor is: %d", devidor));
 			
 		} catch (IOException e) {
 			System.err.println(String.format("Error occured: %s", e.getMessage()));
@@ -70,6 +48,15 @@ public class FileDS  implements DataSource{
 		App.log.info(this.getClass(), "\n");
 		App.log.info(this.getClass(), this.toString());
 		App.log.info(this.getClass(), "#######################################################");
+	}
+	
+	public boolean isValid(){
+		return formPoints.size() > 2 
+				&&  devidor > 0 
+				&& base != null 
+				&& formPoints.contains(formPoints.contains(base.getA()))
+				&& formPoints.contains(base.getB())
+				&& Math.abs(formPoints.indexOf(formPoints.contains(base.getA())) - formPoints.indexOf(formPoints.contains(base.getB()))) == 1;
 	}
 
 	public List<Point> getFormPoints() {
