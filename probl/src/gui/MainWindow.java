@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -19,8 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 public class MainWindow  extends JFrame {
-	final static int windowWidth = 1024;
-	final static int windowhHeight = 768;
+	final static int windowWidth = 1280;
+	final static int windowhHeight = 924;
 	private JAConsole log;
 	private JAPointsList pointList;
 	private JASegment segmentPanel;
@@ -37,19 +38,22 @@ public class MainWindow  extends JFrame {
 		GridBagConstraints c = new GridBagConstraints();
 		
         setTitle("Waypoint Calculator");
-        setSize(windowWidth, windowhHeight);
+        setMinimumSize(new Dimension(windowWidth, windowhHeight));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //this.setExtendedState(Frame.MAXIMIZED_BOTH);
         
         JPanel left = new JPanel();	    
-        left.setPreferredSize(new Dimension(this.getWidth()*4/5 - 5, this.getHeight()));
+        left.setPreferredSize(new Dimension(this.getSize().width*4/5 - 5, this.getHeight()));
         left.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         
         JPanel placeholderPanel = new JPanel(new BorderLayout());    
-        left.add(placeholderPanel, c);      
+        left.add(placeholderPanel, c);
+        Dimension d =  placeholderPanel.getParent().getPreferredSize();
+        placeholderPanel.setPreferredSize(new Dimension(d.getSize().width, d.getSize().height -10));
         
-        JTextField tf = new JTextField("asdasd");        
-        placeholderPanel.add(tf);
+        JPanel display = new JADisplay();        
+        placeholderPanel.add(display);
         
         this.add(left,c);
 	        
@@ -82,23 +86,27 @@ public class MainWindow  extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(placeholderPanel.getComponentCount() == 1 && placeholderLog.getComponentCount() == 1){
-					JPanel component;
-					component = (JPanel) placeholderLog.getComponents()[0];
+					JPanel component = (JPanel) placeholderLog.getComponents()[0];
+					JPanel componentOther = (JPanel) placeholderPanel.getComponents()[0];
 					placeholderLog.removeAll();
-					placeholderLog.add(placeholderPanel.getComponents()[0]);
+					placeholderLog.add(componentOther);
+					componentOther.setPreferredSize(new Dimension(componentOther.getParent().getPreferredSize().width - 10, 200));
+					
 					placeholderPanel.removeAll();
 					placeholderPanel.add(component);
+					component.setPreferredSize(new Dimension(component.getParent().getPreferredSize().width, component.getParent().getPreferredSize().height));
 				}
 				
-				((JButton) e.getSource()).getParent().repaint();
+				((JButton) e.getSource()).getParent().getParent().revalidate();
 			}
 		});
         
         right.add(flip, c);
         
         this.add(right,c);
-        
         this.pack();
+
+
 	}
 
 	public Consumer getConsole() {
