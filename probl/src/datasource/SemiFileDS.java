@@ -16,25 +16,28 @@ public class SemiFileDS implements DataSource{
 	private Segment base;
 	private int devidor;	
 	
+	private File path;
+	
 	public SemiFileDS(File path) throws IOException {
 		formPoints = new ArrayList<>();
 		base = null;
-		devidor = 1;
-		readFile(path);
+		devidor = 0;
+		this.path = path;
 	}	
 	
-	private void readFile(File path) throws IOException {
+	public static List<Point> readFile(File path) throws IOException {
+		List<Point> formPoints = new ArrayList<>();
 		try(Scanner sc = new Scanner(path)){			
 			String line = "-1";
 			
-			App.log.info(this.getClass(), String.format("\nGetting form points"));
+			App.log.info(SemiFileDS.class, String.format("\nGetting form points"));
 			while(sc.hasNextLine()){
 				line = sc.nextLine();
 				if("".equals(line)) continue;
-				App.log.info(this.getClass(), String.format("Reading line: %s", line));
+				App.log.info(null, String.format("Reading line: %s", line));
 				String[] pair = line.split(separator);
 				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
-				App.log.info(this.getClass(), String.format("  Adding point to list: %s", p));
+				App.log.info(SemiFileDS.class, String.format("  Adding point to list: %s", p));
 				formPoints.add(p);
 			}
 			
@@ -45,9 +48,10 @@ public class SemiFileDS implements DataSource{
 			System.err.println(String.format("Source file is not correctly formated: %s", e.getMessage()));
 			throw e; 
 		}
-		App.log.info(this.getClass(), "\n");
-		App.log.info(this.getClass(), this.toString());
-		App.log.info(this.getClass(), "#######################################################");
+		App.log.info(SemiFileDS.class, "\n");
+		App.log.info(SemiFileDS.class, "");
+		App.log.info(SemiFileDS.class, "#######################################################");
+		return formPoints;
 	}
 	
 	public boolean isValid(){
@@ -81,6 +85,14 @@ public class SemiFileDS implements DataSource{
 
 	public void setDevidor(int devidor) {
 		this.devidor = devidor;
+	}
+
+	public File getPath() {
+		return path;
+	}
+
+	public void setPath(File path) {
+		this.path = path;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package datasource;
 
+import java.io.File;
 import java.util.List;
 
 import geometry.Point;
@@ -18,4 +19,8 @@ public interface DataSource {
 
 	public void setDevidor(int devidor) ;
 
+	public File getPath();
+
+	public void setPath(File path);
+	public boolean isValid();
 }

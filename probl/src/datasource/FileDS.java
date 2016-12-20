@@ -100,4 +100,22 @@ public class FileDS  implements DataSource{
 	public String toString() {
 		return "FileDS [formPoints=" + formPoints + ", base=" + base + ", devidor=" + devidor + "]";
 	}
+
+	@Override
+	public File getPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPath(File path) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isValid() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

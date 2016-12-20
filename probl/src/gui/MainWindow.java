@@ -18,24 +18,25 @@ import javax.swing.border.BevelBorder;
 
 import datasource.DataSource;
 import datasource.SemiFileDS;
+import logginig.Logging;
 import probl.App;
 
 @SuppressWarnings("serial")
 public class MainWindow  extends JFrame {
 	final static int windowWidth = 1280;
 	final static int windowhHeight = 924;
-	private JAConsole log;
+	private Logging log;
 	private JAPointsList pointList;
 	private JASegment segmentPanel;
 	private JAInteger sections;
-	
-	private final static String defaultFile = "ds.txt";
+
 	private DataSource ds;
 
-	public MainWindow() throws HeadlessException {
-		super();
-		initUI();		
-		ds = new SemiFileDS(path);
+	public MainWindow(DataSource ds, Logging log) throws HeadlessException {
+		super();	
+		this.ds = ds;
+		this.log = log;
+		initUI();	
 	}
 
 	public void initUI() {    
@@ -67,7 +68,7 @@ public class MainWindow  extends JFrame {
         right.setPreferredSize(new Dimension(this.getWidth()*1/5 - 5, this.getHeight()));
         right.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
                  
-        pointList = new JAPointsList(defaultFile);        
+        pointList = new JAPointsList(ds.getPath());        
         right.add(pointList, c);
         pointList.setPreferredSize(new Dimension(pointList.getParent().getPreferredSize().width - 10, 350));
         
@@ -83,8 +84,7 @@ public class MainWindow  extends JFrame {
         right.add(placeholderLog, c);        
         placeholderLog.setPreferredSize(new Dimension(placeholderLog.getParent().getPreferredSize().width - 10, 200));
         
-        log = new JAConsole();
-        placeholderLog.add(log);
+        placeholderLog.add((JAConsole) log.getConsumer());
         
         JButton flip = new JButton("Switch veiw");
         flip.addActionListener(new ActionListener() {
@@ -111,14 +111,19 @@ public class MainWindow  extends JFrame {
         right.add(flip, c);
         
         JButton calculate = new JButton("Go");
-        flip.addActionListener(new ActionListener() {
+        calculate.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(ds){
+				ds.setFormPoints(pointList.getFormPointList());
+				ds.setBase(segmentPanel.getSegment());
+				ds.setDevidor(sections.getSections());
+				App.log.info(this.getClass(), "Invoking building waypoints");
+				App.log.info(this.getClass(), ds.toString());
+				
+				if(ds.isValid()){
 					
 				}
-					
 			}
 		});
         
@@ -133,10 +138,6 @@ public class MainWindow  extends JFrame {
 
 	public Consumer getConsole() {
 		return (Consumer)log;
-	}
-	
-	 public File getSelectedSourceFile() {
-		return pointList.getSelectedSourceFile();
 	}
 	
 }
