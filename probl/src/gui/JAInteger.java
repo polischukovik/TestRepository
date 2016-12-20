@@ -1,17 +1,12 @@
 package gui;
 
-import java.awt.Dimension;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import probl.App;
-
+@SuppressWarnings("serial")
 public class JAInteger extends JPanel{
 	private Integer sections;
 

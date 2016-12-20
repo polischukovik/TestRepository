@@ -7,8 +7,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 
+@SuppressWarnings("serial")
 public class JAConsole extends JPanel implements Consumer {
         private JTextArea output;
 

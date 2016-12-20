@@ -1,8 +1,5 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -18,19 +15,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Point;
 import probl.App;
 
+@SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
-	private final static String defaultFile = "ds.txt";
+
 	private JList<Point> formPointList = new JList<>();
 	private JButton showDialogButton;
+	private DataSource ds;
 	
-	private File selectedSourceFile = new File(defaultFile);
-	private List<Point> selectedPoints = formPointList.getSelectedValuesList();
+	private File selectedSourceFile;
 	
-	public JAPointsList() {
+	public JAPointsList(String defaultFile) {
+		this.selectedSourceFile = new File(defaultFile);
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createTitledBorder("Points"));
    
@@ -42,21 +42,18 @@ public class JAPointsList extends JPanel{
 	    this.add(new JScrollPane(formPointList));
 	    this.add(showDialogButton);
 	    
-	    showDialogButton.addActionListener(new ActionListener()
-	    {
-	      public void actionPerformed(ActionEvent e)
-	      {
-	    	//Handle open button action.
-	    	    if (e.getSource() == showDialogButton) {
+	    showDialogButton.addActionListener(new ActionListener(){
+	    	public void actionPerformed(ActionEvent e){
+	    		if (e.getSource() == showDialogButton) {
 	    	    	JFileChooser fc = new JFileChooser(selectedSourceFile);
 	    	        int returnVal = fc.showOpenDialog(getParent());
-
+	
 	    	        if (returnVal == JFileChooser.APPROVE_OPTION) {
 	    	        	App.log.info(this.getClass(), "Opening: " + selectedSourceFile.getName() + ".");
 	    	        	try {
-							App.ds = new SemiFileDS(selectedSourceFile);
-							Point[] pointArray = new Point[App.ds.getFormPoints().size()];
-							formPointList.setListData(App.ds.getFormPoints().toArray(pointArray));
+							ds = new SemiFileDS(selectedSourceFile);
+							Point[] pointArray = new Point[ds.getFormPoints().size()];
+							formPointList.setListData(ds.getFormPoints().toArray(pointArray));
 						} catch (IOException e1) {
 							App.log.info(this.getClass(), e1.getMessage());							
 						}
@@ -64,9 +61,9 @@ public class JAPointsList extends JPanel{
 	    	        } else {
 	    	        	App.log.info(this.getClass(), "Open command cancelled by user." + "\n");
 	    	        }
-	    	   }
-	      }
-	    });	    
+	    	  }
+	    }
+	 });	    
 	}
 
 	public File getSelectedSourceFile() {
@@ -74,7 +71,10 @@ public class JAPointsList extends JPanel{
 	}
 
 	public List<Point> getSelectedPoints() {
-		return selectedPoints;
-	}	   
-	
+		return formPointList.getSelectedValuesList();
+	}
+
+	public DataSource getDs() {
+		return ds;
+	}		
 }

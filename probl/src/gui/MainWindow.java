@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -13,12 +12,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
+import datasource.DataSource;
+import datasource.SemiFileDS;
+import probl.App;
+
+@SuppressWarnings("serial")
 public class MainWindow  extends JFrame {
 	final static int windowWidth = 1280;
 	final static int windowhHeight = 924;
@@ -26,10 +28,14 @@ public class MainWindow  extends JFrame {
 	private JAPointsList pointList;
 	private JASegment segmentPanel;
 	private JAInteger sections;
+	
+	private final static String defaultFile = "ds.txt";
+	private DataSource ds;
 
 	public MainWindow() throws HeadlessException {
 		super();
-		initUI();
+		initUI();		
+		ds = new SemiFileDS(path);
 	}
 
 	public void initUI() {    
@@ -52,8 +58,8 @@ public class MainWindow  extends JFrame {
         Dimension d =  placeholderPanel.getParent().getPreferredSize();
         placeholderPanel.setPreferredSize(new Dimension(d.getSize().width, d.getSize().height -10));
         
-        JPanel display = new JADisplay();        
-        placeholderPanel.add(display);
+        JADisplay display = new JADisplay();        
+        placeholderPanel.add(display);        
         
         this.add(left,c);
 	        
@@ -61,11 +67,11 @@ public class MainWindow  extends JFrame {
         right.setPreferredSize(new Dimension(this.getWidth()*1/5 - 5, this.getHeight()));
         right.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
                  
-        pointList = new JAPointsList();        
+        pointList = new JAPointsList(defaultFile);        
         right.add(pointList, c);
         pointList.setPreferredSize(new Dimension(pointList.getParent().getPreferredSize().width - 10, 350));
         
-        segmentPanel = new JASegment("Base segment", pointList.getSelectedPoints());
+        segmentPanel = new JASegment("Base segment", pointList);
         right.add(segmentPanel, c);
         segmentPanel.setPreferredSize(new Dimension(segmentPanel.getParent().getPreferredSize().width - 10, 75));
         
@@ -98,14 +104,30 @@ public class MainWindow  extends JFrame {
 				}
 				
 				((JButton) e.getSource()).getParent().getParent().revalidate();
+				((JButton) e.getSource()).getParent().getParent().repaint();
 			}
 		});
         
         right.add(flip, c);
         
+        JButton calculate = new JButton("Go");
+        flip.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(ds){
+					
+				}
+					
+			}
+		});
+        
+        right.add(calculate, c);
+        
         this.add(right,c);
         this.pack();
-
+        
+        App.canvas = display.getCanvas();
 
 	}
 
