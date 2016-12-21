@@ -19,7 +19,7 @@ public class Segment {
 		super();
 		this.a = a;
 		this.b = b;
-		length = a.distanceTo(b);
+		length = Point.round(a.distanceTo(b), WaypointFinder.COORDINATE_PRECISION + 2);
 		App.log.info(this.getClass(), String.format("  Segment created: %s", this));
 	}
 	

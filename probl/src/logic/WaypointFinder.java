@@ -14,9 +14,11 @@ import probl.App;
 public class WaypointFinder {
 	public final static int COORDINATE_PRECISION = 2;
 	private List<Point> waypoints = new ArrayList<>(); 
+	private List<Point> devisionPoints;
+	private List<Point> intersections = new ArrayList<>();
+	private List<Line> devisionLines = new ArrayList<>();
 	
 	public WaypointFinder(DataSource ds) {		
-		List<Point> devisionPoints;
 		
 		//1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments
 		List<Segment> formSegments = Segment.getSegments(ds.getFormPoints());
@@ -51,10 +53,11 @@ public class WaypointFinder {
 		//4) Для кожної з прямих devisionLines[m] для кожної з ліній на яких лежать відрізки formSegments[n] Визначити точки перетину які вони утвоюють...
 		//Для кожної точки перетину визначити чи належить вона відрізку formSegments[n]
 		for(Point dp : devisionPoints){
-			List<Point> intersections = new ArrayList<>();
+			List<Point> multiIntersections = new ArrayList<>();
 			
 			App.log.info(this.getClass(), String.format("\nCreating perpendicular for devision point %s", dp));
 			Line dl = ovf.getLine().getPerprndicularAtPoint(dp);
+			devisionLines.add(dl);
 			
 			App.log.info(this.getClass(), String.format("\nDevision line %s", dl));
 			for(Segment segment : formSegments){
@@ -67,14 +70,15 @@ public class WaypointFinder {
 				}
 				if(segment.contains(p)){
 					App.log.info(this.getClass(), String.format("  Belongs to segment\n"));
-					intersections.add(p);			
+					multiIntersections.add(p);			
 				}else{
 					App.log.info(this.getClass(), String.format("  Does not belongs to segment\n"));
 				}
 			}
 			
-			intersections.sort(Point.getPointNameComparator(base.getLine()));
-			waypoints.addAll(intersections);
+			multiIntersections.sort(Point.getPointNameComparator(base.getLine()));
+			intersections.addAll(multiIntersections);
+			waypoints.addAll(multiIntersections);
 		}
 		App.log.info(this.getClass(), String.format("---------------------------"));
 				
@@ -86,4 +90,17 @@ public class WaypointFinder {
 	public List<Point> getWaypoints() {
 		return waypoints;
 	}
+
+	public List<Point> getDevisionPoints() {
+		return devisionPoints;
+	}
+
+	public List<Point> getIntersections() {
+		return intersections;
+	}
+
+	public List<Line> getDevisionLines() {
+		return devisionLines;
+	}
+	
 }

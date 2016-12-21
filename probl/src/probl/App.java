@@ -4,15 +4,13 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-
 import datasource.DataSource;
 import datasource.SemiFileDS;
+import geometry.Point;
 import graphics.JGPoint;
+import graphics.Map;
 import gui.JACanvas;
-import gui.JAConsole;
 import gui.MainWindow;
-import gui.StreamCapturer;
 import logginig.Logging;
 
 public class App{
@@ -24,14 +22,15 @@ public class App{
 
 		log = Logging.createLogging();
 		ds = new SemiFileDS(new File("ds.txt"));
+		canvas = new JACanvas(new Map(new Point(0, 0), new Point(50, 50)));
 		
-		MainWindow mw= new MainWindow(ds, log);
+		MainWindow mw= new MainWindow(ds, log, canvas);
 		EventQueue.invokeLater(() -> {
 			mw.setVisible(true);
         });
 		
 		
-		App.canvas.addObject(new JGPoint(500, 200, new Color(255, 5, 5, 255)));
+		//canvas.addObject(new JGPoint(500, 200, new Color(255, 5, 5, 255)));
 		
 		
 //		WaypointFinder waypointFinder = new WaypointFinder(ds);

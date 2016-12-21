@@ -8,10 +8,11 @@ import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public class JADisplay extends JPanel{
-	private JACanvas canvas = new JACanvas();
+	private JACanvas canvas;
 
-	public JADisplay() {
+	public JADisplay(JACanvas canvas) {
 		super(new BorderLayout());
+		this.canvas = canvas;
 		setBorder(BorderFactory.createTitledBorder("Display"));
 		
 		JPanel container = new JPanel(new BorderLayout());

@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,7 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,25 +18,31 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import datasource.DataSource;
-import datasource.SemiFileDS;
+import graphics.JGPoint;
+import graphics.JGPoligon;
+import graphics.JGSegment;
 import logginig.Logging;
+import logic.WaypointFinder;
 import probl.App;
 
 @SuppressWarnings("serial")
 public class MainWindow  extends JFrame {
 	final static int windowWidth = 1280;
 	final static int windowhHeight = 924;
-	private Logging log;
+	
 	private JAPointsList pointList;
 	private JASegment segmentPanel;
 	private JAInteger sections;
 
 	private DataSource ds;
+	private JACanvas canvas;
+	private Logging log;
 
-	public MainWindow(DataSource ds, Logging log) throws HeadlessException {
+	public MainWindow(DataSource ds, Logging log, JACanvas canvas) throws HeadlessException {
 		super();	
 		this.ds = ds;
 		this.log = log;
+		this.canvas = canvas;
 		initUI();	
 	}
 
@@ -59,7 +66,7 @@ public class MainWindow  extends JFrame {
         Dimension d =  placeholderPanel.getParent().getPreferredSize();
         placeholderPanel.setPreferredSize(new Dimension(d.getSize().width, d.getSize().height -10));
         
-        JADisplay display = new JADisplay();        
+        JADisplay display = new JADisplay(canvas);        
         placeholderPanel.add(display);        
         
         this.add(left,c);
@@ -118,11 +125,19 @@ public class MainWindow  extends JFrame {
 				ds.setFormPoints(pointList.getFormPointList());
 				ds.setBase(segmentPanel.getSegment());
 				ds.setDevidor(sections.getSections());
-				App.log.info(this.getClass(), "Invoking building waypoints");
-				App.log.info(this.getClass(), ds.toString());
+				log.info(this.getClass(), "Invoking building waypoints");
+				log.info(this.getClass(), ds.toString());
 				
 				if(ds.isValid()){
-					
+					log.info(this.getClass(), "Datasource ready");
+					WaypointFinder wpf = new WaypointFinder(ds);
+					canvas.clear();
+					canvas.addObject(JGPoint.toList(wpf.getWaypoints(), canvas, new Color(255, 0, 0, 127)));
+					canvas.addObject(JGPoint.toList(wpf.getDevisionPoints(), canvas, new Color(0, 255, 0, 127)));
+					canvas.addObject(JGSegment.toList(wpf.getDevisionLines(), canvas, Color.GREEN));
+					canvas.addObject(new JGPoligon(ds.getFormPoints(), canvas, new Color(50, 30, 210, 127)));
+				}else{
+					log.info(this.getClass(), "Datasource is not ready");
 				}
 			}
 		});

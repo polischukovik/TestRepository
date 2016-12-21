@@ -1,5 +1,7 @@
 package geometry;
 
+import java.awt.geom.Line2D;
+
 import logic.WaypointFinder;
 import probl.App;
 
@@ -58,6 +60,29 @@ public class Line {
 		Point p = new Point(x, y);
 		App.log.info(this.getClass(), String.format("   =%s", p));
 		return p;			
+	}
+	
+	public Segment getSegment(Point a, Point b){
+		
+		double x1,y1,x2,y2;
+		
+		x1 = a.getX();
+		y1 = -1 * A/B * x1 - C/B;
+		
+		x2 = b.getX();
+		y2 = -1 * A/B * x1 - C/B;
+		
+		if((y1 > b.getY() || y2 > b.getY()) || (y1 < a.getY() || y2 < a.getY()) ){
+			y1 = b.getY();
+			y2 = a.getY();
+			x1 = -1 * B/A * y1 - C/A;
+			x2 = -1 * B/A * y2 - C/A;
+			if(x1 > b.getX() || x2 > b.getX()){
+				return null;
+			}		
+		}
+				
+		return new Segment(new Point(x1,y1), new Point(x2,y2));
 	}
 
 	public double getA() {

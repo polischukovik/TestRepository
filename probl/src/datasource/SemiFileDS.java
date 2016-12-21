@@ -56,11 +56,12 @@ public class SemiFileDS implements DataSource{
 	
 	public boolean isValid(){
 		return formPoints.size() > 2 
-				&&  devidor > 0 
+				&& devidor > 0 
 				&& base != null 
-				&& formPoints.contains(formPoints.contains(base.getA()))
+				&& formPoints.contains(base.getA())
 				&& formPoints.contains(base.getB())
-				&& Math.abs(formPoints.indexOf(formPoints.contains(base.getA())) - formPoints.indexOf(formPoints.contains(base.getB()))) == 1;
+				&& (Math.abs(formPoints.indexOf(base.getA()) - formPoints.indexOf(base.getB())) == 1 
+					|| formPoints.indexOf(base.getA()) == 0 && formPoints.indexOf(base.getB()) == formPoints.size() - 1);
 	}
 
 	public List<Point> getFormPoints() {
