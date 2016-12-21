@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.geom.Point2D;
 import java.util.List;
 
 import geometry.Point;
@@ -14,17 +13,23 @@ import gui.JACanvas;
 @SuppressWarnings("serial")
 public class JGPoligon extends Polygon implements JGDisplay {
 	private Color color;
+	private JACanvas canvas;
+	private List<Point> list;
 	
 	public JGPoligon(List<Point> list, JACanvas canvas, Color color) {
 		super();
 		this.color = color;
-		 for(Point p : list){
-			 this.addPoint(canvas.getDisplayX(p.getX()), canvas.getDisplayY(p.getY()));
-		 }
+		this.list = list;
+		this.canvas = canvas;		 
 	}
 
 	@Override
 	public void show(Graphics g) {
+		this.reset();
+		for(Point p : list){
+			 this.addPoint(canvas.getDisplayX(p.getX()), canvas.getDisplayY(p.getY()));
+		 }
+		
 		 Graphics2D g2 = (Graphics2D) g;
 		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		 g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f));

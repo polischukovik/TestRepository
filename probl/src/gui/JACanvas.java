@@ -1,16 +1,23 @@
 package gui;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import geometry.Line;
 import geometry.Point;
+import geometry.Segment;
 import graphics.JGDisplay;
+import graphics.JGLine;
 import graphics.JGPoint;
+import graphics.JGPoligon;
+import graphics.JGSegment;
 import graphics.Map;
 
 @SuppressWarnings("serial")
@@ -24,6 +31,8 @@ public class JACanvas extends JPanel {
 	public JACanvas(Map m) {
 		super();
 		this.map = m;
+
+		this.setBackground(Color.WHITE);
 	}
 	@Override
 	public void paint(Graphics g) {
@@ -35,18 +44,60 @@ public class JACanvas extends JPanel {
 		}
 	}
 	
+	public JGPoint createPoint(Point p, Color color){
+		return new JGPoint(p, this, color);
+	}
+	
+	public List<JGDisplay> createAllPoints(Collection<? extends Point> points, Color color){
+		List<JGDisplay> result = new ArrayList<>();
+		for(Point p : points){
+			result.add(createPoint(p, color));
+		}
+		return result;
+	}
+	
+	public JGPoligon createPoligon(List<Point> p, Color color){
+		return new JGPoligon(p, this, color);
+	}
+	
+	public JGLine createLine(Line l, Color color){
+		return new JGLine(l, this, color);
+	}
+	
+	public List<JGDisplay> createAllLines(Collection<? extends Line> lines, Color color){
+		List<JGDisplay> result = new ArrayList<>();
+		for(Line l : lines){
+			result.add(createLine(l, color));
+		}
+		return result;
+	}
+	
+	public JGSegment createSegment(Segment s, Color color){
+		return new JGSegment(s, this, color);
+	}
+	
+	public List<JGDisplay> createAllSegments(Collection<? extends Segment> segments, Color color){
+		List<JGDisplay> result = new ArrayList<>();
+		for(Segment s : segments){
+			result.add(createSegment(s, color));
+		}
+		return result;
+	}
+	
 	public void addObject(JGDisplay obj){
 		objects.add(obj);
-		this.repaint();
 	}
 	
 	public void addObject(List<JGDisplay> obj){
 		objects.addAll(obj);
-		this.repaint();
 	}
 	
 	public void clear(){
 		objects.clear();
+		render();
+	}
+	
+	public void render(){
 		this.repaint();
 	}
 	

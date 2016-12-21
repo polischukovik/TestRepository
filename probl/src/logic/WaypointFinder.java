@@ -17,6 +17,7 @@ public class WaypointFinder {
 	private List<Point> devisionPoints;
 	private List<Point> intersections = new ArrayList<>();
 	private List<Line> devisionLines = new ArrayList<>();
+	public Segment ovf;
 	
 	public WaypointFinder(DataSource ds) {		
 		
@@ -29,7 +30,7 @@ public class WaypointFinder {
 		// Отримаємо пряму на якій ледить відр. base
 		
 		Line baseLine = base.getLine();		
-		Segment ovf = new Segment(ds.getBase().getA(), ds.getBase().getB());
+		ovf = new Segment(ds.getBase().getA(), ds.getBase().getB());
 		//Для кожної точки фігури отримати пряму перпендикулярну основній що проходить через точку фігури
 		for(Point formPoint : ds.getFormPoints()){
 			Line pointPerprndicular = baseLine.getPerprndicularAtPoint(formPoint);

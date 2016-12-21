@@ -18,9 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import datasource.DataSource;
-import graphics.JGPoint;
-import graphics.JGPoligon;
-import graphics.JGSegment;
 import logginig.Logging;
 import logic.WaypointFinder;
 import probl.App;
@@ -109,9 +106,9 @@ public class MainWindow  extends JFrame {
 					placeholderPanel.add(component);
 					component.setPreferredSize(new Dimension(component.getParent().getPreferredSize().width, component.getParent().getPreferredSize().height));
 				}
-				
 				((JButton) e.getSource()).getParent().getParent().revalidate();
 				((JButton) e.getSource()).getParent().getParent().repaint();
+				canvas.render();
 			}
 		});
         
@@ -132,10 +129,14 @@ public class MainWindow  extends JFrame {
 					log.info(this.getClass(), "Datasource ready");
 					WaypointFinder wpf = new WaypointFinder(ds);
 					canvas.clear();
-					canvas.addObject(JGPoint.toList(wpf.getWaypoints(), canvas, new Color(255, 0, 0, 127)));
-					canvas.addObject(JGPoint.toList(wpf.getDevisionPoints(), canvas, new Color(0, 255, 0, 127)));
-					canvas.addObject(JGSegment.toList(wpf.getDevisionLines(), canvas, Color.GREEN));
-					canvas.addObject(new JGPoligon(ds.getFormPoints(), canvas, new Color(50, 30, 210, 127)));
+					//canvas.addObject(canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127)));
+					//canvas.addObject(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 127)));
+					canvas.addObject(canvas.createSegment(wpf.ovf, Color.RED));
+//					canvas.addObject(canvas.createAllLines(wpf.getDevisionLines(), Color.GREEN));
+					canvas.render();
+//					canvas.addObject(JGPoint.toList(wpf.getDevisionPoints(), canvas, new Color(0, 255, 0, 127)));
+//					canvas.addObject(JGSegment.toList(wpf.getDevisionLines(), canvas, Color.GREEN));
+//					canvas.addObject(new JGPoligon(ds.getFormPoints(), canvas, new Color(50, 30, 210, 127)));
 				}else{
 					log.info(this.getClass(), "Datasource is not ready");
 				}

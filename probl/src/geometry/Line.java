@@ -1,7 +1,5 @@
 package geometry;
 
-import java.awt.geom.Line2D;
-
 import logic.WaypointFinder;
 import probl.App;
 
@@ -27,8 +25,8 @@ public class Line {
 	 */
 	public Line getPerprndicularAtPoint(Point p){
 		App.log.info(this.getClass(), String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
-		double Al = Point.round( -1.0 * this.B , WaypointFinder.COORDINATE_PRECISION);
-		double Bl = Point.round( this.A , WaypointFinder.COORDINATE_PRECISION);
+		double Al = Point.round( this.B , WaypointFinder.COORDINATE_PRECISION);
+		double Bl = Point.round( -1.0 * this.A , WaypointFinder.COORDINATE_PRECISION);
 		double Cl = Point.round( (-1.0) * Al * p.getX() - Bl * p.getY() , WaypointFinder.COORDINATE_PRECISION);
 		Line res = new Line(Al, Bl, Cl);
 		App.log.info(this.getClass(), String.format("  Perpendicular is %s", res));
@@ -70,16 +68,23 @@ public class Line {
 		y1 = -1 * A/B * x1 - C/B;
 		
 		x2 = b.getX();
-		y2 = -1 * A/B * x1 - C/B;
+		y2 = -1 * A/B * x2 - C/B;
 		
-		if((y1 > b.getY() || y2 > b.getY()) || (y1 < a.getY() || y2 < a.getY()) ){
+		if(y1 > b.getY() || y1 < a.getY()){
 			y1 = b.getY();
-			y2 = a.getY();
 			x1 = -1 * B/A * y1 - C/A;
-			x2 = -1 * B/A * y2 - C/A;
-			if(x1 > b.getX() || x2 > b.getX()){
+			
+			if(x1 > b.getX() || x1 < a.getX()){
 				return null;
 			}		
+		}
+		if( y2 > b.getY() || y2 < a.getY() ){
+			y2 = a.getY();
+			x2 = -1 * B/A * y2 - C/A;
+			
+			if( x2 > b.getX()  || x2 < a.getX()){
+				return null;
+			}
 		}
 				
 		return new Segment(new Point(x1,y1), new Point(x2,y2));
