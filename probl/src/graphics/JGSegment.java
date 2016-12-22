@@ -27,10 +27,10 @@ public class JGSegment extends Float implements JGDisplay {
 	
 	@Override
 	public void show(Graphics g) {
-		this.setLine(canvas.getDisplayX(this.getX1())
-				, canvas.getDisplayY(this.getY1())
-				, canvas.getDisplayX(this.getX2())
-				, canvas.getDisplayY(this.getY2()));
+		this.setLine(canvas.getDisplayX(segment.getA().getX())
+				, canvas.getDisplayY(segment.getA().getY())
+				, canvas.getDisplayX(segment.getB().getX())
+				, canvas.getDisplayY(segment.getB().getY()));
 	
 		 Graphics2D g2 = (Graphics2D) g;
 		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

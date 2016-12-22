@@ -116,4 +116,7 @@ public class JACanvas extends JPanel {
 	public double getMapY(int y){
 		return ((canvasSize.getHeight() - y - 0)  * (map.getEnd().getY()) - (map.getStart().getY()) ) / (canvasSize.getHeight() - 0);
 	}
+	public Map getMap() {
+		return map;
+	}
 }

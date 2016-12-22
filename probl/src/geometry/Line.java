@@ -1,5 +1,10 @@
 package geometry;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import logic.WaypointFinder;
 import probl.App;
 
@@ -60,7 +65,7 @@ public class Line {
 		return p;			
 	}
 	
-	public Segment getSegment(Point a, Point b){
+	public Segment getSegmentForBox(Point a, Point b){
 		
 		double x1,y1,x2,y2;
 		
@@ -88,6 +93,29 @@ public class Line {
 		}
 				
 		return new Segment(new Point(x1,y1), new Point(x2,y2));
+	}
+	
+	public Point getProjection(Point p){
+		return this.getPerprndicularAtPoint(p).getInterctionWithLine(this);
+	}
+	
+	public Segment getProjection(List<Point> list){
+		Segment result = null;
+		double distance, max = 0;
+		List<Point> proj = new ArrayList<>();
+		for(Point p : list){
+			proj.add(this.getProjection(p));
+		}
+		for(Point p : proj){
+			for(Point d : proj){
+				distance = p.distanceTo(d);
+				if(distance > max){
+					max = distance;
+					result = new Segment(p, d);
+				}
+			}
+		}
+		return result;
 	}
 
 	public double getA() {

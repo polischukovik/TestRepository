@@ -127,7 +127,7 @@ public class MainWindow  extends JFrame {
 				
 				if(ds.isValid()){
 					log.info(this.getClass(), "Datasource ready");
-					WaypointFinder wpf = new WaypointFinder(ds);
+					WaypointFinder wpf = new WaypointFinder(ds, log);
 					canvas.clear();
 					canvas.addObject(canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127)));
 					canvas.addObject(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 127)));
