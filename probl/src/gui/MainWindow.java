@@ -129,10 +129,10 @@ public class MainWindow  extends JFrame {
 					log.info(this.getClass(), "Datasource ready");
 					WaypointFinder wpf = new WaypointFinder(ds);
 					canvas.clear();
-					//canvas.addObject(canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127)));
-					//canvas.addObject(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 127)));
+					canvas.addObject(canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127)));
+					canvas.addObject(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 127)));
 					canvas.addObject(canvas.createSegment(wpf.ovf, Color.RED));
-//					canvas.addObject(canvas.createAllLines(wpf.getDevisionLines(), Color.GREEN));
+					canvas.addObject(canvas.createAllLines(wpf.getDevisionLines(), Color.GREEN));
 					canvas.render();
 //					canvas.addObject(JGPoint.toList(wpf.getDevisionPoints(), canvas, new Color(0, 255, 0, 127)));
 //					canvas.addObject(JGSegment.toList(wpf.getDevisionLines(), canvas, Color.GREEN));

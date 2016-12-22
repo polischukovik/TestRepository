@@ -20,7 +20,7 @@ public class App{
 
 		log = Logging.createLogging();
 		ds = new SemiFileDS(new File("ds.txt"));
-		canvas = new JACanvas(new Map(new Point(0, 0), new Point(1005, 887)));
+		canvas = new JACanvas(new Map(new Point(-10, -10), new Point(35, 30)));
 		
 		MainWindow mw= new MainWindow(ds, log, canvas);
 		EventQueue.invokeLater(() -> {
