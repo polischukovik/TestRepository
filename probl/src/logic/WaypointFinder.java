@@ -10,7 +10,7 @@ import geometry.Segment;
 import logginig.Logging;
 
 public class WaypointFinder {
-	public final static int COORDINATE_PRECISION = 2;
+	public final static int COORDINATE_PRECISION = 6;
 
 	private Logging logging;
 	@SuppressWarnings("unused")

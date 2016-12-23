@@ -2,8 +2,8 @@ package geometry;
 
 import java.util.Comparator;
 
+import calculator.App;
 import logic.WaypointFinder;
-import probl.App;
 
 public class Point {
 	private double x;

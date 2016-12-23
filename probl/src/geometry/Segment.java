@@ -3,8 +3,8 @@ package geometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import calculator.App;
 import logic.WaypointFinder;
-import probl.App;
 
 public class Segment {
 	private Point a;

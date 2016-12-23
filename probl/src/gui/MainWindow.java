@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import calculator.App;
 import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Point;
@@ -25,7 +26,6 @@ import geometry.Segment;
 import graphics.JGDisplay;
 import logginig.Logging;
 import logic.WaypointFinder;
-import probl.App;
 
 @SuppressWarnings("serial")
 public class MainWindow  extends JFrame {
