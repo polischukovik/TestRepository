@@ -1,10 +1,7 @@
 package geometry;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import logic.WaypointFinder;
 import probl.App;
 
@@ -67,7 +64,7 @@ public class Line {
 	
 	public Segment getSegmentForBox(Point a, Point b){
 		
-		double x1,y1,x2,y2;
+		Double x1,y1,x2,y2;
 		
 		x1 = a.getX();
 		y1 = -1 * A/B * x1 - C/B;
@@ -75,7 +72,8 @@ public class Line {
 		x2 = b.getX();
 		y2 = -1 * A/B * x2 - C/B;
 		
-		if(y1 > b.getY() || y1 < a.getY()){
+//		if(y1.isNaN() || y1.isInfinite() || y1 > b.getY() || y1 < a.getY()){
+		if(y1.isNaN() || y1.isInfinite()){
 			y1 = b.getY();
 			x1 = -1 * B/A * y1 - C/A;
 			
@@ -83,7 +81,8 @@ public class Line {
 				return null;
 			}		
 		}
-		if( y2 > b.getY() || y2 < a.getY() ){
+//		if( y2.isNaN() || y2.isInfinite() || y2 > b.getY() || y2 < a.getY()){
+		if( y2.isNaN() || y2.isInfinite()){
 			y2 = a.getY();
 			x2 = -1 * B/A * y2 - C/A;
 			

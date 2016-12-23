@@ -11,11 +11,7 @@ public class Logging {
 	private int pad = 25;
 	private static Logging logging;
 	private Consumer consumer;
-	
-	private Logging (){
-	
-	}
-	
+		
 	public Logging (PrintStream ps, Consumer consumer){
 		this.ps = ps;
 		this.consumer = consumer;

@@ -1,24 +1,18 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import datasource.SemiFileDS;
 import geometry.Point;
-import probl.App;
+import graphics.JGDisplay;
 
 @SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
@@ -26,8 +20,9 @@ public class JAPointsList extends JPanel{
 	private List<Point> formPointList = new ArrayList<>();
 	private JButton showDialogButton;
 	private JList<Point> defaultList;
+	private List<JGDisplay> displayObjects;
 	
-	public JAPointsList(File defaultFile) {
+	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createTitledBorder("Points"));
    
@@ -38,29 +33,11 @@ public class JAPointsList extends JPanel{
 	    defaultList.setLayoutOrientation(JList.HORIZONTAL_WRAP);  
 	    
 	    this.add(new JScrollPane(defaultList));
-	    this.add(showDialogButton);
-	    
-	    showDialogButton.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent e){
-	    		if (e.getSource() == showDialogButton) {
-	    	    	JFileChooser fc = new JFileChooser(defaultFile);
-	    	        int returnVal = fc.showOpenDialog(getParent());
+	    this.add(showDialogButton);	   
+	}
 	
-	    	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	    	        	App.log.info(this.getClass(), "Opening: " + fc.getSelectedFile().getName() + ".");
-	    	        	try {
-							formPointList = SemiFileDS.readFile(fc.getSelectedFile());
-							Point[] pointArray = new Point[formPointList.size()];
-							defaultList.setListData(formPointList.toArray(pointArray));
-						} catch (IOException e1) {
-							App.log.info(this.getClass(), e1.getMessage());							
-						}     	            
-	    	        } else {
-	    	        	App.log.info(this.getClass(), "Open command cancelled by user." + "\n");
-	    	        }
-	    	  }
-	    }
-	 });	    
+	public JButton getLoadPointsButton() {
+		return showDialogButton;
 	}
 
 	public List<Point> getSelectedPoints() {
@@ -69,7 +46,18 @@ public class JAPointsList extends JPanel{
 
 	public List<Point> getFormPointList() {
 		return formPointList;
+	}
+
+	public void setListData(List<Point> list) {
+		Point[] pointArray = new Point[list.size()];
+		defaultList.setListData(list.toArray(pointArray));		
+	}
+
+	public List<JGDisplay> getDisplayObjects() {
+		return displayObjects;
+	}
+
+	public void setDisplayObjects(List<JGDisplay> displayObjects) {
+		this.displayObjects = displayObjects;
 	}	
-	
-	
 }

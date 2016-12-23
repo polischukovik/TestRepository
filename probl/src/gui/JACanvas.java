@@ -56,11 +56,11 @@ public class JACanvas extends JPanel {
 		return result;
 	}
 	
-	public JGPoligon createPoligon(List<Point> p, Color color){
+	public JGDisplay createPoligon(List<Point> p, Color color){
 		return new JGPoligon(p, this, color);
 	}
 	
-	public JGLine createLine(Line l, Color color){
+	public JGDisplay createLine(Line l, Color color){
 		return new JGLine(l, this, color);
 	}
 	
@@ -72,7 +72,7 @@ public class JACanvas extends JPanel {
 		return result;
 	}
 	
-	public JGSegment createSegment(Segment s, Color color){
+	public JGDisplay createSegment(Segment s, Color color){
 		return new JGSegment(s, this, color);
 	}
 	
@@ -82,6 +82,10 @@ public class JACanvas extends JPanel {
 			result.add(createSegment(s, color));
 		}
 		return result;
+	}	
+
+	public JGDisplay createWaypointPath(List<Point> waypoints, Color color) {
+		return new JGWaypointPath(waypoints, this, color);
 	}
 	
 	public void addObject(JGDisplay obj){
@@ -91,14 +95,21 @@ public class JACanvas extends JPanel {
 	public void addObject(List<JGDisplay> obj){
 		objects.addAll(obj);
 	}
+
+	public void removeObjects(List<JGDisplay> o) {
+		objects.removeAll(o);		
+	}
 	
 	public void clear(){
 		objects.clear();
-		render();
 	}
 	
 	public void render(){
-		this.repaint();
+		this.repaint(); 
+	}
+	
+	public void showFigure(List<Point> points){
+		
 	}
 	
 	public int getDisplayX(double x){

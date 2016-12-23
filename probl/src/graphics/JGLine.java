@@ -6,15 +6,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
+
 import geometry.Line;
-import geometry.Point;
 import geometry.Segment;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
 public class JGLine  extends Line2D.Float implements JGDisplay {
 	private Color color;
-	private int size = 2;
+	private int size = 1;
 	private JACanvas canvas;
 	private Line line;
 	
@@ -26,7 +26,6 @@ public class JGLine  extends Line2D.Float implements JGDisplay {
 	}
 	
 	public void show(Graphics g){
-		//Segment s = line.getSegmentForBox(new Point(canvas.getMapX(0),canvas.getMapY(canvas.getHeight())), new Point(canvas.getMapX(canvas.getWidth()), canvas.getMapY(0))); 
 		Segment s = line.getSegmentForBox(canvas.getMap().getStart(), canvas.getMap().getEnd());
 		if(s == null) return;
 		

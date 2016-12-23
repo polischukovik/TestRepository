@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import datasource.DataSource;
-import datasource.FileDS;
 import geometry.Line;
 import geometry.Point;
 import geometry.Segment;
 import logginig.Logging;
-import probl.App;
 
 public class WaypointFinder {
 	public final static int COORDINATE_PRECISION = 2;
 
 	private Logging logging;
+	@SuppressWarnings("unused")
 	private DataSource ds;
 	
 	private List<Point> waypoints = new ArrayList<>(); 
