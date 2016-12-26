@@ -13,7 +13,9 @@ import javax.swing.JPanel;
 import calculator.App;
 import geometry.Line;
 import geometry.Point;
+import geometry.Polygon;
 import geometry.Segment;
+import graphics.Dimention;
 import graphics.JGDisplay;
 import graphics.JGLine;
 import graphics.JGPoint;
@@ -112,52 +114,47 @@ public class JACanvas extends JPanel {
 		this.repaint(); 
 	}
 	
-    public void positionMap(List<Point> formPointList){
-    	Point center = Point.getCenterOfMass(formPointList);
-    	App.log.info(this.getClass(), String.format("Central point: %s", center));
-		
-    	Segment vOvf = Line.getVertical(center).getProjection(formPointList);
-		Segment hOvf = Line.getHorizontal(center).getProjection(formPointList);
-		//new Segment(new Point(vOvf.getA().getLongitude(), hOvf.getA().getLatitude()), new Point(vOvf.getB().getLongitude(), hOvf.getB().getLatitude()));
-		
-		App.log.info(this.getClass(), String.format("vOvf - %s : %s\thOvf - %s : %s", vOvf.getA(), vOvf.getB(), hOvf.getA(), hOvf.getB()));
+    public void positionMap(Polygon polygon){
+ 
+		Dimention mapOvf = polygon.getOvf();		
+    	App.log.info(this.getClass(), String.format("Map OVF is %s", mapOvf));
 				
-		
 		Point start = null, end = null;
-		if(hOvf.getLength() > vOvf.getLength()){
-			/*
-			 * when horizontal component is greater
-			 */
-			double halfVerticalY = vOvf.getA().getLongitude() + (vOvf.getB().getLongitude() - vOvf.getA().getLongitude())/2;
-			
-			start = new Point(
-					hOvf.getA().getLatitude(),
-					halfVerticalY - hOvf.getLength()/2);
-			end = new Point(
-					hOvf.getB().getLatitude(),
-					halfVerticalY + vOvf.getLength()/2);
-		}else if(hOvf.getLength() < vOvf.getLength()){
+		if(mapOvf.getvOvf().getLength() > mapOvf.gethOvf().getLength()){
 			/*
 			 * when vertical component is greater
 			 */
-			double halfHorizontalX = hOvf.getA().getLatitude() + (hOvf.getB().getLatitude() - hOvf.getA().getLatitude())/2;
+			double halfVertical = mapOvf.getA().getLatitude() + (mapOvf.getB().getLongitude() - mapOvf.getA().getLongitude())/2;
+			double horizontal = mapOvf.gethOvf().getB().getLongitude() - mapOvf.gethOvf().getA().getLongitude();
 			
 			start = new Point(
-					halfHorizontalX - vOvf.getLength()/2,
-					vOvf.getA().getLongitude());
+					mapOvf.getA().getLatitude(),
+					halfVerticalY - mapOvf.gethOvf().getLength()/2);
 			end = new Point(
-					halfHorizontalX + vOvf.getLength()/2,
-					vOvf.getB().getLongitude());
+					mapOvf.gethOvf().getB().getLatitude(),
+					halfVerticalY + mapOvf.gethOvf().getLength()/2);
+		}else if(mapOvf.getvOvf().getLength() < mapOvf.gethOvf().getLength()){
+			/*
+			 * when horizontal component is greater
+			 */
+			double halfHorizontalX = mapOvf.gethOvf().getA().getLatitude() + (mapOvf.gethOvf().getB().getLatitude() - mapOvf.gethOvf().getA().getLatitude())/2;
+			
+			start = new Point(
+					halfHorizontalX - mapOvf.getvOvf().getLength()/2,
+					mapOvf.getvOvf().getA().getLongitude());
+			end = new Point(
+					halfHorizontalX + mapOvf.getvOvf().getLength()/2,
+					mapOvf.getvOvf().getB().getLongitude());
 		}else{
 			/*
 			 * when ovfH x ovfV  is square
 			 */
 			start = new Point(
-					hOvf.getA().getLatitude(),
-					vOvf.getA().getLongitude());
+					mapOvf.gethOvf().getA().getLatitude(),
+					mapOvf.getvOvf().getA().getLongitude());
 			end = new Point(
-					hOvf.getB().getLatitude(),
-					vOvf.getB().getLongitude());
+					mapOvf.gethOvf().getB().getLatitude(),
+					mapOvf.getvOvf().getB().getLongitude());
 		}
 		
 		this.setMap(new Map(start, end));;

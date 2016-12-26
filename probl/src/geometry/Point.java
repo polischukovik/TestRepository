@@ -110,14 +110,4 @@ public class Point {
 			return -1;
 		}
 	}
-	
-	public static Point getCenterOfMass(List<Point> list){
-		double sumLat = 0, sumLong = 0;
-		for(Point p : list){
-			sumLat += p.getLatitude();
-			sumLong += p.getLongitude();
-		}
-		return new Point(sumLat/list.size(), sumLong/list.size());
-	}
-
 }

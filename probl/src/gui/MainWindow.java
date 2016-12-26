@@ -23,6 +23,7 @@ import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Line;
 import geometry.Point;
+import geometry.Polygon;
 import geometry.Segment;
 import graphics.JGDisplay;
 import graphics.Map;
@@ -166,17 +167,17 @@ public class MainWindow  extends JFrame {
 
     	        if (returnVal == JFileChooser.APPROVE_OPTION) {
     	        	App.log.info(this.getClass(), "Opening: " + fc.getSelectedFile().getName() + ".");
-    	        	List<Point> formPointList;
+    	        	Polygon polygon;
     	        	try {
-    	        		formPointList = SemiFileDS.readFile(fc.getSelectedFile());
+    	        		polygon = new Polygon(SemiFileDS.readFile(fc.getSelectedFile()));
 					} catch (IOException e1) {
 						App.log.info(this.getClass(), e1.getMessage());
 						return;
 					}    
-					ds.setFormPoints(formPointList);					
-					pointList.setListData(formPointList);
+					ds.setFormPoints(polygon);					
+					pointList.setListData(polygon);
 
-					canvas.positionMap(formPointList);
+					canvas.positionMap(polygon);
 					
 					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
 					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));

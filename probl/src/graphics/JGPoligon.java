@@ -14,19 +14,19 @@ import gui.JACanvas;
 public class JGPoligon extends Polygon implements JGDisplay {
 	private Color color;
 	private JACanvas canvas;
-	private List<Point> list;
+	private geometry.Polygon polygon;
 	
 	public JGPoligon(List<Point> list, JACanvas canvas, Color color) {
 		super();
 		this.color = color;
-		this.list = list;
+		this.polygon = new geometry.Polygon(list);
 		this.canvas = canvas;		 
 	}
 
 	@Override
 	public void show(Graphics g) {
 		this.reset();
-		for(Point p : list){
+		for(Point p : polygon){
 			 this.addPoint(canvas.getDisplayX(p.getLatitude()), canvas.getDisplayY(p.getLongitude()));
 		 }
 		
