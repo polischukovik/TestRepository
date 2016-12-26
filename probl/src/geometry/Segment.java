@@ -33,8 +33,8 @@ public class Segment {
 			App.log.info(this.getClass(), String.format("  Calculating devition point %d", i));
 			double R = 1.0*i / (n - i);
 			App.log.info(this.getClass(), String.format("    Ratio is %d/%d = %f", i, n, R));
-			double xM = (this.a.getX() + R * this.b.getX()) / (1 + R); 
-			double yM = (this.a.getY() + R * this.b.getY()) / (1 + R);
+			double xM = (this.a.getLatitude() + R * this.b.getLatitude()) / (1 + R); 
+			double yM = (this.a.getLongitude() + R * this.b.getLongitude()) / (1 + R);
 			
 			Point p = new Point(xM, yM);
 			App.log.info(this.getClass(), String.format("    Got point %s", p));
@@ -44,7 +44,7 @@ public class Segment {
 	}
 	
 	public Line getLine(){
-		return Line.getLine(this);
+		return new Line(this);
 	}
 	
 	/*

@@ -113,64 +113,70 @@ public class JACanvas extends JPanel {
 	}
 	
     public void positionMap(List<Point> formPointList){
+    	Point center = Point.getCenterOfMass(formPointList);
+    	App.log.info(this.getClass(), String.format("Central point: %s", center));
 		
-		Segment hOvf = Line.getHorizontal().getProjection((formPointList));
-		Segment vOvf = Line.getVertical().getProjection((formPointList));
+    	Segment vOvf = Line.getVertical(center).getProjection(formPointList);
+		Segment hOvf = Line.getHorizontal(center).getProjection(formPointList);
+		//new Segment(new Point(vOvf.getA().getLongitude(), hOvf.getA().getLatitude()), new Point(vOvf.getB().getLongitude(), hOvf.getB().getLatitude()));
+		
+		App.log.info(this.getClass(), String.format("vOvf - %s : %s\thOvf - %s : %s", vOvf.getA(), vOvf.getB(), hOvf.getA(), hOvf.getB()));
+				
 		
 		Point start = null, end = null;
 		if(hOvf.getLength() > vOvf.getLength()){
 			/*
 			 * when horizontal component is greater
 			 */
-			double halfVerticalY = vOvf.getA().getY() + (vOvf.getB().getY() - vOvf.getA().getY())/2;
+			double halfVerticalY = vOvf.getA().getLongitude() + (vOvf.getB().getLongitude() - vOvf.getA().getLongitude())/2;
 			
 			start = new Point(
-					hOvf.getA().getX(),
+					hOvf.getA().getLatitude(),
 					halfVerticalY - hOvf.getLength()/2);
 			end = new Point(
-					hOvf.getB().getX(),
+					hOvf.getB().getLatitude(),
 					halfVerticalY + vOvf.getLength()/2);
 		}else if(hOvf.getLength() < vOvf.getLength()){
 			/*
 			 * when vertical component is greater
 			 */
-			double halfHorizontalX = hOvf.getA().getX() + (hOvf.getB().getX() - hOvf.getA().getX())/2;
+			double halfHorizontalX = hOvf.getA().getLatitude() + (hOvf.getB().getLatitude() - hOvf.getA().getLatitude())/2;
 			
 			start = new Point(
 					halfHorizontalX - vOvf.getLength()/2,
-					vOvf.getA().getY());
+					vOvf.getA().getLongitude());
 			end = new Point(
 					halfHorizontalX + vOvf.getLength()/2,
-					vOvf.getB().getY());
+					vOvf.getB().getLongitude());
 		}else{
 			/*
 			 * when ovfH x ovfV  is square
 			 */
 			start = new Point(
-					hOvf.getA().getX(),
-					vOvf.getA().getY());
+					hOvf.getA().getLatitude(),
+					vOvf.getA().getLongitude());
 			end = new Point(
-					hOvf.getB().getX(),
-					vOvf.getB().getY());
+					hOvf.getB().getLatitude(),
+					vOvf.getB().getLongitude());
 		}
 		
 		this.setMap(new Map(start, end));;
     }
 	
 	public int getDisplayX(double x){
-		return new Double((x - map.getStart().getX()) * canvasSize.getWidth() / (map.getEnd().getX() - (map.getStart().getX()))).intValue();
+		return new Double((x - map.getStart().getLatitude()) * canvasSize.getWidth() / (map.getEnd().getLatitude() - (map.getStart().getLatitude()))).intValue();
 	}
 	
 	public int getDisplayY(double y){
-		return new Double(canvasSize.getHeight() - (y - map.getStart().getY()) * canvasSize.getHeight() / (map.getEnd().getY() - (map.getStart().getY()))).intValue();
+		return new Double(canvasSize.getHeight() - (y - map.getStart().getLongitude()) * canvasSize.getHeight() / (map.getEnd().getLongitude() - (map.getStart().getLongitude()))).intValue();
 	}
 	
 	public double getMapX(int x){
-		return ((x - 0)  * (map.getEnd().getX()) - (map.getStart().getX()) ) / (canvasSize.getWidth() - 0);
+		return ((x - 0)  * (map.getEnd().getLatitude()) - (map.getStart().getLatitude()) ) / (canvasSize.getWidth() - 0);
 	}
 	
 	public double getMapY(int y){
-		return ((canvasSize.getHeight() - y - 0)  * (map.getEnd().getY()) - (map.getStart().getY()) ) / (canvasSize.getHeight() - 0);
+		return ((canvasSize.getHeight() - y - 0)  * (map.getEnd().getLongitude()) - (map.getStart().getLongitude()) ) / (canvasSize.getHeight() - 0);
 	}
 	public Map getMap() {
 		return map;

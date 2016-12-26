@@ -36,9 +36,9 @@ public class JGWaypointPath extends Path2D.Float implements JGDisplay {
 		if(waypoints == null && waypoints.size() < 2){
 			return;
 		}
-		this.moveTo(canvas.getDisplayX(waypoints.get(0).getX()), canvas.getDisplayY(waypoints.get(0).getY()));
+		this.moveTo(canvas.getDisplayX(waypoints.get(0).getLatitude()), canvas.getDisplayY(waypoints.get(0).getLongitude()));
 		for(int i=1; i < waypoints.size(); i++){
-			this.lineTo(canvas.getDisplayX(waypoints.get(i).getX()), canvas.getDisplayY(waypoints.get(i).getY()));			
+			this.lineTo(canvas.getDisplayX(waypoints.get(i).getLatitude()), canvas.getDisplayY(waypoints.get(i).getLongitude()));			
 		 }
 		 Graphics2D g2 = (Graphics2D) g;
 		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

@@ -4,15 +4,14 @@ import java.util.Comparator;
 import java.util.List;
 
 import calculator.App;
-import logic.WaypointFinder;
 
 public class Point {
-	private double x;
-	private double y;
-	public Point(double x, double y) {
+	private double latitude;
+	private double longitude;
+	public Point(double longitude, double latitude) {
 		super();
-		this.x = round(x,App.COORDINATE_PRECISION);
-		this.y = round(y,App.COORDINATE_PRECISION);
+		this.latitude = round(longitude,App.COORDINATE_PRECISION);
+		this.longitude = round(latitude,App.COORDINATE_PRECISION);
 	}
 	
 	/*
@@ -26,9 +25,20 @@ public class Point {
 //	}
 	
 	public double distanceTo(Point p){
-		App.log.info(this.getClass(), String.format("    Finding distance from %s to %s", this, p));		
-		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), App.COORDINATE_PRECISION);
-		App.log.info(this.getClass(), String.format("    Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
+		
+		double R = 6371000; // metres
+		double φ1 = Math.toRadians(this.getLatitude());
+		double φ2 = Math.toRadians(p.getLatitude());
+		double Δφ = Math.toRadians(p.getLatitude() - this.getLatitude());
+		double Δλ = Math.toRadians(p.getLongitude()-this.getLongitude());
+
+		double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+		        Math.cos(φ1) * Math.cos(φ2) *
+		        Math.sin(Δλ/2) * Math.sin(Δλ/2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+		double d = R * c;
+		
 		return d;
 	}
 	
@@ -64,28 +74,28 @@ public class Point {
 		if (getClass() != obj.getClass())
 			return false;
 		Point other = (Point) obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
 			return false;
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
 			return false;
 		return true;
 	}
 
-	public double getX() {
-		return x;
+	public double getLatitude() {
+		return latitude;
 	}
-	public void setX(double x) {
-		this.x = x;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
-	public double getY() {
-		return y;
+	public double getLongitude() {
+		return longitude;
 	}
-	public void setY(double y) {
-		this.y = y;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	@Override
 	public String toString() {
-		return "Point [x=" + x + ", y=" + y + "]";
+		return "Point [" + latitude + ", " + longitude + "]";
 	}
 
 	public int relatesTo(Point a, Segment base) {
@@ -99,6 +109,15 @@ public class Point {
 		}else{
 			return -1;
 		}
+	}
+	
+	public static Point getCenterOfMass(List<Point> list){
+		double sumLat = 0, sumLong = 0;
+		for(Point p : list){
+			sumLat += p.getLatitude();
+			sumLong += p.getLongitude();
+		}
+		return new Point(sumLat/list.size(), sumLong/list.size());
 	}
 
 }

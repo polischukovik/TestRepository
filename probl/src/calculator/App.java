@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import datasource.DataSource;
 import datasource.SemiFileDS;
-import geometry.Point;
-import graphics.Map;
 import gui.JACanvas;
 import gui.MainWindow;
 import logginig.Logging;

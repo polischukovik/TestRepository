@@ -27,7 +27,7 @@ public class JGPoligon extends Polygon implements JGDisplay {
 	public void show(Graphics g) {
 		this.reset();
 		for(Point p : list){
-			 this.addPoint(canvas.getDisplayX(p.getX()), canvas.getDisplayY(p.getY()));
+			 this.addPoint(canvas.getDisplayX(p.getLatitude()), canvas.getDisplayY(p.getLongitude()));
 		 }
 		
 		 Graphics2D g2 = (Graphics2D) g;
