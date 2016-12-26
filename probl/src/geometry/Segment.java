@@ -19,7 +19,7 @@ public class Segment {
 		super();
 		this.a = a;
 		this.b = b;
-		length = Point.round(a.distanceTo(b), WaypointFinder.COORDINATE_PRECISION + 2);
+		length = Point.round(a.distanceTo(b), App.COORDINATE_PRECISION + 2);
 		App.log.info(this.getClass(), String.format("  Segment created: %s", this));
 	}
 	
@@ -43,29 +43,8 @@ public class Segment {
 		return subSegment;
 	}
 	
-	/*
-	 * Отримання лінійної функції для відрізка *  
-	 * (y-y1)/(y2-y1)=(x-x1)/(x2-x1)
-	 * (y1-y2)*x + (x2-x1)*y +(x1y2-x2y1)=0
-	 * Ax+By+C=0
-	 * y=-A/B*x - C/B
-	 * A=y1-y2
-	 * B=x2-x1
-	 * C=x1y2 - x2y1
-	 */
 	public Line getLine(){
-		App.log.info(this.getClass(), String.format("  Geting line for segment %s", this));
-		double A,B,C;
-		A=this.a.getY()-this.b.getY();
-		App.log.info(this.getClass(), String.format("  A = y1 - y2 = %f - %f = %f", this.a.getY(), this.b.getY(), A));
-		
-		B=this.b.getX()-this.a.getX();
-		App.log.info(this.getClass(), String.format("  B = x2 - x1 = %f - %f = %f", this.b.getX(), this.a.getX(), B));
-		
-		C=this.a.getX()*this.b.getY() - this.b.getX()*this.a.getY();
-		App.log.info(this.getClass(), String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", this.a.getX(), this.b.getY(), this.b.getX(), this.a.getY(), C));
-		
-		return new Line(A, B, C);
+		return Line.getLine(this);
 	}
 	
 	/*
@@ -93,7 +72,7 @@ public class Segment {
 		App.log.info(this.getClass(), String.format("\n  Does %s contains %s?\t", this, p));
 		double da = p.distanceTo(a);
 		double db = p.distanceTo(b);
-		boolean bool = (Point.round(length, WaypointFinder.COORDINATE_PRECISION - 1) == Point.round(da + db, WaypointFinder.COORDINATE_PRECISION - 1));
+		boolean bool = (Point.round(length, App.COORDINATE_PRECISION - 1) == Point.round(da + db, App.COORDINATE_PRECISION - 1));
 		App.log.info(this.getClass(), String.format("  %f = %f?", length, da  + db));
 		return bool;
 	}

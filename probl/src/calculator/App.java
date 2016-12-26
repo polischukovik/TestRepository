@@ -15,6 +15,7 @@ public class App{
 	public static Logging log;
 	public static DataSource ds;
 	public static JACanvas canvas;
+	public static int COORDINATE_PRECISION = 6;
     
 	public static void main(String[] args) throws IOException{		
 
@@ -22,7 +23,7 @@ public class App{
 		ds = new SemiFileDS(new File("ds.txt"));
 //		50.392621, 30.496226
 //		50.391877, 30.494816
-		canvas = new JACanvas(new Map(new Point(50.392621, 30.496226), new Point(50.391877, 30.494816)));
+		canvas = new JACanvas();
 		
 		MainWindow mw= new MainWindow(ds, log, canvas);
 		EventQueue.invokeLater(() -> {

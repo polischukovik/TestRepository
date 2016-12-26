@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import calculator.App;
 import geometry.Line;
 import geometry.Point;
 import geometry.Segment;
@@ -28,9 +29,8 @@ public class JACanvas extends JPanel {
 	
 	private Dimension canvasSize;
 	
-	public JACanvas(Map m) {
+	public JACanvas() {
 		super();
-		this.map = m;
 
 		this.setBackground(Color.WHITE);
 	}
@@ -105,12 +105,57 @@ public class JACanvas extends JPanel {
 	}
 	
 	public void render(){
+		if(this.map == null){
+			App.log.info(this.getClass(), "Map is not initialized");
+			return;
+		}
 		this.repaint(); 
 	}
 	
-	public void showFigure(List<Point> points){
+    public void positionMap(List<Point> formPointList){
 		
-	}
+		Segment hOvf = Line.getHorizontal().getProjection((formPointList));
+		Segment vOvf = Line.getVertical().getProjection((formPointList));
+		
+		Point start = null, end = null;
+		if(hOvf.getLength() > vOvf.getLength()){
+			/*
+			 * when horizontal component is greater
+			 */
+			double halfVerticalY = vOvf.getA().getY() + (vOvf.getB().getY() - vOvf.getA().getY())/2;
+			
+			start = new Point(
+					hOvf.getA().getX(),
+					halfVerticalY - hOvf.getLength()/2);
+			end = new Point(
+					hOvf.getB().getX(),
+					halfVerticalY + vOvf.getLength()/2);
+		}else if(hOvf.getLength() < vOvf.getLength()){
+			/*
+			 * when vertical component is greater
+			 */
+			double halfHorizontalX = hOvf.getA().getX() + (hOvf.getB().getX() - hOvf.getA().getX())/2;
+			
+			start = new Point(
+					halfHorizontalX - vOvf.getLength()/2,
+					vOvf.getA().getY());
+			end = new Point(
+					halfHorizontalX + vOvf.getLength()/2,
+					vOvf.getB().getY());
+		}else{
+			/*
+			 * when ovfH x ovfV  is square
+			 */
+			start = new Point(
+					hOvf.getA().getX(),
+					vOvf.getA().getY());
+			end = new Point(
+					hOvf.getB().getX(),
+					vOvf.getB().getY());
+		}
+		
+		this.setMap(new Map(start, end));;
+    }
 	
 	public int getDisplayX(double x){
 		return new Double((x - map.getStart().getX()) * canvasSize.getWidth() / (map.getEnd().getX() - (map.getStart().getX()))).intValue();
@@ -130,4 +175,8 @@ public class JACanvas extends JPanel {
 	public Map getMap() {
 		return map;
 	}
+	public void setMap(Map map) {
+		this.map = map;
+	}
+	
 }

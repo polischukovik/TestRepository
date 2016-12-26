@@ -1,5 +1,6 @@
 package logic;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import geometry.Segment;
 import logginig.Logging;
 
 public class WaypointFinder {
-	public final static int COORDINATE_PRECISION = 6;
 
 	private Logging logging;
 	@SuppressWarnings("unused")
@@ -25,6 +25,7 @@ public class WaypointFinder {
 	public WaypointFinder(DataSource ds, Logging logging) {
 		this.ds = ds;
 		this.logging = logging;
+		
 		/*
 		 *1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments 
 		 */

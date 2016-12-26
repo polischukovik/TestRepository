@@ -21,9 +21,11 @@ import javax.swing.border.BevelBorder;
 import calculator.App;
 import datasource.DataSource;
 import datasource.SemiFileDS;
+import geometry.Line;
 import geometry.Point;
 import geometry.Segment;
 import graphics.JGDisplay;
+import graphics.Map;
 import logginig.Logging;
 import logic.WaypointFinder;
 
@@ -173,6 +175,8 @@ public class MainWindow  extends JFrame {
 					}    
 					ds.setFormPoints(formPointList);					
 					pointList.setListData(formPointList);
+
+					canvas.positionMap(formPointList);
 					
 					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
 					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
@@ -235,6 +239,5 @@ public class MainWindow  extends JFrame {
 	public Consumer getConsole() {
 		return (Consumer)log;
 	}
-	
 }
 

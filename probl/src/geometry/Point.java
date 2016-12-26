@@ -1,6 +1,7 @@
 package geometry;
 
 import java.util.Comparator;
+import java.util.List;
 
 import calculator.App;
 import logic.WaypointFinder;
@@ -10,16 +11,23 @@ public class Point {
 	private double y;
 	public Point(double x, double y) {
 		super();
-		this.x = round(x,WaypointFinder.COORDINATE_PRECISION);
-		this.y = round(y,WaypointFinder.COORDINATE_PRECISION);
+		this.x = round(x,App.COORDINATE_PRECISION);
+		this.y = round(y,App.COORDINATE_PRECISION);
 	}
 	
 	/*
 	 * d=sqlrt((x2−x1)^2+(y2−y1)^2)
 	 */
+//	public double distanceTo(Point p){
+//		App.log.info(this.getClass(), String.format("    Finding distance from %s to %s", this, p));		
+//		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), App.COORDINATE_PRECISION);
+//		App.log.info(this.getClass(), String.format("    Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
+//		return d;
+//	}
+	
 	public double distanceTo(Point p){
 		App.log.info(this.getClass(), String.format("    Finding distance from %s to %s", this, p));		
-		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), WaypointFinder.COORDINATE_PRECISION);
+		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), App.COORDINATE_PRECISION);
 		App.log.info(this.getClass(), String.format("    Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
 		return d;
 	}
@@ -92,4 +100,5 @@ public class Point {
 			return -1;
 		}
 	}
+
 }

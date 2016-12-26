@@ -12,7 +12,7 @@ public class Line {
 	private double B;
 	private double C;	
 	
-	public Line(double A, double B, double C) {
+	private Line(double A, double B, double C) {
 		super();
 		this.A = A;
 		this.B = B;
@@ -28,9 +28,9 @@ public class Line {
 	 */
 	public Line getPerprndicularAtPoint(Point p){
 		App.log.info(this.getClass(), String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
-		double Al = Point.round( this.B , WaypointFinder.COORDINATE_PRECISION);
-		double Bl = Point.round( -1.0 * this.A , WaypointFinder.COORDINATE_PRECISION);
-		double Cl = Point.round( (-1.0) * Al * p.getX() - Bl * p.getY() , WaypointFinder.COORDINATE_PRECISION);
+		double Al = Point.round( this.B , App.COORDINATE_PRECISION);
+		double Bl = Point.round( -1.0 * this.A , App.COORDINATE_PRECISION);
+		double Cl = Point.round( (-1.0) * Al * p.getX() - Bl * p.getY() , App.COORDINATE_PRECISION);
 		Line res = new Line(Al, Bl, Cl);
 		App.log.info(this.getClass(), String.format("  Perpendicular is %s", res));
 		return res;
@@ -56,8 +56,8 @@ public class Line {
 			App.log.info(this.getClass(), String.format("null"));
 			return null; //Parallel
 		}
-		double x = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
-		double y = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), WaypointFinder.COORDINATE_PRECISION);
+		double x = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
+		double y = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
 		Point p = new Point(x, y);
 		App.log.info(this.getClass(), String.format("   =%s", p));
 		return p;			
@@ -99,6 +99,12 @@ public class Line {
 		return this.getPerprndicularAtPoint(p).getInterctionWithLine(this);
 	}
 	
+	/**
+	 * Calculate determination area of the list of Point on given Line<br>
+	 * Basically searches a projection of each point of the list on the Line and calculates the outer points
+	 * @param list - the List of the points for which determination area is calculated
+	 * @return An instance of a Segment containing the most outer points of projection on Line
+	 */
 	public Segment getProjection(List<Point> list){
 		Segment result = null;
 		double distance, max = 0;
@@ -116,6 +122,26 @@ public class Line {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Generates an instance of Horizontal line that contains Point(0,0)
+	 * A=0, B=1, C=0
+	 * 
+	 * @return an instance of the Line
+	 */
+	public static Line getHorizontal(){
+		return new Line(0, 1, 0);
+	}
+	
+	/**
+	 * Generates an instance of Vertical line that contains Point(0,0)
+	 * A=1, B=0, C=0
+	 * 
+	 * @return an instance of the Line
+	 */
+	public static Line getVertical(){
+		return new Line(1, 0, 0);
 	}
 
 	public double getA() {
@@ -145,6 +171,30 @@ public class Line {
 	@Override
 	public String toString() {
 		return "Line [A=" + A + ", B=" + B + ", C=" + C + "]";
+	}
+
+	/*
+	 * Отримання лінійної функції для відрізка *  
+	 * (y-y1)/(y2-y1)=(x-x1)/(x2-x1)
+	 * (y1-y2)*x + (x2-x1)*y +(x1y2-x2y1)=0
+	 * Ax+By+C=0
+	 * y=-A/B*x - C/B
+	 * A=y1-y2
+	 * B=x2-x1
+	 * C=x1y2 - x2y1
+	 */
+	public static Line getLine(Segment segment) {
+		App.log.info(segment.getClass(), String.format("  Geting line for segment %s", segment));
+		double A,B,C;
+		A=segment.getA().getY()-segment.getB().getY();
+		App.log.info(segment.getClass(), String.format("  A = y1 - y2 = %f - %f = %f", segment.getA().getY(), segment.getB().getY(), A));
+		
+		B=segment.getB().getX()-segment.getA().getX();
+		App.log.info(segment.getClass(), String.format("  B = x2 - x1 = %f - %f = %f", segment.getB().getX(), segment.getA().getX(), B));
+		
+		C=segment.getA().getX()*segment.getB().getY() - segment.getB().getX()*segment.getA().getY();
+		App.log.info(segment.getClass(), String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", segment.getA().getX(), segment.getB().getY(), segment.getB().getX(), segment.getA().getY(), C));
+		return new Line(A,B,C);
 	}
 	
 }
