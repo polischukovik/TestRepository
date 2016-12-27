@@ -4,6 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.RoundRectangle2D.Double;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,16 +32,18 @@ public class JACanvas extends JPanel {
 	private List<JGDisplay> objects = new ArrayList<>();
 	private Map map;
 	
-	private Dimension canvasSize;
+	private Dimension canvasSize = null;
 	
 	public JACanvas() {
 		super();
 
 		this.setBackground(Color.WHITE);
 	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
+		
 		canvasSize = getSize();
 		
 		for(JGDisplay o : objects){			
@@ -124,7 +129,7 @@ public class JACanvas extends JPanel {
 			/*
 			 * when vertical component is greater
 			 */
-			double halfVertical = mapOvf.getA().getLatitude() + (mapOvf.getB().getLongitude() - mapOvf.getA().getLongitude())/2;
+			double halfVerticalY = mapOvf.getA().getLatitude() + (mapOvf.getB().getLongitude() - mapOvf.getA().getLongitude())/2;
 			double horizontal = mapOvf.gethOvf().getB().getLongitude() - mapOvf.gethOvf().getA().getLongitude();
 			
 			start = new Point(
@@ -161,11 +166,11 @@ public class JACanvas extends JPanel {
     }
 	
 	public int getDisplayX(double x){
-		return new Double((x - map.getStart().getLatitude()) * canvasSize.getWidth() / (map.getEnd().getLatitude() - (map.getStart().getLatitude()))).intValue();
+		return new java.lang.Double((x - map.getStart().getLatitude()) * canvasSize.getWidth() / (map.getEnd().getLatitude() - (map.getStart().getLatitude()))).intValue();
 	}
 	
 	public int getDisplayY(double y){
-		return new Double(canvasSize.getHeight() - (y - map.getStart().getLongitude()) * canvasSize.getHeight() / (map.getEnd().getLongitude() - (map.getStart().getLongitude()))).intValue();
+		return new java.lang.Double(canvasSize.getHeight() - (y - map.getStart().getLongitude()) * canvasSize.getHeight() / (map.getEnd().getLongitude() - (map.getStart().getLongitude()))).intValue();
 	}
 	
 	public double getMapX(int x){

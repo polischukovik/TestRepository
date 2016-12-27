@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class JAPointsList extends JPanel{
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createTitledBorder("Points"));
+        setPreferredSize(new Dimension (300, 350));
    
         showDialogButton = new JButton("Open");
 	    

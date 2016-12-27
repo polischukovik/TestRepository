@@ -1,6 +1,8 @@
 package calculator;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import datasource.DataSource;
@@ -24,6 +26,10 @@ public class App{
 		canvas = new JACanvas();
 		
 		MainWindow mw= new MainWindow(ds, log, canvas);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		mw.setSize(screenSize.width*3/4, screenSize.height*3/4);
+		mw.setLocationByPlatform(true);
 		EventQueue.invokeLater(() -> {
 			mw.setVisible(true);
         });

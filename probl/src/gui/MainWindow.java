@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -57,60 +58,42 @@ public class MainWindow  extends JFrame {
 	}
 
 	public void initUI() {    
-		
-		this.setLayout(new FlowLayout());
-		//this.setPreferredSize(new Dimension(this.getParent().getSize().width*4/5 - 5, this.getParent().getHeight()));
-		
         setTitle("Waypoint Calculator");
-        setMinimumSize(new Dimension(windowWidth, windowhHeight));
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //this.setExtendedState(Frame.MAXIMIZED_BOTH);
         
-        JPanel left = new JPanel();	    
-        left.setPreferredSize(new Dimension(this.getSize().width*4/5 - 5, this.getHeight()));
-        left.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        JPanel generalPanel = new JPanel(new BorderLayout());	    
+        JPanel rightPanel = new JPanel();
         
-        JPanel placeholderPanel = new JPanel(new BorderLayout());    
-        left.add(placeholderPanel);
-        Dimension d =  placeholderPanel.getParent().getPreferredSize();
-        placeholderPanel.setPreferredSize(new Dimension(d.getSize().width, d.getSize().height -10));
+        JPanel plcHldrDisp = new JPanel(new BorderLayout());    
+        JPanel plcHldrConsole = new JPanel(new BorderLayout());    
+        
+        pointList = new JAPointsList();        
+        segmentPanel = new JASegment("Base segment", pointList);
+        sections = new JAInteger("Sections");
+        
+        generalPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setPreferredSize(new Dimension(300, 300));
+        rightPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         
         JADisplay display = new JADisplay(canvas);        
-        placeholderPanel.add(display);        
+        plcHldrDisp.add(display);        
+        plcHldrConsole.add((JAConsole) log.getConsumer());
         
-        this.add(left);
-	        
-        JPanel right = new JPanel(new FlowLayout());
-        right.setPreferredSize(new Dimension(this.getWidth()*1/5 - 5, this.getHeight()));
-        right.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-                 
-        pointList = new JAPointsList();        
-        right.add(pointList);
-        pointList.setPreferredSize(new Dimension(pointList.getParent().getPreferredSize().width - 10, 350));
-        
-        segmentPanel = new JASegment("Base segment", pointList);
-        right.add(segmentPanel);
-        segmentPanel.setPreferredSize(new Dimension(segmentPanel.getParent().getPreferredSize().width - 10, 75));
-        
-        sections = new JAInteger("Sections");
-        right.add(sections);
-        sections.setPreferredSize(new Dimension(sections.getParent().getPreferredSize().width - 10, 50));
-        
-        JPanel placeholderLog = new JPanel(new BorderLayout());    
-        right.add(placeholderLog);        
-        placeholderLog.setPreferredSize(new Dimension(placeholderLog.getParent().getPreferredSize().width - 10, 200));
-        
-        placeholderLog.add((JAConsole) log.getConsumer());
+        rightPanel.add(pointList);
+        rightPanel.add(segmentPanel);
+        rightPanel.add(sections);
+        rightPanel.add(plcHldrConsole);        
+        generalPanel.add(plcHldrDisp);
         
         JButton flip = new JButton("Switch veiw");  
-        right.add(flip);
+        rightPanel.add(flip);
         
         JButton calculate = new JButton("Go");
-        right.add(calculate);
-        
-        this.add(right);
-        this.pack();
+        rightPanel.add(calculate);
+
+        this.add(generalPanel, BorderLayout.CENTER);
+        this.add(rightPanel, BorderLayout.EAST);
         
         calculate.addActionListener(new ActionListener() {
 
@@ -219,15 +202,15 @@ public class MainWindow  extends JFrame {
 		flip.addActionListener(new ActionListener() {					
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(placeholderPanel.getComponentCount() == 1 && placeholderLog.getComponentCount() == 1){
-					JPanel component = (JPanel) placeholderLog.getComponents()[0];
-					JPanel componentOther = (JPanel) placeholderPanel.getComponents()[0];
-					placeholderLog.removeAll();
-					placeholderLog.add(componentOther);
+				if(plcHldrDisp.getComponentCount() == 1 && plcHldrConsole.getComponentCount() == 1){
+					JPanel component = (JPanel) plcHldrConsole.getComponents()[0];
+					JPanel componentOther = (JPanel) plcHldrDisp.getComponents()[0];
+					plcHldrConsole.removeAll();
+					plcHldrConsole.add(componentOther);
 					componentOther.setPreferredSize(new Dimension(componentOther.getParent().getPreferredSize().width - 10, 200));
 					
-					placeholderPanel.removeAll();
-					placeholderPanel.add(component);
+					plcHldrDisp.removeAll();
+					plcHldrDisp.add(component);
 					component.setPreferredSize(new Dimension(component.getParent().getPreferredSize().width, component.getParent().getPreferredSize().height));
 				}
 				((JButton) e.getSource()).getParent().getParent().revalidate();
