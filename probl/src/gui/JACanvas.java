@@ -119,7 +119,7 @@ public class JACanvas extends JPanel {
 		this.repaint(); 
 	}
 	
-    public void positionMap(Polygon polygon){
+    public void loadMap(Polygon polygon){
  
 		Dimention mapOvf = polygon.getOvf();		
     	App.log.info(this.getClass(), String.format("Map OVF is %s", mapOvf));

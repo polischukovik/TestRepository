@@ -23,22 +23,20 @@ public class JASegment extends JPanel{
 	private List<JGDisplay> displayObjects;
 
 	public JASegment(String name, JAPointsList pointList){
-		Dimension d =new Dimension(300,10);
-        setPreferredSize(d);
-	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));	    
+	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));    
         setBorder(BorderFactory.createTitledBorder(name));
-        
+        setPreferredSize(new Dimension (300, 75));
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));        
+        panel.setMaximumSize(new Dimension(300, 25));       
+        panel.setMinimumSize(new Dimension(300, 25));
         JLabel label = new JLabel("Segment:");
         segmentField = new JTextField();
         segmentField.setEditable(false);
-        segmentField.setPreferredSize(d);
         
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));        
         panel.add(label);
         panel.add(segmentField);
-        //panel.setPreferredSize(new Dimension(getPreferredSize().getSize().width - 10, 10));
-        
         buttonAdd = new JButton("Add Segment");
         
         this.add(buttonAdd);

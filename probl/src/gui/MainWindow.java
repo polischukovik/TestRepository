@@ -67,16 +67,16 @@ public class MainWindow  extends JFrame {
         JPanel plcHldrDisp = new JPanel(new BorderLayout());    
         JPanel plcHldrConsole = new JPanel(new BorderLayout());    
         
-        pointList = new JAPointsList();        
+        pointList = new JAPointsList();  
         segmentPanel = new JASegment("Base segment", pointList);
         sections = new JAInteger("Sections");
+        JADisplay display = new JADisplay(canvas);    
         
-        generalPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setPreferredSize(new Dimension(300, 300));
         rightPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-        
-        JADisplay display = new JADisplay(canvas);        
+        generalPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+    
         plcHldrDisp.add(display);        
         plcHldrConsole.add((JAConsole) log.getConsumer());
         
@@ -152,15 +152,15 @@ public class MainWindow  extends JFrame {
     	        	App.log.info(this.getClass(), "Opening: " + fc.getSelectedFile().getName() + ".");
     	        	Polygon polygon;
     	        	try {
-    	        		polygon = new Polygon(SemiFileDS.readFile(fc.getSelectedFile()));
+    	        		ds.setFormPoints(SemiFileDS.readFile(fc.getSelectedFile()));
 					} catch (IOException e1) {
 						App.log.info(this.getClass(), e1.getMessage());
 						return;
 					}    
-					ds.setFormPoints(polygon);					
+	        		polygon = new Polygon(ds.getFormPoints());
 					pointList.setListData(polygon);
 
-					canvas.positionMap(polygon);
+					canvas.loadMap(polygon);
 					
 					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
 					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
@@ -202,17 +202,7 @@ public class MainWindow  extends JFrame {
 		flip.addActionListener(new ActionListener() {					
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(plcHldrDisp.getComponentCount() == 1 && plcHldrConsole.getComponentCount() == 1){
-					JPanel component = (JPanel) plcHldrConsole.getComponents()[0];
-					JPanel componentOther = (JPanel) plcHldrDisp.getComponents()[0];
-					plcHldrConsole.removeAll();
-					plcHldrConsole.add(componentOther);
-					componentOther.setPreferredSize(new Dimension(componentOther.getParent().getPreferredSize().width - 10, 200));
-					
-					plcHldrDisp.removeAll();
-					plcHldrDisp.add(component);
-					component.setPreferredSize(new Dimension(component.getParent().getPreferredSize().width, component.getParent().getPreferredSize().height));
-				}
+				swipeWindows(plcHldrDisp, plcHldrConsole);
 				((JButton) e.getSource()).getParent().getParent().revalidate();
 				((JButton) e.getSource()).getParent().getParent().repaint();
 				canvas.render();
@@ -222,6 +212,20 @@ public class MainWindow  extends JFrame {
 
 	public Consumer getConsole() {
 		return (Consumer)log;
+	}
+
+	private void swipeWindows(JPanel plcHldrDisp, JPanel plcHldrConsole) {
+		if(plcHldrDisp.getComponentCount() == 1 && plcHldrConsole.getComponentCount() == 1){
+			JPanel component = (JPanel) plcHldrConsole.getComponents()[0];
+			JPanel componentOther = (JPanel) plcHldrDisp.getComponents()[0];
+			plcHldrConsole.removeAll();
+			plcHldrConsole.add(componentOther);
+			componentOther.setPreferredSize(new Dimension(componentOther.getParent().getPreferredSize().width - 10, 200));
+			
+			plcHldrDisp.removeAll();
+			plcHldrDisp.add(component);
+			component.setPreferredSize(new Dimension(component.getParent().getPreferredSize().width, component.getParent().getPreferredSize().height));
+		}
 	}
 }
 

@@ -26,11 +26,11 @@ public class JAPointsList extends JPanel{
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setBorder(BorderFactory.createTitledBorder("Points"));
-        setPreferredSize(new Dimension (300, 350));
-   
+        
         showDialogButton = new JButton("Open");
 	    
 	    defaultList = new JList<>();
+	    defaultList.setPreferredSize(new Dimension (300, 200));
 	    defaultList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	    defaultList.setLayoutOrientation(JList.HORIZONTAL_WRAP);  
 	    

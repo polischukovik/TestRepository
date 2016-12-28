@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 
 import javax.swing.BorderFactory;
@@ -15,7 +16,9 @@ public class JAConsole extends JPanel implements Consumer {
         public JAConsole() {
             setLayout(new BorderLayout());
             setBorder(BorderFactory.createTitledBorder("Console"));
+
             output = new JTextArea();
+
             this.add(new JScrollPane(output));
         }
 

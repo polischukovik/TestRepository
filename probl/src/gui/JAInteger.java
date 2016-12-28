@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Dimension;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -13,7 +15,8 @@ public class JAInteger extends JPanel{
 	public JAInteger(String name) {
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setBorder(BorderFactory.createTitledBorder(name));
-		
+        setMaximumSize(new Dimension (300, 75));
+        
 		JLabel label1 = new JLabel(String.format("%s:", name));
         
         sectionsField = new JTextField();
