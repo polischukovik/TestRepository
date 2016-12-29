@@ -51,6 +51,6 @@ public class Polygon extends ArrayList<Point> {
 			lonB = hOvf.getA().getLongitude();
 		}
 		
-		return new Dimention(new Point(lonA, latA), new Point(lonB, latB), hOvf, vOvf);
+		return new Dimention(new Point(latA, lonA), new Point(latB, lonB), hOvf, vOvf);
 	}
 }

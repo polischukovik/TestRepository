@@ -8,10 +8,10 @@ import calculator.App;
 public class Point {
 	private double latitude;
 	private double longitude;
-	public Point(double longitude, double latitude) {
+	public Point(double latitude, double longitude) {
 		super();
-		this.latitude = round(longitude,App.COORDINATE_PRECISION);
-		this.longitude = round(latitude,App.COORDINATE_PRECISION);
+		this.latitude = round(latitude,App.COORDINATE_PRECISION);
+		this.longitude = round(longitude,App.COORDINATE_PRECISION);
 	}
 	
 	/*
@@ -40,6 +40,14 @@ public class Point {
 		double d = R * c;
 		
 		return d;
+	}
+	
+	public Point moveTo(double direction, double distance){
+		double tc = Math.toRadians(direction);
+		double lat =Math.asin(Math.sin(this.getLatitude())*Math.cos(distance)+Math.cos(this.getLatitude())*Math.sin(distance)*Math.cos(tc));
+		double dlon=Math.atan2(Math.sin(tc)*Math.sin(distance)*Math.cos(this.getLatitude()),Math.cos(distance)-Math.sin(this.getLatitude())*Math.sin(lat));
+		double lon=(this.getLatitude()-dlon +Math.PI) % 2*Math.PI - Math.PI;
+		return new Point(lat, lon);
 	}
 	
 	public static Comparator<Point> getPointNameComparator(Line base){

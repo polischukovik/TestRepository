@@ -160,7 +160,7 @@ public class MainWindow  extends JFrame {
 	        		polygon = new Polygon(ds.getFormPoints());
 					pointList.setListData(polygon);
 
-					canvas.loadMap(polygon);
+					canvas.setMapImage(polygon);
 					
 					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
 					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
