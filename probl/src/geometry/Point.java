@@ -43,13 +43,19 @@ public class Point {
 	}
 	
 	public Point moveTo(double direction, double distance){
-		double tc = Math.toRadians(direction);
+		double tc = direction;
 		double lat =Math.asin(Math.sin(this.getLatitude())*Math.cos(distance)+Math.cos(this.getLatitude())*Math.sin(distance)*Math.cos(tc));
 		double dlon=Math.atan2(Math.sin(tc)*Math.sin(distance)*Math.cos(this.getLatitude()),Math.cos(distance)-Math.sin(this.getLatitude())*Math.sin(lat));
 		double lon=(this.getLatitude()-dlon +Math.PI) % 2*Math.PI - Math.PI;
 		return new Point(lat, lon);
 	}
 	
+	private double mod(double y, double x){
+		mod=y - x * int(y/x)
+		if ( mod < 0) mod = mod + x
+		
+	}
+
 	public static Comparator<Point> getPointNameComparator(Line base){
 		return new Comparator<Point>() {
 			@Override
@@ -63,6 +69,18 @@ public class Point {
 			}
 		};
 	}
+	
+//	public Point translateCoordinates(final double distance, final Point origpoint, final double angle) {
+//        final double distanceNorth = Math.sin(angle) * distance;
+//        final double distanceEast = Math.cos(angle) * distance;
+//
+//        final double earthRadius = 6371000;
+//
+//        final double newLat = origpoint.latitude + (distanceNorth / earthRadius) * 180 / Math.PI;
+//        final double newLon = origpoint.longitude + (distanceEast / (earthRadius * Math.cos(newLat * 180 / Math.PI))) * 180 / Math.PI;
+//
+//        return new Point(newLat, newLon);
+//}
 	
 	public static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
