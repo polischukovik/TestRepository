@@ -26,7 +26,7 @@ public class JGLine  extends Line2D.Float implements JGDisplay {
 	}
 	
 	public void show(Graphics g){
-		Segment s = line.getSegmentForBox(canvas.getMap().getStart(), canvas.getMap().getEnd());
+		Segment s = line.getSegmentForBox(canvas.getMap().getSW(), canvas.getMap().getNE());
 		if(s == null) return;
 		
 		this.setLine(canvas.getDisplayX(s.getA().getLatitude())

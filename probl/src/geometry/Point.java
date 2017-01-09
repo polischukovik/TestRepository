@@ -1,11 +1,12 @@
 package geometry;
 
 import java.util.Comparator;
-import java.util.List;
 
 import calculator.App;
 
 public class Point {
+	public static final Point HOME = new Point(50.392621, 30.496226);
+	
 	private double latitude;
 	private double longitude;
 	public Point(double latitude, double longitude) {
@@ -30,7 +31,7 @@ public class Point {
 		double φ1 = Math.toRadians(this.getLatitude());
 		double φ2 = Math.toRadians(p.getLatitude());
 		double Δφ = Math.toRadians(p.getLatitude() - this.getLatitude());
-		double Δλ = Math.toRadians(p.getLongitude()-this.getLongitude());
+		double Δλ = Math.toRadians(p.getLongitude() - this.getLongitude());
 
 		double a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
 		        Math.cos(φ1) * Math.cos(φ2) *
@@ -46,14 +47,16 @@ public class Point {
 		double tc = direction;
 		double lat =Math.asin(Math.sin(this.getLatitude())*Math.cos(distance)+Math.cos(this.getLatitude())*Math.sin(distance)*Math.cos(tc));
 		double dlon=Math.atan2(Math.sin(tc)*Math.sin(distance)*Math.cos(this.getLatitude()),Math.cos(distance)-Math.sin(this.getLatitude())*Math.sin(lat));
-		double lon=(this.getLatitude()-dlon +Math.PI) % 2*Math.PI - Math.PI;
-		return new Point(lat, lon);
+		double lon= mod( (this.getLatitude()-dlon +Math.PI), 2*Math.PI) - Math.PI;
+		return new Point(this.getLatitude() + lat, this.getLongitude() + lon);
 	}
 	
 	private double mod(double y, double x){
-		mod=y - x * int(y/x)
-		if ( mod < 0) mod = mod + x
-		
+		double mod = y - x * (int)(y/x); ///mood
+		if(mod < 0){
+			mod = mod + x;
+		}
+		return mod;
 	}
 
 	public static Comparator<Point> getPointNameComparator(Line base){
