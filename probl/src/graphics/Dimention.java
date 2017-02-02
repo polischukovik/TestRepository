@@ -31,5 +31,13 @@ public class Dimention extends Segment{
 	public void sethOvf(Segment hOvf) {
 		this.hOvf = hOvf;
 	}
+	
+	public Point getSW(){
+		return this.getA();
+	}
+	
+	public Point getNE(){
+		return this.getB();
+	}
 
 }

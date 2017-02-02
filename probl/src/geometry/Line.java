@@ -153,11 +153,11 @@ public class Line {
 			proj.add(this.getProjection(p));
 		}
 		for(Point p : proj){
-			maxP = p;
 			for(Point d : proj){
 				distance = p.distanceTo(d);
 				if(distance > max){
 					max = distance;
+					maxP = p;
 					maxD = d;
 				}
 			}

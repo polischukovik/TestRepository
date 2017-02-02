@@ -30,7 +30,7 @@ public class JAPointsList extends JPanel{
         showDialogButton = new JButton("Open");
 	    
 	    defaultList = new JList<>();
-	    defaultList.setPreferredSize(new Dimension (300, 200));
+	    defaultList.setPreferredSize(new Dimension (300, 400));
 	    defaultList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	    defaultList.setLayoutOrientation(JList.HORIZONTAL_WRAP);  
 	    

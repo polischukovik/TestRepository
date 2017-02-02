@@ -3,7 +3,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,8 +21,6 @@ import javax.swing.border.BevelBorder;
 import calculator.App;
 import datasource.DataSource;
 import datasource.SemiFileDS;
-import geometry.Line;
-import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
 import graphics.JGDisplay;
@@ -150,17 +147,17 @@ public class MainWindow  extends JFrame {
 
     	        if (returnVal == JFileChooser.APPROVE_OPTION) {
     	        	App.log.info(this.getClass(), "Opening: " + fc.getSelectedFile().getName() + ".");
-    	        	Polygon polygon;
+    	        	
     	        	try {
     	        		ds.setFormPoints(SemiFileDS.readFile(fc.getSelectedFile()));
 					} catch (IOException e1) {
 						App.log.info(this.getClass(), e1.getMessage());
 						return;
-					}    
-	        		polygon = new Polygon(ds.getFormPoints());
+					}   
+    	        	Polygon polygon = new Polygon(ds.getFormPoints());
 					pointList.setListData(polygon);
 
-					canvas.loadMap(polygon);
+					canvas.setMap(new Map(polygon, canvas.getSize()));
 					
 					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
 					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
