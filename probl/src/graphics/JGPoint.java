@@ -9,7 +9,7 @@ import java.awt.geom.Ellipse2D;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGPoint extends Point implements JGDisplay {
+public class JGPoint extends Point implements CanvasObject {
 	private Color color;
 	private int size = 5;
 	private JACanvas canvas;

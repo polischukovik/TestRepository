@@ -10,13 +10,13 @@ import java.awt.geom.Path2D;
 import java.util.List;
 
 import geometry.Point;
-import graphics.CompositeStroke;
-import graphics.CompoundStroke;
-import graphics.JGDisplay;
-import graphics.ShapeStroke;
+import graphics.CanvasObject;
+import graphics.strokes.CompositeStroke;
+import graphics.strokes.CompoundStroke;
+import graphics.strokes.ShapeStroke;
 
 @SuppressWarnings("serial")
-public class JGWaypointPath extends Path2D.Float implements JGDisplay {
+public class JGWaypointPath extends Path2D.Float implements CanvasObject {
 
 	private JACanvas canvas;
 	private List<Point> waypoints;

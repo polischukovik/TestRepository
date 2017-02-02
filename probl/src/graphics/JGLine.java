@@ -12,7 +12,7 @@ import geometry.Segment;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGLine  extends Line2D.Float implements JGDisplay {
+public class JGLine  extends Line2D.Float implements CanvasObject {
 	private Color color;
 	private int size = 1;
 	private JACanvas canvas;

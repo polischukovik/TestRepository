@@ -26,8 +26,6 @@ public class App{
 		
 		log = Logging.createLogging();
 		ds = new SemiFileDS(new File("ds.txt"));
-//		50.392621, 30.496226
-//		50.391877, 30.494816
 		canvas = new JACanvas();
 		
 		MainWindow mw= new MainWindow(ds, log, canvas);

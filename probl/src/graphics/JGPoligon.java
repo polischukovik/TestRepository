@@ -11,7 +11,7 @@ import geometry.Point;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGPoligon extends Polygon implements JGDisplay {
+public class JGPoligon extends Polygon implements CanvasObject {
 	private Color color;
 	private JACanvas canvas;
 	private geometry.Polygon polygon;

@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import geometry.Point;
-import graphics.JGDisplay;
+import graphics.CanvasObject;
 
 @SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
@@ -21,7 +21,7 @@ public class JAPointsList extends JPanel{
 	private List<Point> formPointList = new ArrayList<>();
 	private JButton showDialogButton;
 	private JList<Point> defaultList;
-	private List<JGDisplay> displayObjects;
+	private List<CanvasObject> displayObjects;
 	
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -55,11 +55,11 @@ public class JAPointsList extends JPanel{
 		defaultList.setListData(list.toArray(pointArray));		
 	}
 
-	public List<JGDisplay> getDisplayObjects() {
+	public List<CanvasObject> getDisplayObjects() {
 		return displayObjects;
 	}
 
-	public void setDisplayObjects(List<JGDisplay> displayObjects) {
+	public void setDisplayObjects(List<CanvasObject> displayObjects) {
 		this.displayObjects = displayObjects;
 	}	
 }

@@ -23,7 +23,7 @@ import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Polygon;
 import geometry.Segment;
-import graphics.JGDisplay;
+import graphics.CanvasObject;
 import graphics.Map;
 import logginig.Logging;
 import logic.WaypointFinder;
@@ -41,10 +41,10 @@ public class MainWindow  extends JFrame {
 	private JACanvas canvas;
 	private Logging log;
 	
-	private List<JGDisplay> ovfLine;
-	private List<JGDisplay> divisionLines;
-	private List<JGDisplay> waypoints;
-	protected List<JGDisplay> waypointPath;
+	private List<CanvasObject> ovfLine;
+	private List<CanvasObject> divisionLines;
+	private List<CanvasObject> waypoints;
+	protected List<CanvasObject> waypointPath;
 
 	public MainWindow(DataSource ds, Logging log, JACanvas canvas) throws HeadlessException {
 		super();	
@@ -159,8 +159,8 @@ public class MainWindow  extends JFrame {
 
 					canvas.setMap(new Map(polygon, canvas.getSize()));
 					
-					List<JGDisplay> oldDisplayObject = pointList.getDisplayObjects();
-					List<JGDisplay> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
+					List<CanvasObject> oldDisplayObject = pointList.getDisplayObjects();
+					List<CanvasObject> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
 					displaylist.add(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 32)));
 					
 					pointList.setDisplayObjects(displaylist);
@@ -184,7 +184,7 @@ public class MainWindow  extends JFrame {
 					ds.setBase(segment);
 					segmentPanel.setSegment(segment);
 					
-					List<JGDisplay> oldDisplayObject = segmentPanel.getDisplayObjects();
+					List<CanvasObject> oldDisplayObject = segmentPanel.getDisplayObjects();
 					segmentPanel.setDisplayObjects(Arrays.asList(canvas.createSegment(segment, Color.GREEN)));
 					
 					if(oldDisplayObject != null){

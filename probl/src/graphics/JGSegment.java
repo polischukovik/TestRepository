@@ -11,7 +11,7 @@ import geometry.Segment;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGSegment extends Float implements JGDisplay {
+public class JGSegment extends Float implements CanvasObject {
 	private Color color;
 	private int size = 2;
 	private JACanvas canvas;

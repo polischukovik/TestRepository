@@ -84,6 +84,10 @@ public class Map{
 		return NE;
 	}
 	
+	public void setNE(Point NE) {
+		this.NE = NE;
+	}
+	
 //	public int getBoundsZoomLevel(Dimention, mapDim) {
 //	    int WORLD_DIM_height = 256, WORLD_DIM_width = 256;
 //	    int ZOOM_MAX = 21;
@@ -112,7 +116,4 @@ public class Map{
 //        return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
 //    }
 
-	public void setNE(Point NE) {
-		this.NE = NE;
-	}
 }
