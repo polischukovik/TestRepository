@@ -11,12 +11,12 @@ import geometry.Point;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGPoligon extends Polygon implements CanvasObject {
+public class JGPolygon extends Polygon implements CanvasObject {
 	private Color color;
 	private JACanvas canvas;
 	private geometry.Polygon polygon;
 	
-	public JGPoligon(List<Point> list, JACanvas canvas, Color color) {
+	public JGPolygon(List<Point> list, JACanvas canvas, Color color) {
 		super();
 		this.color = color;
 		this.polygon = new geometry.Polygon(list);

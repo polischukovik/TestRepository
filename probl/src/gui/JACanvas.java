@@ -13,12 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import geometry.Line;
+import geometry.Path;
 import geometry.Point;
+import geometry.Polygon;
 import geometry.Segment;
 import graphics.CanvasObject;
 import graphics.JGLine;
+import graphics.JGPath;
 import graphics.JGPoint;
-import graphics.JGPoligon;
+import graphics.JGPolygon;
 import graphics.JGSegment;
 import graphics.Map;
 
@@ -26,10 +29,18 @@ import graphics.Map;
 public class JACanvas extends JPanel {
 	final static BasicStroke stroke = new BasicStroke(2.0f);
 	private List<CanvasObject> objects = new ArrayList<>();
-	private Map map;
+	private Map map = null;
 	
 	private Dimension canvasSize = null;
 	private JLabel imageContainer;
+	
+	public static enum CanvasElements{
+		Point,
+		Line,
+		Segment,
+		Polygon,
+		Path
+	}; 
 	
 	public JACanvas() {
 		super();
@@ -41,7 +52,7 @@ public class JACanvas extends JPanel {
 
 		this.add(imageContainer);
 		
-		setMap(new Map());
+		imageContainer.setIcon(Map.getDefaultImage());
 	}
 
 	public void setMap(Map map){
@@ -53,7 +64,9 @@ public class JACanvas extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		
+		if(map == null){
+			throw new IllegalStateException("Canvas is not initialized");
+		}		
 		canvasSize = getSize();
 		
 		for(CanvasObject o : objects){			
@@ -61,48 +74,32 @@ public class JACanvas extends JPanel {
 		}
 	}
 	
-	public JGPoint createPoint(Point p, Color color){
-		return new JGPoint(p, this, color);
-	}
-	
-	public List<CanvasObject> createAllPoints(Collection<? extends Point> points, Color color){
-		List<CanvasObject> result = new ArrayList<>();
-		for(Point p : points){
-			result.add(createPoint(p, color));
+	public void createElement(Object obj, Color color){
+		CanvasElements co = CanvasElements.valueOf(obj.getClass().getSimpleName());
+		switch (co) {
+		case Point:
+			objects.add( new JGPoint((Point) obj, this, color));
+		case Line:
+			objects.add( new JGLine((Line) obj, this, color));
+		case Segment:
+			objects.add( new JGSegment((Segment) obj, this, color));
+		case Polygon:
+			objects.add( new JGPolygon((Polygon) obj, this, color));
+		case Path:
+			objects.add( new JGPath((Path) obj, this, color));
+		default:
+			throw new IllegalArgumentException(String.format("Element of type %s could not be displayed", obj.getClass().getSimpleName()));
 		}
-		return result;
 	}
 	
-	public CanvasObject createPoligon(List<Point> p, Color color){
-		return new JGPoligon(p, this, color);
-	}
-	
-	public CanvasObject createLine(Line l, Color color){
-		return new JGLine(l, this, color);
-	}
-	
-	public List<CanvasObject> createAllLines(Collection<? extends Line> lines, Color color){
-		List<CanvasObject> result = new ArrayList<>();
-		for(Line l : lines){
-			result.add(createLine(l, color));
+	public void createAllElements(Collection<?> collection, Color color){
+		for(Object obj : collection){
+			try {
+				createElement(obj, color);
+			} catch (Exception e) {
+				// log error here
+			}			
 		}
-		return result;
-	}
-	
-	public CanvasObject createSegment(Segment s, Color color){
-		return new JGSegment(s, this, color);
-	}
-	
-	public List<CanvasObject> createAllSegments(Collection<? extends Segment> segments, Color color){
-		List<CanvasObject> result = new ArrayList<>();
-		for(Segment s : segments){
-			result.add(createSegment(s, color));
-		}
-		return result;
-	}	
-
-	public CanvasObject createWaypointPath(List<Point> waypoints, Color color) {
-		return new JGWaypointPath(waypoints, this, color);
 	}
 	
 	public void addObject(CanvasObject obj){
@@ -123,9 +120,7 @@ public class JACanvas extends JPanel {
 	
 	public void render(){
 		this.repaint(); 
-	}
-	
-    
+	}    
 	
 	public int getDisplayX(double x){
 		return new java.lang.Double((x - map.getSW().getLatitude()) * canvasSize.getWidth() / (map.getNE().getLatitude() - (map.getSW().getLatitude()))).intValue();

@@ -17,16 +17,18 @@ public class Map{
 
 	private Point SW, NE;
 	private ImageIcon image;
-	private final String defaultImagePath = "blank.jpg";
+	private final static String DEFAULTIMAGEPATH = "blank.jpg";
+	private static ImageIcon defaultImage =  new ImageIcon(Map.class.getResource(DEFAULTIMAGEPATH));
 
-	/**
-	 * Creates blank map
-	 */
-	public Map() {
-		this.SW = null;
-		this.NE = null;
-		image = createImageIcon(defaultImagePath, "blank");
-	}
+//	/**
+//	 * Creates blank map
+//	 */
+//	public Map() {
+//		this.SW = null;
+//		this.NE = null;
+//		
+//		defaultImage = createImageIcon(DEFAULTIMAGEPATH, "Default Image");
+//	}
 	
 	/**
 	 * Creates map to display polygon.
@@ -61,6 +63,10 @@ public class Map{
 		return image;
 	}
 	
+	public static ImageIcon getDefaultImage() {
+		return defaultImage;
+	}
+	
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	private ImageIcon createImageIcon(String path, String description) {
 	    java.net.URL imgURL = getClass().getResource(path);
@@ -68,7 +74,7 @@ public class Map{
 	        return new ImageIcon(imgURL, description);
 	    } else {
 	        System.err.println("Couldn't load image: " + path);
-	        return null;
+	    	return new ImageIcon();
 	    }
 	}
 

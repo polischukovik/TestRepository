@@ -1,4 +1,4 @@
-package gui;
+package graphics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -9,21 +9,22 @@ import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.util.List;
 
+import geometry.Path;
 import geometry.Point;
-import graphics.CanvasObject;
 import graphics.strokes.CompositeStroke;
 import graphics.strokes.CompoundStroke;
 import graphics.strokes.ShapeStroke;
+import gui.JACanvas;
 
 @SuppressWarnings("serial")
-public class JGWaypointPath extends Path2D.Float implements CanvasObject {
+public class JGPath extends Path2D.Float implements CanvasObject {
 
 	private JACanvas canvas;
-	private List<Point> waypoints;
+	private Path waypoints;
 	private Color color;
 	private int size = 5;
 
-	public JGWaypointPath(List<Point> waypoints, JACanvas jaCanvas, Color color) {
+	public JGPath(Path waypoints, JACanvas jaCanvas, Color color) {
 		super();
 		this.waypoints = waypoints;
 		this.canvas = jaCanvas;
@@ -33,12 +34,12 @@ public class JGWaypointPath extends Path2D.Float implements CanvasObject {
 	@Override
 	public void show(Graphics g) {
 		this.reset();
-		if(waypoints == null && waypoints.size() < 2){
+		if(waypoints == null && waypoints.getWaypoints().size() < 2){
 			return;
 		}
-		this.moveTo(canvas.getDisplayX(waypoints.get(0).getLatitude()), canvas.getDisplayY(waypoints.get(0).getLongitude()));
-		for(int i=1; i < waypoints.size(); i++){
-			this.lineTo(canvas.getDisplayX(waypoints.get(i).getLatitude()), canvas.getDisplayY(waypoints.get(i).getLongitude()));			
+		this.moveTo(canvas.getDisplayX(waypoints.getWaypoints().get(0).getLatitude()), canvas.getDisplayY(waypoints.getWaypoints().get(0).getLongitude()));
+		for(int i=1; i < waypoints.getWaypoints().size(); i++){
+			this.lineTo(canvas.getDisplayX(waypoints.getWaypoints().get(i).getLatitude()), canvas.getDisplayY(waypoints.getWaypoints().get(i).getLongitude()));			
 		 }
 		 Graphics2D g2 = (Graphics2D) g;
 		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

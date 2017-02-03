@@ -17,7 +17,7 @@ public class Logging {
 		this.consumer = consumer;
 	}
 	
-	public Logging getLogging(){
+	public static Logging getLogging(){
 		return logging;
 	}
 	
@@ -42,4 +42,5 @@ public class Logging {
 	public Consumer getConsumer() {
 		return consumer;
 	}
+	
 }

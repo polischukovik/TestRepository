@@ -40,11 +40,6 @@ public class MainWindow  extends JFrame {
 	private DataSource ds;
 	private JACanvas canvas;
 	private Logging log;
-	
-	private List<CanvasObject> ovfLine;
-	private List<CanvasObject> divisionLines;
-	private List<CanvasObject> waypoints;
-	protected List<CanvasObject> waypointPath;
 
 	public MainWindow(DataSource ds, Logging log, JACanvas canvas) throws HeadlessException {
 		super();	
@@ -108,7 +103,7 @@ public class MainWindow  extends JFrame {
 					if(ovfLine != null){
 						canvas.removeObjects(ovfLine);
 					}
-					ovfLine = Arrays.asList(canvas.createSegment(wpf.ovf, Color.RED));					
+					ovfLine = Arrays.asList(canvas.createElement(wpf.ovf, Color.RED));					
 					canvas.addObject(ovfLine);
 					
 					//add division lines
@@ -121,7 +116,7 @@ public class MainWindow  extends JFrame {
 					if(waypointPath != null){
 						canvas.removeObjects(waypointPath);
 					}
-					waypointPath = Arrays.asList(canvas.createWaypointPath(wpf.getWaypoints(), Color.YELLOW));					
+					waypointPath = Arrays.asList(canvas.createElement(wpf.getWaypoints(), Color.YELLOW));					
 					canvas.addObject(waypointPath);
 					
 					canvas.render();
@@ -185,7 +180,7 @@ public class MainWindow  extends JFrame {
 					segmentPanel.setSegment(segment);
 					
 					List<CanvasObject> oldDisplayObject = segmentPanel.getDisplayObjects();
-					segmentPanel.setDisplayObjects(Arrays.asList(canvas.createSegment(segment, Color.GREEN)));
+					segmentPanel.setDisplayObjects(Arrays.asList(canvas.createElement(segment, Color.GREEN)));
 					
 					if(oldDisplayObject != null){
 						canvas.removeObjects(oldDisplayObject);	

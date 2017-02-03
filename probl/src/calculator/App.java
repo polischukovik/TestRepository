@@ -19,10 +19,10 @@ public class App{
 	public static int COORDINATE_PRECISION = 6;
     
 	public static void main(String[] args) throws IOException{		
-		Point p = new Point(50.392621, 30.496226);
-		Point n = p.moveTo(360, 100);
-		System.out.println(n);
-		
+//		Point p = new Point(50.392621, 30.496226);
+//		Point n = p.moveTo(360, 100);
+//		System.out.println(n);
+//		
 		
 		log = Logging.createLogging();
 		ds = new SemiFileDS(new File("ds.txt"));
