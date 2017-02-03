@@ -17,8 +17,7 @@ public class Map{
 
 	private Point SW, NE;
 	private ImageIcon image;
-	private final static String DEFAULTIMAGEPATH = "blank.jpg";
-	private static ImageIcon defaultImage =  new ImageIcon(Map.class.getResource(DEFAULTIMAGEPATH));
+	private static ImageIcon defaultImage =  new ImageIcon(Map.class.getResource("blank.jpg"));
 
 //	/**
 //	 * Creates blank map

@@ -21,7 +21,6 @@ public class JAPointsList extends JPanel{
 	private List<Point> formPointList = new ArrayList<>();
 	private JButton showDialogButton;
 	private JList<Point> defaultList;
-	private List<CanvasObject> displayObjects;
 	
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -54,12 +53,4 @@ public class JAPointsList extends JPanel{
 		Point[] pointArray = new Point[list.size()];
 		defaultList.setListData(list.toArray(pointArray));		
 	}
-
-	public List<CanvasObject> getDisplayObjects() {
-		return displayObjects;
-	}
-
-	public void setDisplayObjects(List<CanvasObject> displayObjects) {
-		this.displayObjects = displayObjects;
-	}	
 }

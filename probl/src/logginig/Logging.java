@@ -9,7 +9,7 @@ import gui.StreamCapturer;
 public class Logging {
 	private PrintStream ps;
 	private int pad = 25;
-	private static Logging logging;
+	private static Logging logging = null;
 	private Consumer consumer;
 		
 	public Logging (PrintStream ps, Consumer consumer){

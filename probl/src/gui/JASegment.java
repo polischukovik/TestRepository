@@ -20,7 +20,6 @@ public class JASegment extends JPanel{
 	private Segment segment;
 	private JButton buttonAdd;
 	private JTextField segmentField;
-	private List<CanvasObject> displayObjects;
 
 	public JASegment(String name, JAPointsList pointList){
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));    
@@ -55,14 +54,4 @@ public class JASegment extends JPanel{
 	public JButton getButtonAdd() {
 		return buttonAdd;
 	}
-
-	public List<CanvasObject> getDisplayObjects() {		
-		return displayObjects;
-	}
-
-	public void setDisplayObjects(List<CanvasObject> displayObjects) {		
-		this.displayObjects = displayObjects;
-	}
-	
-
 }

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -74,22 +75,26 @@ public class JACanvas extends JPanel {
 		}
 	}
 	
-	public void createElement(Object obj, Color color){
+	private CanvasObject createCanvasElement(Object obj, Color color){
 		CanvasElements co = CanvasElements.valueOf(obj.getClass().getSimpleName());
 		switch (co) {
 		case Point:
-			objects.add( new JGPoint((Point) obj, this, color));
+			return new JGPoint((Point) obj, this, color);
 		case Line:
-			objects.add( new JGLine((Line) obj, this, color));
+			return new JGLine((Line) obj, this, color);
 		case Segment:
-			objects.add( new JGSegment((Segment) obj, this, color));
+			return new JGSegment((Segment) obj, this, color);
 		case Polygon:
-			objects.add( new JGPolygon((Polygon) obj, this, color));
+			return new JGPolygon((Polygon) obj, this, color);
 		case Path:
-			objects.add( new JGPath((Path) obj, this, color));
+			return new JGPath((Path) obj, this, color);
 		default:
 			throw new IllegalArgumentException(String.format("Element of type %s could not be displayed", obj.getClass().getSimpleName()));
 		}
+	}
+	
+	public void createElement(Object obj, Color color){
+		objects.add(createCanvasElement(obj, color));
 	}
 	
 	public void createAllElements(Collection<?> collection, Color color){
@@ -101,17 +106,19 @@ public class JACanvas extends JPanel {
 			}			
 		}
 	}
-	
-	public void addObject(CanvasObject obj){
-		objects.add(obj);
-	}
-	
-	public void addObject(List<CanvasObject> obj){
-		objects.addAll(obj);
-	}
 
-	public void removeObjects(List<CanvasObject> o) {
-		objects.removeAll(o);		
+	public void removeElement(Object obj, Color color) {
+		objects.remove(createCanvasElement(obj, color));		
+	}
+	
+	public void removeAllElements(Collection<?> collection, Color color) {
+		for(Object obj : collection){
+			try {
+				removeElement(obj, color);
+			} catch (Exception e) {
+				// log error here
+			}
+		}
 	}
 	
 	public void clear(){

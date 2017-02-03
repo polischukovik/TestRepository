@@ -7,7 +7,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -21,9 +20,9 @@ import javax.swing.border.BevelBorder;
 import calculator.App;
 import datasource.DataSource;
 import datasource.SemiFileDS;
+import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
-import graphics.CanvasObject;
 import graphics.Map;
 import logginig.Logging;
 import logic.WaypointFinder;
@@ -40,7 +39,9 @@ public class MainWindow  extends JFrame {
 	private DataSource ds;
 	private JACanvas canvas;
 	private Logging log;
-
+	
+	private WaypointFinder wpf;
+	
 	public MainWindow(DataSource ds, Logging log, JACanvas canvas) throws HeadlessException {
 		super();	
 		this.ds = ds;
@@ -98,34 +99,17 @@ public class MainWindow  extends JFrame {
 				
 				if(ds.isValid()){
 					log.info(this.getClass(), "Datasource ready");
-					WaypointFinder wpf = new WaypointFinder(ds, log);
+					WaypointFinder oldWpf = wpf; 
+					wpf = new WaypointFinder(ds, log);
 					
-					if(ovfLine != null){
-						canvas.removeObjects(ovfLine);
+					if(oldWpf != null){
+						canvas.removeElement(oldWpf.ovf, Color.RED);
+						canvas.removeElement(oldWpf.getWaypoints(), Color.YELLOW);
+						canvas.removeElement(oldWpf.getWaypoints(), Color.ORANGE);
 					}
-					ovfLine = Arrays.asList(canvas.createElement(wpf.ovf, Color.RED));					
-					canvas.addObject(ovfLine);
-					
-					//add division lines
-//					if(divisionLines != null){
-//						canvas.removeObjects(divisionLines);
-//					}
-//					divisionLines = canvas.createAllLines(wpf.getDevisionLines(), Color.GREEN);					
-//					canvas.addObject(divisionLines);
-					
-					if(waypointPath != null){
-						canvas.removeObjects(waypointPath);
-					}
-					waypointPath = Arrays.asList(canvas.createElement(wpf.getWaypoints(), Color.YELLOW));					
-					canvas.addObject(waypointPath);
-					
-					canvas.render();
-					
-					if(waypoints != null){
-						canvas.removeObjects(waypoints);
-					}
-					waypoints = canvas.createAllPoints(wpf.getWaypoints(), Color.ORANGE);					
-					canvas.addObject(waypoints);
+					canvas.createElement(wpf.ovf, Color.RED);
+					canvas.createElement(wpf.getWaypoints(), Color.YELLOW);
+					canvas.createElement(wpf.getWaypoints(), Color.ORANGE);
 					
 					canvas.render();
 				}else{
@@ -154,19 +138,14 @@ public class MainWindow  extends JFrame {
 
 					canvas.setMap(new Map(polygon, canvas.getSize()));
 					
-					List<CanvasObject> oldDisplayObject = pointList.getDisplayObjects();
-					List<CanvasObject> displaylist = canvas.createAllPoints(ds.getFormPoints(), new Color(0, 255, 0, 127));
-					displaylist.add(canvas.createPoligon(ds.getFormPoints(), new Color(50, 30, 210, 32)));
-					
-					pointList.setDisplayObjects(displaylist);
-					
-					if(oldDisplayObject != null){
-						canvas.removeObjects(oldDisplayObject);	
-					}					
-					canvas.addObject(displaylist);
+					canvas.clear();
+					List<Point> fieldPoints = ds.getFormPoints();
+					Polygon fieldPolygon = new Polygon(ds.getFormPoints());
+					canvas.createAllElements(fieldPoints, new Color(0, 255, 0, 127));
+					canvas.createElement(fieldPolygon, new Color(50, 30, 210, 32));
 					canvas.render();
     	        } else {
-    	        	App.log.info(this.getClass(), "Open command cancelled by user." + "\n");
+    	        	Logging.getLogging().info(this.getClass(), "Open command cancelled by user." + "\n");
     	        }
 		    }
 		 });	
@@ -176,16 +155,15 @@ public class MainWindow  extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(pointList != null && pointList.getSelectedPoints().size() == 2){
 					Segment segment = new Segment(pointList.getSelectedPoints().get(0), pointList.getSelectedPoints().get(1));
+					Segment oldBase = ds.getBase();
+					
+					if(oldBase != null){
+						canvas.removeElement(oldBase, Color.GREEN);
+					}					
 					ds.setBase(segment);
 					segmentPanel.setSegment(segment);
 					
-					List<CanvasObject> oldDisplayObject = segmentPanel.getDisplayObjects();
-					segmentPanel.setDisplayObjects(Arrays.asList(canvas.createElement(segment, Color.GREEN)));
-					
-					if(oldDisplayObject != null){
-						canvas.removeObjects(oldDisplayObject);	
-					}
-					canvas.addObject(segmentPanel.getDisplayObjects());
+					canvas.createElement(segment, Color.GREEN);
 					canvas.render();
 				}							
 			}
