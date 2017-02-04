@@ -17,7 +17,6 @@ public class Map{
 
 	private Point SW, NE;
 	private ImageIcon image;
-	private static ImageIcon defaultImage =  new ImageIcon(Map.class.getResource("blank.jpg"));
 
 //	/**
 //	 * Creates blank map
@@ -61,21 +60,7 @@ public class Map{
 	public ImageIcon getImage() {
 		return image;
 	}
-	
-	public static ImageIcon getDefaultImage() {
-		return defaultImage;
-	}
-	
-	/** Returns an ImageIcon, or null if the path was invalid. */
-	private ImageIcon createImageIcon(String path, String description) {
-	    java.net.URL imgURL = getClass().getResource(path);
-	    if (imgURL != null) {
-	        return new ImageIcon(imgURL, description);
-	    } else {
-	        System.err.println("Couldn't load image: " + path);
-	    	return new ImageIcon();
-	    }
-	}
+
 
 	public Point getSW() {
 		return SW;

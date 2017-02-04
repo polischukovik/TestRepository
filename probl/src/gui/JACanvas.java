@@ -5,11 +5,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -25,6 +27,7 @@ import graphics.JGPoint;
 import graphics.JGPolygon;
 import graphics.JGSegment;
 import graphics.Map;
+import tools.Tools;
 
 @SuppressWarnings("serial")
 public class JACanvas extends JPanel {
@@ -46,14 +49,14 @@ public class JACanvas extends JPanel {
 	public JACanvas() {
 		super();
 		setLayout(new BorderLayout());
-		this.setBackground(Color.BLACK);
+		this.setBackground(Color.LIGHT_GRAY);
 		imageContainer = new JLabel();
 		imageContainer.setVerticalAlignment(JLabel.CENTER);
 		imageContainer.setHorizontalAlignment(JLabel.CENTER);
 
 		this.add(imageContainer);
-		
-		imageContainer.setIcon(Map.getDefaultImage());
+		ImageIcon icon = Tools.createImageIcon("/img/blank.png", "Blank image");
+		imageContainer.setIcon(icon);
 	}
 
 	public void setMap(Map map){
@@ -65,14 +68,12 @@ public class JACanvas extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		if(map == null){
-			throw new IllegalStateException("Canvas is not initialized");
-		}		
 		canvasSize = getSize();
-		
-		for(CanvasObject o : objects){			
-			o.show(g);
-		}
+		if(map != null){
+			for(CanvasObject o : objects){			
+				o.show(g);
+			}
+		}	
 	}
 	
 	private CanvasObject createCanvasElement(Object obj, Color color){
