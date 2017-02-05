@@ -1,6 +1,5 @@
 package logic;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class WaypointFinder {
 		 * Отримаємо пряму на якій ледить відр. base
 		 */
 		Segment base = ds.getBase();
-		ovf = base.getLine().getProjection(ds.getFormPoints());
+		ovf = base.getLine().getProjection(ds.getFormPoints().toArray(new Point[0]));
 		
 		/*
 		 * 3) Поділити відрізок ovf на devidor, знайти координати точок поділу: devisionPoints[u-1]

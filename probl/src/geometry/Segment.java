@@ -79,21 +79,14 @@ public class Segment {
 	public Point getA() {
 		return a;
 	}
-	public void setA(Point a) {
-		this.a = a;
-	}
+
 	public Point getB() {
 		return b;
 	}
-	public void setB(Point b) {
-		this.b = b;
-	}
+
 	public double getLength() {
 		return length;
 	}
-	public void setLength(double length) {
-		this.length = length;
-	}	
 	
 	@Override
 	public boolean equals(Object obj) {

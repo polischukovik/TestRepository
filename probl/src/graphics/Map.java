@@ -1,11 +1,7 @@
 package graphics;
 
 import java.awt.Dimension;
-import java.awt.Image;
-import java.io.IOException;
-import java.net.URL;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import geometry.Point;
@@ -13,8 +9,7 @@ import geometry.Polygon;
 import tools.GoogleTools;
 
 public class Map{
-	final static String URL_PATTERN = "https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=%d&size=%dx%d&scale=2&maptype=hybrid&format=jpg";
-
+	
 	private Point SW, NE;
 	private ImageIcon image;
 
@@ -34,33 +29,22 @@ public class Map{
 	 * @param polygon
 	 */
 	public Map(Polygon polygon, Dimension canvasSize) {
-		super();
-		Point center = polygon.getCenterOfMass();
-		Dimention ovf = polygon.getOvf();
+		image = GoogleTools.getMapImage(polygon, canvasSize, "/img/blank.png");
 		
-		double lat = center.getLatitude();
-        double lon = center.getLongitude();
-		int zoom = GoogleTools.getBoundsZoomLevel(ovf.getNE(), ovf.getSW(), (int)canvasSize.getWidth(), (int)canvasSize.getHeight()) -1;
-		int size_w = (int)canvasSize.getWidth() / 2;
-		int size_h = (int)canvasSize.getHeight() / 2;
-		image = new ImageIcon( getMapImage(lat, lon, zoom, size_w, size_h));
-	}
-	
-	private Image getMapImage(double lat, double lon, int zoom, int size_w, int size_h) {
-		Image image = null;
-        try {
-        	URL url = new URL(String.format(URL_PATTERN, lat, lon, zoom, size_w, size_h));
-            image = ImageIO.read(url);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-		return image;
+		if(image != null) {
+//			this.SW = center.moveTo(direction, distance);
+//			this.NE = center.moveTo(direction, distance);
+			this.SW = Dimention.getSquareOvf(polygon.getOvf()).getSW();
+			this.NE = Dimention.getSquareOvf(polygon.getOvf()).getNE();
+		}else{
+			this.SW = Dimention.getSquareOvf(polygon.getOvf()).getSW();
+			this.NE = Dimention.getSquareOvf(polygon.getOvf()).getNE();
+		}
 	}
 
 	public ImageIcon getImage() {
 		return image;
 	}
-
 
 	public Point getSW() {
 		return SW;

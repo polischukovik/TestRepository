@@ -5,13 +5,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -27,7 +25,7 @@ import graphics.JGPoint;
 import graphics.JGPolygon;
 import graphics.JGSegment;
 import graphics.Map;
-import tools.Tools;
+import tools.GoogleTools;
 
 @SuppressWarnings("serial")
 public class JACanvas extends JPanel {
@@ -37,6 +35,7 @@ public class JACanvas extends JPanel {
 	
 	private Dimension canvasSize = null;
 	private JLabel imageContainer;
+	private Icon defaultImage;
 	
 	public static enum CanvasElements{
 		Point,
@@ -55,8 +54,8 @@ public class JACanvas extends JPanel {
 		imageContainer.setHorizontalAlignment(JLabel.CENTER);
 
 		this.add(imageContainer);
-		ImageIcon icon = Tools.createImageIcon("/img/blank.png", "Blank image");
-		imageContainer.setIcon(icon);
+		defaultImage = GoogleTools.getMapImage(null, null, "/img/blank.png");
+		imageContainer.setIcon(defaultImage);
 	}
 
 	public void setMap(Map map){

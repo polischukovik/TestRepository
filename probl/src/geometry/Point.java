@@ -5,7 +5,7 @@ import java.util.Comparator;
 import calculator.App;
 
 public class Point {
-	public static final Point HOME = new Point(50.392621, 30.496226);
+	//public static final Point HOME = new Point(50.392621, 30.496226);
 	
 	private double latitude;
 	private double longitude;
@@ -125,6 +125,15 @@ public class Point {
 	@Override
 	public String toString() {
 		return "Point [" + latitude + ", " + longitude + "]";
+	}
+	
+	public static Point getCenterOfMass(Point ...points){
+		double sumLat = 0, sumLong = 0;
+		for (int i = 0; i < points.length; i++) {
+			sumLat += points[i].getLatitude();
+			sumLong += points[i].getLongitude();
+		}
+		return new Point(sumLat/points.length, sumLong/points.length);
 	}
 
 	public int relatesTo(Point a, Segment base) {

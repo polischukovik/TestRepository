@@ -17,22 +17,13 @@ public class Polygon extends ArrayList<Point> {
 	public Polygon(Collection<Point> c) {
 		super(c);
 	}
-
-	public Point getCenterOfMass(){
-		double sumLat = 0, sumLong = 0;
-		for(Point p : this){
-			sumLat += p.getLatitude();
-			sumLong += p.getLongitude();
-		}
-		return new Point(sumLat/this.size(), sumLong/this.size());
-	}
 	
 	public Dimention getOvf(){
-	   	Point center = this.getCenterOfMass();
+	   	Point center = Point.getCenterOfMass(this.toArray(new Point[0]));
     	App.log.info(this.getClass(), String.format("Central point: %s", center));
 		
-    	Segment vOvf = Line.getVertical(center).getProjection(this);
-		Segment hOvf = Line.getHorizontal(center).getProjection(this);
+    	Segment vOvf = Line.getVertical(center).getProjection(this.toArray(new Point[0]));
+		Segment hOvf = Line.getHorizontal(center).getProjection(this.toArray(new Point[0]));
 		
 		double latA, lonA, latB, lonB;
 		if(vOvf.getA().getLatitude() < vOvf.getB().getLatitude() ){
@@ -51,6 +42,6 @@ public class Polygon extends ArrayList<Point> {
 			lonB = hOvf.getA().getLongitude();
 		}
 		
-		return new Dimention(new Point(latA, lonA), new Point(latB, lonB), hOvf, vOvf);
+		return new Dimention(new Point(latA, lonA), new Point(latB, lonB));
 	}
 }

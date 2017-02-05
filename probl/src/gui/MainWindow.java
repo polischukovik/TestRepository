@@ -140,9 +140,8 @@ public class MainWindow  extends JFrame {
 					
 					canvas.clear();
 					List<Point> fieldPoints = ds.getFormPoints();
-					Polygon fieldPolygon = new Polygon(ds.getFormPoints());
 					canvas.createAllElements(fieldPoints, new Color(0, 255, 0, 127));
-					canvas.createElement(fieldPolygon, new Color(50, 30, 210, 32));
+					canvas.createElement(polygon, new Color(50, 30, 210, 32));
 					canvas.render();
     	        } else {
     	        	Logging.getLogging().info(this.getClass(), "Open command cancelled by user." + "\n");
@@ -181,7 +180,7 @@ public class MainWindow  extends JFrame {
 	}
 
 	public Consumer getConsole() {
-		return (Consumer)log;
+		return (Consumer) log;
 	}
 
 	private void swipeWindows(JPanel plcHldrDisp, JPanel plcHldrConsole) {

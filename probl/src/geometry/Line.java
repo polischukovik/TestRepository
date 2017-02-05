@@ -145,7 +145,7 @@ public class Line {
 	 * @param list - the List of the points for which determination area is calculated
 	 * @return An instance of a Segment containing the most outer points of projection on Line
 	 */
-	public Segment getProjection(List<Point> list){
+	public Segment getProjection(Point ...list){
 		Point maxP = null, maxD = null;
 		double distance, max = 0;
 		List<Point> proj = new ArrayList<>();
