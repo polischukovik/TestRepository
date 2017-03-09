@@ -18,7 +18,7 @@ public class App{
 //		Point p = new Point(50.392621, 30.496226);
 //		Point n = p.moveTo(360, 100);
 //		System.out.println(n);
-//		
+////		
 		
 		log = Logging.createLogging();
 		//ds = new SemiFileDS(new File("ds.txt"));
