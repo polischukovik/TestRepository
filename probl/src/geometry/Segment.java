@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import calculator.App;
-import logic.WaypointFinder;
+import logginig.Logger;
 
 public class Segment {
 	private Point a;
 	private Point b;
 	private double length;
+	private static Logger logger = Logger.getLogger(Segment.class);
 	
 	public Segment() {
 		super();
@@ -20,24 +21,24 @@ public class Segment {
 		this.a = a;
 		this.b = b;
 		length = Point.round(a.distanceTo(b), App.COORDINATE_PRECISION + 2);
-		App.log.info(this.getClass(), String.format("  Segment created: %s", this));
+		logger.info(String.format("  Segment created: %s", this));
 	}
 	
 	/*
 	 * 1) Поділити відрізок з координатами x1,x2 на n частин
 	 */
 	public List<Point> devideSegment(int n){
-		App.log.info(this.getClass(), String.format("\nDeviding segment %s into %d parts", this, n));
+		logger.info(String.format("\nDeviding segment %s into %d parts", this, n));
 		List<Point> subSegment = new ArrayList<>();
 		for(int i = 1; i <= n-1; i++){
-			App.log.info(this.getClass(), String.format("  Calculating devition point %d", i));
+			logger.info(String.format("  Calculating devition point %d", i));
 			double R = 1.0*i / (n - i);
-			App.log.info(this.getClass(), String.format("    Ratio is %d/%d = %f", i, n, R));
+			logger.info(String.format("    Ratio is %d/%d = %f", i, n, R));
 			double xM = (this.a.getLatitude() + R * this.b.getLatitude()) / (1 + R); 
 			double yM = (this.a.getLongitude() + R * this.b.getLongitude()) / (1 + R);
 			
 			Point p = new Point(xM, yM);
-			App.log.info(this.getClass(), String.format("    Got point %s", p));
+			logger.info(String.format("    Got point %s", p));
 			subSegment.add(p);
 			}
 		return subSegment;
@@ -46,34 +47,17 @@ public class Segment {
 	public Line getLine(){
 		return new Line(this);
 	}
-	
-	/*
-	 * Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють
-	 */
-	public static List<Segment> getSegments(List<Point> list){
-		List<Segment> result = new ArrayList<>();
-		for(int i=0; i< list.size(); i++){
-			if(i == list.size() -1){
-				App.log.info(null, String.format("\nCreating segment for %s and %s", list.get(i), list.get(0)));
-				result.add(new Segment(list.get(i),list.get(0)));
-				return result;
-			}
-			App.log.info(null, String.format("\nCreating segment for %s and %s", list.get(i), list.get(i+1)));
-			result.add(new Segment(list.get(i),list.get(i+1)));
-		}
-		return result;
-	}
-	
+		
 	/*
 	 * Чи належить точка відрізку?
 	 * чкщо сума відстаней до початку і кінця відрізку дорівнює довжині відрізку то ледить 
 	 */
 	public boolean contains(Point p){
-		App.log.info(this.getClass(), String.format("\n  Does %s contains %s?\t", this, p));
+		logger .info(String.format("\n  Does %s contains %s?\t", this, p));
 		double da = p.distanceTo(a);
 		double db = p.distanceTo(b);
 		boolean bool = (Point.round(length, App.COORDINATE_PRECISION - 1) == Point.round(da + db, App.COORDINATE_PRECISION - 1));
-		App.log.info(this.getClass(), String.format("  %f = %f?", length, da  + db));
+		logger.info(String.format("  %f = %f?", length, da  + db));
 		return bool;
 	}
 	public Point getA() {

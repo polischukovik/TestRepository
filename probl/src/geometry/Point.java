@@ -3,12 +3,15 @@ package geometry;
 import java.util.Comparator;
 
 import calculator.App;
+import logginig.Logger;
 
 public class Point {
 	//public static final Point HOME = new Point(50.392621, 30.496226);
+	protected static Logger logger = Logger.getLogger(Point.class);
 	
 	private double latitude;
 	private double longitude;
+
 	public Point(double latitude, double longitude) {
 		super();
 		this.latitude = round(latitude,App.COORDINATE_PRECISION);
@@ -65,7 +68,7 @@ public class Point {
 			public int compare(Point o1, Point o2) {
 				Point intersection = base.getInterctionWithLine(base.getPerprndicularAtPoint(o1));
 				if(!intersection.equals(base.getInterctionWithLine(base.getPerprndicularAtPoint(o2)))){
-					App.log.info(this.getClass(), "ERRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR");
+					logger.info("Impossible condition");
 				}
 				double diff = o1.distanceTo(intersection) - o2.distanceTo(intersection);
 				return diff < 0 ? -1 : diff > 0 ? 1 : 0;

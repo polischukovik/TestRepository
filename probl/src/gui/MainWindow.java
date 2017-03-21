@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,11 +25,13 @@ import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
 import graphics.Map;
-import logginig.Logging;
+import logginig.Logger;
 import logic.WaypointFinder;
 
 @SuppressWarnings("serial")
 public class MainWindow  extends JFrame {
+	protected static Logger logger = Logger.getLogger(MainWindow.class);
+	
 	final static int windowWidth = 1280;
 	final static int windowhHeight = 924;
 	
@@ -38,15 +41,11 @@ public class MainWindow  extends JFrame {
 
 	private DataSource ds;
 	private JACanvas canvas;
-	private Logging log;
 	
-	private WaypointFinder wpf;
+	private WaypointFinder wpf;	
 	
-	public MainWindow(DataSource ds, Logging log, JACanvas canvas) throws HeadlessException {
+	public MainWindow() throws HeadlessException {
 		super();	
-		this.ds = ds;
-		this.log = log;
-		this.canvas = canvas;
 		initUI();	
 	}
 
@@ -63,7 +62,7 @@ public class MainWindow  extends JFrame {
         pointList = new JAPointsList();  
         segmentPanel = new JASegment("Base segment", pointList);
         sections = new JAInteger("Sections");
-        JADisplay display = new JADisplay(canvas);    
+        JADisplay display = new JADisplay();    
         
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setPreferredSize(new Dimension(300, 300));
@@ -71,7 +70,8 @@ public class MainWindow  extends JFrame {
         generalPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
     
         plcHldrDisp.add(display);        
-        plcHldrConsole.add((JAConsole) log.getConsumer());
+        plcHldrConsole.add(new JAConsole());
+
         
         rightPanel.add(pointList);
         rightPanel.add(segmentPanel);
@@ -94,13 +94,13 @@ public class MainWindow  extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				ds.setDevidor(sections.getSections());
-				log.info(this.getClass(), "Invoking building waypoints");
-				log.info(this.getClass(), ds.toString());
+				logger.info("Invoking building waypoints");
+				logger.info(ds.toString());
 				
 				if(ds.isValid()){
-					log.info(this.getClass(), "Datasource ready");
+					logger.info("Datasource ready");
 					WaypointFinder oldWpf = wpf; 
-					wpf = new WaypointFinder(ds, log);
+					wpf = new WaypointFinder(ds);
 					
 					if(oldWpf != null){
 						canvas.removeElement(oldWpf.ovf, Color.RED);
@@ -113,7 +113,7 @@ public class MainWindow  extends JFrame {
 					
 					canvas.render();
 				}else{
-					log.info(this.getClass(), "Datasource is not ready");
+					logger .info("Datasource is not ready");
 				}
 			}
 		});
@@ -121,30 +121,31 @@ public class MainWindow  extends JFrame {
         pointList.getLoadPointsButton().addActionListener(new ActionListener(){  
         	@Override
 	    	public void actionPerformed(ActionEvent e){
-	    		JFileChooser fc = new JFileChooser(ds.getPath());
+	    		JFileChooser fc = new JFileChooser(new File("."));
     	        int returnVal = fc.showOpenDialog(getParent());
 
     	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-    	        	App.log.info(this.getClass(), "Opening: " + fc.getSelectedFile().getName() + ".");
+    	        	
+    	        	logger.info("Opening: " + fc.getSelectedFile().getName() + ".");
     	        	
     	        	try {
-    	        		ds.setFormPoints(SemiFileDS.readFile(fc.getSelectedFile()));
+    	        		ds = new SemiFileDS(fc.getSelectedFile());
 					} catch (IOException e1) {
-						App.log.info(this.getClass(), e1.getMessage());
+						logger.info(e1.getMessage());
 						return;
 					}   
     	        	Polygon polygon = new Polygon(ds.getFormPoints());
 					pointList.setListData(polygon);
 
-					canvas.setMap(new Map(polygon, canvas.getSize()));
+					//canvas.setMap(new Map(polygon, canvas.getSize()));
 					
-					canvas.clear();
-					List<Point> fieldPoints = ds.getFormPoints();
-					canvas.createAllElements(fieldPoints, new Color(0, 255, 0, 127));
-					canvas.createElement(polygon, new Color(50, 30, 210, 32));
-					canvas.render();
+//					canvas.clear();
+//					List<Point> fieldPoints = ds.getFormPoints();
+//					canvas.createAllElements(fieldPoints, new Color(0, 255, 0, 127));
+//					canvas.createElement(polygon, new Color(50, 30, 210, 32));
+//					canvas.render();
     	        } else {
-    	        	Logging.getLogging().info(this.getClass(), "Open command cancelled by user." + "\n");
+    	        	logger.info("Open command cancelled by user." + "\n");
     	        }
 		    }
 		 });	
@@ -177,10 +178,6 @@ public class MainWindow  extends JFrame {
 				canvas.render();
 			}
 		});
-	}
-
-	public Consumer getConsole() {
-		return (Consumer) log;
 	}
 
 	private void swipeWindows(JPanel plcHldrDisp, JPanel plcHldrConsole) {
