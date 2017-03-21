@@ -11,6 +11,6 @@ public class TestPoint {
 	
    @Test
    public void distanceTo() {
-     
+	   
    }
 }
