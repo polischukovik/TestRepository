@@ -73,7 +73,7 @@ public class GoogleTools {
 		}
 		
 		Point center = Point.getCenterOfMass(polygon.toArray(new Point[0]));
-		Dimention ovf = polygon.getOvf();
+		Dimention ovf = polygon.getDimention();
 		
 		double lat = center.getLatitude();
         double lon = center.getLongitude();
@@ -81,10 +81,10 @@ public class GoogleTools {
 		int size_w = 620;
 		int size_h = 620;
 		
-		ImageIcon result = GoogleTools.getMapImage(lat, lon, zoom, size_w, size_h);
+		//ImageIcon result = GoogleTools.getMapImage(lat, lon, zoom, size_w, size_h);
+		ImageIcon result = null;
 		
-		//if(result == null){
-		if(true){
+		if(result == null){
 			return createImageIcon(defaultPath, "Default image");
 		}
 		return result;

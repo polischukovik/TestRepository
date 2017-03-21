@@ -31,14 +31,16 @@ public class Map{
 	public Map(Polygon polygon, Dimension canvasSize) {
 		image = GoogleTools.getMapImage(polygon, canvasSize, "/img/blank.png");
 		
+		Dimention poligonDimention = new Dimention(polygon);
+		
 		if(image != null) {
 //			this.SW = center.moveTo(direction, distance);
 //			this.NE = center.moveTo(direction, distance);
-			this.SW = Dimention.getSquareOvf(polygon.getOvf()).getSW();
-			this.NE = Dimention.getSquareOvf(polygon.getOvf()).getNE();
+			this.SW = poligonDimention.getSquareDiagonal().getA();
+			this.NE = poligonDimention.getSquareDiagonal().getB();
 		}else{
-			this.SW = Dimention.getSquareOvf(polygon.getOvf()).getSW();
-			this.NE = Dimention.getSquareOvf(polygon.getOvf()).getNE();
+			this.SW = poligonDimention.getSquareDiagonal().getA();
+			this.NE = poligonDimention.getSquareDiagonal().getB();
 		}
 	}
 

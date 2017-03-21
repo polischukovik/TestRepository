@@ -76,7 +76,13 @@ public class JACanvas extends JPanel {
 	}
 	
 	private CanvasObject createCanvasElement(Object obj, Color color){
-		CanvasElements co = CanvasElements.valueOf(obj.getClass().getSimpleName());
+		CanvasElements co;
+		try{
+			co = CanvasElements.valueOf(obj.getClass().getSimpleName());
+		}catch(IllegalArgumentException e){
+			throw new IllegalArgumentException(String.format("Element of type %s could not be displayed", obj.getClass().getSimpleName()));
+		}
+		
 		switch (co) {
 		case Point:
 			return new JGPoint((Point) obj, this, color);
@@ -89,8 +95,8 @@ public class JACanvas extends JPanel {
 		case Path:
 			return new JGPath((Path) obj, this, color);
 		default:
-			throw new IllegalArgumentException(String.format("Element of type %s could not be displayed", obj.getClass().getSimpleName()));
-		}
+			return null;
+		}		
 	}
 	
 	public void createElement(Object obj, Color color){
