@@ -1,17 +1,15 @@
 package graphics;
 
 import java.awt.Dimension;
-
-import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 
 import geometry.Point;
-import geometry.Polygon;
 import tools.GoogleTools;
 
 public class Map{
 	
 	private Point SW, NE;
-	private ImageIcon image;
+	private BufferedImage image;
 
 //	/**
 //	 * Creates blank map
@@ -28,23 +26,24 @@ public class Map{
 	 * Map contains SW and NE points and GoogleMap image
 	 * @param polygon
 	 */
-	public Map(Polygon polygon, Dimension canvasSize) {
-		image = GoogleTools.getMapImage(polygon, canvasSize, "/img/blank.png");
-		
-		Dimention poligonDimention = new Dimention(polygon);
-		
+	public Map(Dimention ovf, Dimension canvasSize, int zoom) {				
+		image = GoogleTools.getMapImage(ovf, canvasSize, zoom, "/img/blank.png");		
+
+		Point center = ovf.getCenter();
+		double metersPerPixel = GoogleTools.getMetersPerPixel(zoom, center.getLatitude()); 
 		if(image != null) {
-//			this.SW = center.moveTo(direction, distance);
-//			this.NE = center.moveTo(direction, distance);
-			this.SW = poligonDimention.getSquareDiagonal().getA();
-			this.NE = poligonDimention.getSquareDiagonal().getB();
+			double hDistance = image.getHeight() * metersPerPixel;
+			double vDistance = image.getWidth() * metersPerPixel;
+			
+			this.SW = center.moveTo(90 * 3, hDistance / 2).moveTo(90 * 2, vDistance / 2);
+			this.NE = center.moveTo(90 * 1, hDistance / 2).moveTo(90 * 4, hDistance / 2);
 		}else{
-			this.SW = poligonDimention.getSquareDiagonal().getA();
-			this.NE = poligonDimention.getSquareDiagonal().getB();
+			this.SW = ovf.getSquareDiagonal().getA();
+			this.NE = ovf.getSquareDiagonal().getB();
 		}
 	}
 
-	public ImageIcon getImage() {
+	public BufferedImage getImage() {
 		return image;
 	}
 
@@ -64,32 +63,4 @@ public class Map{
 		this.NE = NE;
 	}
 	
-//	public int getBoundsZoomLevel(Dimention, mapDim) {
-//	    int WORLD_DIM_height = 256, WORLD_DIM_width = 256;
-//	    int ZOOM_MAX = 21;
-//
-//	    var ne = bounds.getNorthEast();
-//	    var sw = bounds.getSouthWest();
-//
-//	    var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
-//
-//	    var lngDiff = ne.lng() - sw.lng();
-//	    var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-//
-//	    var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
-//	    var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
-//
-//	    return Math.min(latZoom, lngZoom, ZOOM_MAX);
-//	}
-//	
-//	function latRad(lat) {
-//        var sin = Math.sin(lat * Math.PI / 180);
-//        var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-//        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-//    }
-//
-//    function zoom(mapPx, worldPx, fraction) {
-//        return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
-//    }
-
 }

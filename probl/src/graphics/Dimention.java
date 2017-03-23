@@ -8,14 +8,14 @@ import geometry.Segment;
 
 public class Dimention{
 	private Segment vOvf, hOvf, diagonal, squareDiagonal;
-	private Point SW, NE;
+	private Point SW, NE, center;
 	
 	public Dimention(ArrayList<Point> points) {
 		//rough center of mass represents average point concentration
-		Point center = Point.getCenterOfMass(points.toArray(new Point[0]));
+		Point centerDummy = Point.getCenterOfMass(points.toArray(new Point[0]));
 		//Segments progected on rough center of mass
-    	Segment vOvfDummy = Line.getVertical(center).getProjection(points.toArray(new Point[0]));
-		Segment hOvfDummy = Line.getHorizontal(center).getProjection(points.toArray(new Point[0]));
+    	Segment vOvfDummy = Line.getVertical(centerDummy).getProjection(points.toArray(new Point[0]));
+		Segment hOvfDummy = Line.getHorizontal(centerDummy).getProjection(points.toArray(new Point[0]));
 		
 		double latMin, lonMin, latMax, lonMax;
 		if(vOvfDummy.getA().getLatitude() < vOvfDummy.getB().getLatitude() ){
@@ -38,23 +38,26 @@ public class Dimention{
 		this.NE = new Point(latMax, lonMax);
 		this.diagonal = new Segment(SW, NE);
 		
-		Point realCenterOfDiagonal = Point.getCenterOfMass(diagonal.getA(), diagonal.getB());
+		this.center = Point.getCenterOfMass(diagonal.getA(), diagonal.getB());
 		
-		this.hOvf = Line.getVertical(realCenterOfDiagonal).getProjection(diagonal.getA(), diagonal.getB());
-		this.vOvf = Line.getHorizontal(realCenterOfDiagonal).getProjection(diagonal.getA(), diagonal.getB());
+		this.hOvf = Line.getHorizontal(center).getProjection(diagonal.getA(), diagonal.getB());
+		this.vOvf = Line.getVertical(center).getProjection(diagonal.getA(), diagonal.getB());
 		
 		if (vOvf.getLength() == hOvf.getLength()){
 			this.squareDiagonal = diagonal;
 		}
 		
 		if(vOvf.getLength() < hOvf.getLength()){
+			//Latitude is 2 times less then Longitude
+			double factor = ((NE.getLongitude() - SW.getLongitude())/2)/2;
 			this.squareDiagonal = new Segment(
-					  new Point(center.getLatitude() - hOvf.getLength()/2, SW.getLongitude())
-					, new Point(center.getLatitude() + hOvf.getLength()/2, NE.getLongitude()));
+					  new Point(center.getLatitude() - factor, SW.getLongitude())
+					, new Point(center.getLatitude() + factor, NE.getLongitude()));
 		}else{
+			double factor = ((NE.getLatitude() - SW.getLatitude())/2)*2;
 			this.squareDiagonal = new Segment(
-					  new Point(SW.getLongitude(), center.getLongitude() - vOvf.getLength()/2)
-					, new Point(NE.getLongitude(), center.getLongitude() + vOvf.getLength()/2)
+					  new Point(SW.getLatitude(), center.getLongitude() - factor)
+					, new Point(NE.getLatitude(), center.getLongitude() + factor)
 					);
 		}
 	}
@@ -81,6 +84,10 @@ public class Dimention{
 	
 	public Point getNE(){
 		return NE;
+	}
+
+	public Point getCenter() {
+		return center;
 	}
 
 }

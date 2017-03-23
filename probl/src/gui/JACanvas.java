@@ -5,12 +5,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import geometry.Line;
@@ -19,6 +18,7 @@ import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
 import graphics.CanvasObject;
+import graphics.Dimention;
 import graphics.JGLine;
 import graphics.JGPath;
 import graphics.JGPoint;
@@ -34,8 +34,12 @@ public class JACanvas extends JPanel {
 	private Map map = null;
 	
 	private Dimension canvasSize = null;
-	private JLabel imageContainer;
-	private Icon defaultImage;
+	private BufferedImage defaultImage;
+	
+	private int imageTopLeftX = 0;
+	private int imageTopLeftY = 0;
+	
+	public int zoom = 0;
 	
 	public static enum CanvasElements{
 		Point,
@@ -49,25 +53,31 @@ public class JACanvas extends JPanel {
 		super();
 		setLayout(new BorderLayout());
 		this.setBackground(Color.LIGHT_GRAY);
-		imageContainer = new JLabel();
-		imageContainer.setVerticalAlignment(JLabel.CENTER);
-		imageContainer.setHorizontalAlignment(JLabel.CENTER);
 
-		this.add(imageContainer);
-		defaultImage = GoogleTools.getMapImage(null, null, "/img/blank.png");
-		imageContainer.setIcon(defaultImage);
+		defaultImage = GoogleTools.getMapImage(null, null, 0, "./resources/img/blank.png");
+		render();
 	}
 
-	public void setMap(Map map){
-		this.map = map;
-		imageContainer.setIcon(map.getImage());
-		render();
+	public void setMapForArea(Dimention ovf){
+		zoom = GoogleTools.getBoundsZoomLevel(ovf.getNE(), ovf.getSW(), (int)canvasSize.getWidth(), (int)canvasSize.getHeight()) -1;
+		this.map = new Map(ovf, this.getSize(), zoom);
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 		canvasSize = getSize();
+		
+		if(map == null){			
+			g.drawImage(defaultImage, 0, 0, this);
+		}
+		if(map != null && map.getImage() != null){
+			BufferedImage img = map.getImage(); 
+			imageTopLeftX = (int) (canvasSize.getWidth() - img.getWidth())/2;
+			imageTopLeftY = (int) (canvasSize.getHeight() - img.getHeight())/2;
+        	g.drawImage(img, imageTopLeftX, imageTopLeftY, this);
+        }		
+		
 		if(map != null){
 			for(CanvasObject o : objects){			
 				o.show(g);
@@ -135,21 +145,29 @@ public class JACanvas extends JPanel {
 		this.repaint(); 
 	}    
 	
-	public int getDisplayX(double x){
-		return new java.lang.Double((x - map.getSW().getLatitude()) * canvasSize.getWidth() / (map.getNE().getLatitude() - (map.getSW().getLatitude()))).intValue();
+	public int getDisplayX(double longitude){		
+		double Pmin = imageTopLeftX;
+		double Pmax = map.getImage().getWidth() - imageTopLeftX;
+		double Cmin = map.getSW().getLongitude();
+		double Cmax = map.getNE().getLongitude();
+		//System.out.println(String.format("Pmin %f Pmax %f Cmin %f Cmax %f longitude %f",Pmin, Pmax, Cmin, Cmax, longitude));
+		
+		return proportion(Pmin, Pmax, Cmin, Cmax, longitude);
 	}
 	
-	public int getDisplayY(double y){
-		return new java.lang.Double(canvasSize.getHeight() - (y - map.getSW().getLongitude()) * canvasSize.getHeight() / (map.getNE().getLongitude() - (map.getSW().getLongitude()))).intValue();
+	public int getDisplayY(double latitude){
+		double Pmin = imageTopLeftY;
+		double Pmax = map.getImage().getHeight() - imageTopLeftY;
+		double Cmin = map.getSW().getLatitude();
+		double Cmax = map.getNE().getLatitude();
+		
+		return map.getImage().getHeight() - proportion(Pmin, Pmax, Cmin, Cmax, latitude);
 	}
 	
-	public double getMapX(int x){
-		return ((x - 0)  * (map.getNE().getLatitude()) - (map.getSW().getLatitude()) ) / (canvasSize.getWidth() - 0);
+	private int proportion(double Pmin, double Pmax, double Cmin, double Cmax, double coordinate){
+		return new java.lang.Double((Pmax - Pmin) * (coordinate - Cmin) / (Cmax - Cmin) + Pmin).intValue();
 	}
 	
-	public double getMapY(int y){
-		return ((canvasSize.getHeight() - y - 0)  * (map.getNE().getLongitude()) - (map.getSW().getLongitude()) ) / (canvasSize.getHeight() - 0);
-	}
 	public Map getMap() {
 		return map;
 	}

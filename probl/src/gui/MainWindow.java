@@ -18,14 +18,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import calculator.App;
 import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Path;
 import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
-import graphics.Map;
 import logginig.Logger;
 import logic.WaypointFinder;
 
@@ -42,7 +40,6 @@ public class MainWindow  extends JFrame {
 	private JADisplay display;	
 
 	private DataSource ds;
-	private JACanvas canvas;
 	
 	private WaypointFinder wpf;
 	
@@ -138,8 +135,9 @@ public class MainWindow  extends JFrame {
 					}   
     	        	Polygon polygon = new Polygon(ds.getFormPoints());
 					pointList.setListData(polygon);
-
-					display.getCanvas().setMap(new Map(polygon, display.getCanvas().getSize()));
+					
+					//create map area relative to polygon
+					display.getCanvas().setMapForArea(polygon.getDimention());
 					
 					display.getCanvas().clear();
 					List<Point> fieldPoints = ds.getFormPoints();
