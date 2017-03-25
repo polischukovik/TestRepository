@@ -3,12 +3,16 @@ package geometry;
 import java.util.Comparator;
 
 import calculator.App;
+import logginig.Logger;
+import tools.GoogleTools;
 
 public class Point {
 	//public static final Point HOME = new Point(50.392621, 30.496226);
+	protected static Logger logger = Logger.getLogger(Point.class);
 	
 	private double latitude;
 	private double longitude;
+
 	public Point(double latitude, double longitude) {
 		super();
 		this.latitude = round(latitude,App.COORDINATE_PRECISION);
@@ -27,7 +31,7 @@ public class Point {
 	
 	public double distanceTo(Point p){
 		
-		double R = 6371000; // metres
+		double R = GoogleTools.RADIUS; // metres
 		double φ1 = Math.toRadians(this.getLatitude());
 		double φ2 = Math.toRadians(p.getLatitude());
 		double Δφ = Math.toRadians(p.getLatitude() - this.getLatitude());
@@ -43,20 +47,50 @@ public class Point {
 		return d;
 	}
 	
+//	public Point moveTo(double direction, double distance){
+//		double tc = direction;
+//		double lat = Math.asin(Math.sin(this.getLatitude()) * Math.cos(distance) 
+//				+ Math.cos(this.getLatitude()) * Math.sin(distance) * Math.cos(tc));
+//		double dlon = Math.atan2(Math.sin(tc) * Math.sin(distance) * Math.cos(this.getLatitude()), Math.cos(distance) 
+//				- Math.sin(this.getLatitude()) * Math.sin(lat));
+//		double lon = mod((this.getLatitude() - dlon + Math.PI), 2 * Math.PI) - Math.PI;
+//		return new Point(this.getLatitude() + lat, this.getLongitude() + lon);
+//	}
+//	
+//	private double mod(double y, double x){
+//		double mod = y - x * (int)(y/x); ///mood
+//		if(mod < 0){
+//			mod = mod + x;
+//		}
+//		return mod;
+//	}
+	
 	public Point moveTo(double direction, double distance){
-		double tc = direction;
-		double lat =Math.asin(Math.sin(this.getLatitude())*Math.cos(distance)+Math.cos(this.getLatitude())*Math.sin(distance)*Math.cos(tc));
-		double dlon=Math.atan2(Math.sin(tc)*Math.sin(distance)*Math.cos(this.getLatitude()),Math.cos(distance)-Math.sin(this.getLatitude())*Math.sin(lat));
-		double lon= mod( (this.getLatitude()-dlon +Math.PI), 2*Math.PI) - Math.PI;
-		return new Point(this.getLatitude() + lat, this.getLongitude() + lon);
+		double dist = distance / GoogleTools.RADIUS;  
+		double brng = toRad(direction);  
+		
+		double lat1 = toRad(this.getLatitude());
+		double lon1 = toRad(this.getLongitude());
+		
+		double lat2 = Math.asin(Math.sin(lat1) * Math.cos(dist) + 
+		                     Math.cos(lat1) * Math.sin(dist) * Math.cos(brng));
+		
+		double lon2 = lon1 + Math.atan2(Math.sin(brng) * Math.sin(dist) *
+		                             Math.cos(lat1), 
+		                             Math.cos(dist) - Math.sin(lat1) *
+		                             Math.sin(lat2));
+		
+		if (Double.isNaN(lat2) || Double.isNaN(lon2)) return null;
+		
+		return new Point(toDeg(lat2), toDeg(lon2));
 	}
 	
-	private double mod(double y, double x){
-		double mod = y - x * (int)(y/x); ///mood
-		if(mod < 0){
-			mod = mod + x;
-		}
-		return mod;
+	private double toRad(double degree){
+		return degree * Math.PI / 180;
+	}
+	
+	private double toDeg(double radians) {
+		return radians * 180 / Math.PI;
 	}
 
 	public static Comparator<Point> getPointNameComparator(Line base){
@@ -65,7 +99,7 @@ public class Point {
 			public int compare(Point o1, Point o2) {
 				Point intersection = base.getInterctionWithLine(base.getPerprndicularAtPoint(o1));
 				if(!intersection.equals(base.getInterctionWithLine(base.getPerprndicularAtPoint(o2)))){
-					App.log.info(this.getClass(), "ERRRRRRRRRRRRRRRRRRRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOR");
+					logger.info("Impossible condition");
 				}
 				double diff = o1.distanceTo(intersection) - o2.distanceTo(intersection);
 				return diff < 0 ? -1 : diff > 0 ? 1 : 0;

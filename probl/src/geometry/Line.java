@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import calculator.App;
+import logginig.Logger;
 
 public class Line {
 
 	private double A;
 	private double B;
-	private double C;	
+	private double C;
+	private static Logger logger = Logger.getLogger(Line.class);	
 	
 	private Line(double A, double B, double C) {
 		super();
@@ -32,7 +34,7 @@ public class Line {
 	 * @return Line containing the segment
 	 */
 	public Line(Segment segment) {
-		App.log.info(segment.getClass(), String.format("  Geting line for segment %s", segment));
+		logger .info(String.format("  Geting line for segment %s", segment));
 		double x1,x2,y1,y2;
 		x1= segment.getA().getLongitude();
 		x2= segment.getB().getLongitude();
@@ -40,13 +42,13 @@ public class Line {
 		y2= segment.getB().getLatitude();
 		
 		this.A = y1 - y2;
-		App.log.info(segment.getClass(), String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
+		logger.info(String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
 		
 		this.B = x2-x1;
-		App.log.info(segment.getClass(), String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
+		logger.info(String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
 		
 		this.C = x1*y2 - x2*y1;
-		App.log.info(segment.getClass(), String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
+		logger.info(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
 	}
 	
 	/**
@@ -60,12 +62,12 @@ public class Line {
 	 * @return new Line perpendicular to original
 	 */
 	public Line getPerprndicularAtPoint(Point p){
-		App.log.info(this.getClass(), String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
+		logger.info(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
 		double Al = this.B;
 		double Bl = -1.0 * this.A ;
 		double Cl = (-1.0) * Al * p.getLongitude() - Bl * p.getLatitude() ;
 		Line res = new Line(Al, Bl, Cl);
-		App.log.info(this.getClass(), String.format("  Perpendicular is %s", res));
+		logger.info(String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
@@ -82,17 +84,17 @@ public class Line {
 	 * @return Point value where these line intersects or null if they are parallel
 	 */
 	public Point getInterctionWithLine(Line l){
-		App.log.info(this.getClass(), String.format("\n  Obtaining intersectionpoint for lines:"));
-		App.log.info(this.getClass(), String.format("  \\/%s", this));
-		App.log.info(this.getClass(), String.format("  /\\%s", l));
+		logger.info(String.format("\n  Obtaining intersectionpoint for lines:"));
+		logger.info(String.format("  \\/%s", this));
+		logger.info(String.format("  /\\%s", l));
 		if((this.A * l.getB() - l.getA() * this.B) == 0){
-			App.log.info(this.getClass(), String.format("null"));
+			logger.info(String.format("null"));
 			return null; //Parallel
 		}
 		double lon = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
 		double lat = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
 		Point p = new Point(lat, lon);
-		App.log.info(this.getClass(), String.format("   =%s", p));
+		logger.info(String.format("   =%s", p));
 		return p;			
 	}
 	

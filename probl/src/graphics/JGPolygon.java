@@ -27,7 +27,7 @@ public class JGPolygon extends Polygon implements CanvasObject {
 	public void show(Graphics g) {
 		this.reset();
 		for(Point p : polygon){
-			 this.addPoint(canvas.getDisplayX(p.getLatitude()), canvas.getDisplayY(p.getLongitude()));
+			 this.addPoint(canvas.getDisplayX(p.getLongitude()), canvas.getDisplayY(p.getLatitude()));
 		 }
 		
 		 Graphics2D g2 = (Graphics2D) g;

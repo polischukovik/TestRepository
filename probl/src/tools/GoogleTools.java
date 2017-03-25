@@ -1,19 +1,20 @@
 package tools;
 
 import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import geometry.Point;
-import geometry.Polygon;
 import graphics.Dimention;
+import logginig.Logger;
 
 public class GoogleTools {
+	public static Logger logger = Logger.getLogger(GoogleTools.class);
+	public final static int RADIUS = 6378137;
 	final static int GLOBE_WIDTH = 256; // a constant in Google's map projection
 	final static int ZOOM_MAX = 21;
 	final static String URL_PATTERN = "https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=%d&size=%dx%d&scale=2&maptype=hybrid&format=jpg";
@@ -36,29 +37,7 @@ public class GoogleTools {
 	private static double zoom(double mapPx, double worldPx, double fraction) {
 	    final double LN2 = .693147180559945309417;
 	    return (Math.log(mapPx / worldPx / fraction) / LN2);
-	}
-	
-	private static ImageIcon getMapImage(double lat, double lon, int zoom, int size_w, int size_h) {
-		Image image = null;
-        try {
-        	URL url = new URL(String.format(URL_PATTERN, lat, lon, zoom, size_w, size_h));
-            image = ImageIO.read(url);
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-		return new ImageIcon(image);
-	}
-	
-	/** Returns an ImageIcon, or null if the path was invalid. */
-	private static ImageIcon createImageIcon(String path, String description) {
-	    java.net.URL imgURL = GoogleTools.class.getResource(path);
-	    if (imgURL != null) {
-	        return new ImageIcon(imgURL, description);
-	    } else {
-	        System.err.println("Couldn't load image: " + path);
-	    	return new ImageIcon();
-	    }
-	}
+	}	
 	
 	/**
 	 * Returns image of map which fits given polygon on canvas size. Or returns default image 
@@ -67,26 +46,62 @@ public class GoogleTools {
 	 * @param defaultPath
 	 * @return
 	 */
-	public static ImageIcon getMapImage(Polygon polygon, Dimension canvasSize, String defaultPath) {
-		if(polygon == null || canvasSize == null) {
-			return createImageIcon(defaultPath, "Default image");
-		}
-		
-		Point center = Point.getCenterOfMass(polygon.toArray(new Point[0]));
-		Dimention ovf = polygon.getOvf();
-		
-		double lat = center.getLatitude();
-        double lon = center.getLongitude();
-		int zoom = GoogleTools.getBoundsZoomLevel(ovf.getNE(), ovf.getSW(), (int)canvasSize.getWidth(), (int)canvasSize.getHeight()) -1;
-		int size_w = 620;
-		int size_h = 620;
-		
-		ImageIcon result = GoogleTools.getMapImage(lat, lon, zoom, size_w, size_h);
-		
-		//if(result == null){
-		if(true){
-			return createImageIcon(defaultPath, "Default image");
-		}
+	public static BufferedImage getMapImage(Dimention ovf, Dimension canvasSize, int zoom, String defaultPath) {
+		BufferedImage result = new BufferedImage(1240, 1240, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img;
+		if(ovf == null || canvasSize == null) {				
+			img = readImageFromUrl(defaultPath);
+			result = (img == null) ? result : img; 
+		}else{
+			double lat = ovf.getCenter().getLatitude();
+	        double lon = ovf.getCenter().getLongitude();
+	        
+			int size_w = 620;
+			int size_h = 620;
+        
+        	String url = String.format(URL_PATTERN, lat, lon, zoom, size_w, size_h);
+        	img = readImageFromUrl(url);
+        	logger.info("Loaded map image from: " + url);
+        	
+        	result = (img == null) ? readImageFromUrl(defaultPath) :  img;	    			
+		}			
+
 		return result;
+	}
+	
+	/** Returns an ImageIcon, or null if the path was invalid. 
+	 * @throws IOException */
+	private static BufferedImage readImageFromUrl(String url){
+	    if (url != null) {
+	        try {
+	        	if(url.startsWith("http")){
+	        		return ImageIO.read(new URL(url));
+	        	}else{
+	        		return ImageIO.read(new File(url));
+	        	}				
+			} catch (IOException e) {
+				System.err.println("Cannot read URL");
+				e.printStackTrace();
+			}
+	    } else {
+	        System.err.println("Image URL is null");
+	    	return null;
+	    }
+		return null;
+	}
+	
+//	public static double getMetersPerPixel(int zoom, double latitude){
+//		return 156543.03392 * Math.cos(latitude * Math.PI / 180) / Math.pow(2, zoom);
+//		
+//	}
+	
+	public static double getMetersPerPixel(int zoom, double latitude){
+		double factor = 0.009330692;
+		for(int refZoom = 24; refZoom > zoom + 1; refZoom--){
+			factor = factor * 2;
+		}
+		
+		return factor * Math.cos(latitude * Math.PI / 180) ;
+		
 	}
 }

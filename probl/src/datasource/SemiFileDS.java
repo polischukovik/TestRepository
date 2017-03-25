@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import calculator.App;
-import geometry.*;
+import geometry.Point;
+import geometry.Segment;
+import logginig.Logger;
 
 public class SemiFileDS implements DataSource{
+	private static Logger logger = Logger.getLogger(SemiFileDS.class);
+	
 	private static String separator = ",";
 	
 	private List<Point> formPoints;
@@ -22,22 +25,22 @@ public class SemiFileDS implements DataSource{
 		formPoints = new ArrayList<>();
 		base = null;
 		devidor = 0;
-		this.path = path;
+		formPoints = readFile(path);
 	}	
 	
-	public static List<Point> readFile(File path) throws IOException {
+	private static List<Point> readFile(File path) throws IOException {
 		List<Point> formPoints = new ArrayList<>();
 		try(Scanner sc = new Scanner(path)){			
 			String line = "-1";
 			
-			App.log.info(SemiFileDS.class, String.format("\nGetting form points"));
+			logger .info(String.format("\nGetting form points"));
 			while(sc.hasNextLine()){
 				line = sc.nextLine();
 				if("".equals(line)) continue;
-				App.log.info(null, String.format("Reading line: %s", line));
+				logger.info(String.format("Reading line: %s", line));
 				String[] pair = line.split(separator);
 				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
-				App.log.info(SemiFileDS.class, String.format("  Adding point to list: %s", p));
+				logger.info(String.format("  Adding point to list: %s", p));
 				formPoints.add(p);
 			}
 			
@@ -48,9 +51,9 @@ public class SemiFileDS implements DataSource{
 			System.err.println(String.format("Source file is not correctly formated: %s", e.getMessage()));
 			throw e; 
 		}
-		App.log.info(SemiFileDS.class, "\n");
-		App.log.info(SemiFileDS.class, "");
-		App.log.info(SemiFileDS.class, "#######################################################");
+		logger.info("\n");
+		logger.info("");
+		logger.info("#######################################################");
 		return formPoints;
 	}
 	

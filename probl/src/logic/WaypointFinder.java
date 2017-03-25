@@ -6,12 +6,14 @@ import java.util.List;
 import datasource.DataSource;
 import geometry.Line;
 import geometry.Point;
+import geometry.Polygon;
 import geometry.Segment;
-import logginig.Logging;
+import logginig.Logger;
 
 public class WaypointFinder {
 
-	private Logging logging;
+	private static Logger logging = Logger.getLogger(WaypointFinder.class);
+	
 	@SuppressWarnings("unused")
 	private DataSource ds;
 	
@@ -21,15 +23,14 @@ public class WaypointFinder {
 	private List<Line> devisionLines = new ArrayList<>();
 	public Segment ovf;
 	
-	public WaypointFinder(DataSource ds, Logging logging) {
+	public WaypointFinder(DataSource ds) {
 		this.ds = ds;
-		this.logging = logging;
 		
 		/*
 		 *1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments 
 		 */
-		List<Segment> formSegments = Segment.getSegments(ds.getFormPoints());
-		log(String.format("---------------------------"));
+		List<Segment> formSegments = new Polygon(ds.getFormPoints()).getSegments();
+		logging.info(String.format("---------------------------"));
 		
 		/*
 		 * 2)Знайти область визначення фігури відносно відрізка base
@@ -42,7 +43,7 @@ public class WaypointFinder {
 		 * 3) Поділити відрізок ovf на devidor, знайти координати точок поділу: devisionPoints[u-1]
 		 */
 		devisionPoints = ovf.devideSegment(ds.getDevidor());
-		log(String.format("---------------------------"));
+		logging.info(String.format("---------------------------"));
 				
 		/*
 		 * 4) Для кожної з прямих devisionLines[m] для кожної з ліній на яких лежать відрізки formSegments[n] Визначити точки перетину які вони утвоюють...
@@ -51,24 +52,24 @@ public class WaypointFinder {
 		for(Point dp : devisionPoints){
 			List<Point> allIntersections = new ArrayList<>();
 			
-			log(String.format("\nCreating perpendicular for devision point %s", dp));
+			logging.info(String.format("\nCreating perpendicular for devision point %s", dp));
 			Line dl = ovf.getLine().getPerprndicularAtPoint(dp);
 			devisionLines.add(dl);
 			
-			log(String.format("\nDevision line %s", dl));
+			logging.info(String.format("\nDevision line %s", dl));
 			for(Segment segment : formSegments){
 				
-				log(String.format("  Find intersection point with segment line %s:\t", segment));
+				logging.info(String.format("  Find intersection point with segment line %s:\t", segment));
 				Point p = segment.getLine().getInterctionWithLine(dl);
 				if(p == null){
-					log(String.format("  Parallel"));
+					logging.info(String.format("  Parallel"));
 					continue;
 				}
 				if(segment.contains(p)){
-					log(String.format("  Belongs to segment\n"));
+					logging.info(String.format("  Belongs to segment\n"));
 					allIntersections.add(p);			
 				}else{
-					log(String.format("  Does not belongs to segment\n"));
+					logging.info(String.format("  Does not belongs to segment\n"));
 				}
 			}
 			
@@ -76,10 +77,10 @@ public class WaypointFinder {
 			intersections.addAll(allIntersections);
 			waypoints.addAll(allIntersections);
 		}
-		log(String.format("---------------------------"));
+		logging.info(String.format("---------------------------"));
 				
 		for(Point p : waypoints){
-			log(p.toString());
+			logging.info(p.toString());
 		}	
 	}
 
@@ -99,9 +100,4 @@ public class WaypointFinder {
 		return devisionLines;
 	}
 
-	private void log(String string) {
-		if(logging != null){
-			logging.info(this.getClass(), string);
-		}		
-	}	
 }

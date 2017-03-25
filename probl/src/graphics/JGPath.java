@@ -7,12 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
-import java.util.List;
 
 import geometry.Path;
-import geometry.Point;
-import graphics.strokes.CompositeStroke;
-import graphics.strokes.CompoundStroke;
 import graphics.strokes.ShapeStroke;
 import gui.JACanvas;
 

@@ -23,7 +23,7 @@ public class JGPoint extends Point implements CanvasObject {
 	}
 	
 	public void show(Graphics g){
-		this.setLocation(new Point(canvas.getDisplayX(point.getLatitude()), canvas.getDisplayY(point.getLongitude())));
+		this.setLocation(new Point(canvas.getDisplayX(point.getLongitude()), canvas.getDisplayY(point.getLatitude())));
 		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
