@@ -30,5 +30,9 @@ public class JAInteger extends JPanel{
 	public Integer getSections() {
 		return Integer.parseInt(sectionsField.getText());
 	}
+	
+	public void setSections(int value) {
+		sectionsField.setText(String.valueOf(value));
+	}
 
 }

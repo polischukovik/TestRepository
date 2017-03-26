@@ -18,7 +18,7 @@ import graphics.CanvasObject;
 @SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
 
-	private List<Point> formPointList = new ArrayList<>();
+	private List<Point> formPointList;
 	private JButton showDialogButton;
 	private JList<Point> defaultList;
 	
@@ -51,6 +51,7 @@ public class JAPointsList extends JPanel{
 
 	public void setListData(List<Point> list) {
 		Point[] pointArray = new Point[list.size()];
+		formPointList = list;
 		defaultList.setListData(list.toArray(pointArray));		
 	}
 }

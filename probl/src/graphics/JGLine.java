@@ -26,13 +26,13 @@ public class JGLine  extends Line2D.Float implements CanvasObject {
 	}
 	
 	public void show(Graphics g){
-		Segment s = line.getSegmentForBox(canvas.getMap().getSW(), canvas.getMap().getNE());
+		Segment s = line.getSegmentForBox(canvas.display.map.getSW(), canvas.display.map.getNE());
 		if(s == null) return;
 		
-		this.setLine(canvas.getDisplayX(s.getA().getLatitude())
-				, canvas.getDisplayY(s.getA().getLongitude())
-				, canvas.getDisplayX(s.getB().getLatitude())
-				, canvas.getDisplayY(s.getB().getLongitude()));
+		this.setLine(canvas.getDisplayX(s.getA().getLongitude())
+				, canvas.getDisplayY(s.getA().getLatitude())
+				, canvas.getDisplayX(s.getB().getLongitude())
+				, canvas.getDisplayY(s.getB().getLatitude()));
 	
 		 Graphics2D g2 = (Graphics2D) g;
 		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

@@ -8,7 +8,7 @@ import graphics.Dimention;
 import logginig.Logger;
 
 @SuppressWarnings("serial")
-public class Polygon extends ArrayList<Point> {
+public class Polygon extends ArrayList<Point> implements Displayable{
 
 	private static Logger logger = Logger.getLogger(Polygon.class);
 

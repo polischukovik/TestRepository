@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
 import geometry.Point;
+import logginig.Logger;
 import tools.GoogleTools;
 
 public class Map{
 	
 	private Point SW, NE;
 	private BufferedImage image;
+	Logger logging = Logger.getLogger(Map.class);
 
 //	/**
 //	 * Creates blank map
@@ -41,6 +43,8 @@ public class Map{
 			this.SW = ovf.getSquareDiagonal().getA();
 			this.NE = ovf.getSquareDiagonal().getB();
 		}
+		
+		logging.info(String.format("Map SW: %s\tNE:%s", SW, NE));
 	}
 
 	public BufferedImage getImage() {

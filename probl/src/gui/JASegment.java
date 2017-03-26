@@ -1,9 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -13,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import geometry.Segment;
-import graphics.CanvasObject;
 
 @SuppressWarnings("serial")
 public class JASegment extends JPanel{
@@ -48,6 +44,10 @@ public class JASegment extends JPanel{
 
 	public void setSegment(Segment segment) {
 		this.segment = segment;
+		if(segment == null){
+			segmentField.setText("");
+			return;
+		}
 		segmentField.setText(segment.toString());	
 	}
 

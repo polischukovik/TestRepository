@@ -14,9 +14,6 @@ public class WaypointFinder {
 
 	private static Logger logging = Logger.getLogger(WaypointFinder.class);
 	
-	@SuppressWarnings("unused")
-	private DataSource ds;
-	
 	private List<Point> waypoints = new ArrayList<>(); 
 	private List<Point> devisionPoints;
 	private List<Point> intersections = new ArrayList<>();
@@ -24,7 +21,6 @@ public class WaypointFinder {
 	public Segment ovf;
 	
 	public WaypointFinder(DataSource ds) {
-		this.ds = ds;
 		
 		/*
 		 *1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments 

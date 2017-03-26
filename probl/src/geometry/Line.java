@@ -6,7 +6,7 @@ import java.util.List;
 import calculator.App;
 import logginig.Logger;
 
-public class Line {
+public class Line implements Displayable{
 
 	private double A;
 	private double B;

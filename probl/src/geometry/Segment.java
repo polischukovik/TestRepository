@@ -6,7 +6,7 @@ import java.util.List;
 import calculator.App;
 import logginig.Logger;
 
-public class Segment {
+public class Segment implements Displayable{
 	private Point a;
 	private Point b;
 	private double length;

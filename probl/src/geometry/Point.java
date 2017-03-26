@@ -6,7 +6,7 @@ import calculator.App;
 import logginig.Logger;
 import tools.GoogleTools;
 
-public class Point {
+public class Point implements Displayable{
 	//public static final Point HOME = new Point(50.392621, 30.496226);
 	protected static Logger logger = Logger.getLogger(Point.class);
 	

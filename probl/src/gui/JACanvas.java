@@ -3,7 +3,6 @@ package gui;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -24,22 +23,20 @@ import graphics.JGPath;
 import graphics.JGPoint;
 import graphics.JGPolygon;
 import graphics.JGSegment;
-import graphics.Map;
+import logginig.Logger;
 import tools.GoogleTools;
 
 @SuppressWarnings("serial")
 public class JACanvas extends JPanel {
+	Logger logger = Logger.getLogger(JACanvas.class);
+	
 	final static BasicStroke stroke = new BasicStroke(2.0f);
 	private List<CanvasObject> objects = new ArrayList<>();
-	private Map map = null;
-	
-	private Dimension canvasSize = null;
 	private BufferedImage defaultImage;
 	
-	private int imageTopLeftX = 0;
-	private int imageTopLeftY = 0;
-	
-	public int zoom = 0;
+	int imageTopLeftX = 0;
+	int imageTopLeftY = 0;
+	public JADisplay display;
 	
 	public static enum CanvasElements{
 		Point,
@@ -49,8 +46,9 @@ public class JACanvas extends JPanel {
 		Path
 	}; 
 	
-	public JACanvas() {
+	public JACanvas(JADisplay display) {
 		super();
+		this.display = display;
 		setLayout(new BorderLayout());
 		this.setBackground(Color.LIGHT_GRAY);
 
@@ -59,26 +57,25 @@ public class JACanvas extends JPanel {
 	}
 
 	public void setMapForArea(Dimention ovf){
-		zoom = GoogleTools.getBoundsZoomLevel(ovf.getNE(), ovf.getSW(), (int)canvasSize.getWidth(), (int)canvasSize.getHeight()) -1;
-		this.map = new Map(ovf, this.getSize(), zoom);
-	}
+			}
 
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		canvasSize = getSize();
 		
-		if(map == null){			
+		if(display.map == null){			
 			g.drawImage(defaultImage, 0, 0, this);
 		}
-		if(map != null && map.getImage() != null){
-			BufferedImage img = map.getImage(); 
-			imageTopLeftX = (int) (canvasSize.getWidth() - img.getWidth())/2;
-			imageTopLeftY = (int) (canvasSize.getHeight() - img.getHeight())/2;
+		if(display.map != null && display.map.getImage() != null){
+			BufferedImage img = display.map.getImage(); 
+			double displayWidth = getSize().getWidth();
+			double displayHeight = getSize().getHeight();
+			imageTopLeftX = (int) (displayWidth / 2 - img.getWidth() / 2);
+			imageTopLeftY = (int) (displayHeight / 2 - img.getHeight() / 2);
         	g.drawImage(img, imageTopLeftX, imageTopLeftY, this);
         }		
 		
-		if(map != null){
+		if(display.map != null){
 			for(CanvasObject o : objects){			
 				o.show(g);
 			}
@@ -109,32 +106,15 @@ public class JACanvas extends JPanel {
 		}		
 	}
 	
-	public void createElement(Object obj, Color color){
-		objects.add(createCanvasElement(obj, color));
+	public CanvasObject createElement(Object obj, Color color){
+		CanvasObject element = createCanvasElement(obj, color);
+		objects.add(element);
+		return element;
 	}
 	
-	public void createAllElements(Collection<?> collection, Color color){
-		for(Object obj : collection){
-			try {
-				createElement(obj, color);
-			} catch (Exception e) {
-				// log error here
-			}			
-		}
-	}
-
-	public void removeElement(Object obj, Color color) {
-		objects.remove(createCanvasElement(obj, color));		
-	}
-	
-	public void removeAllElements(Collection<?> collection, Color color) {
-		for(Object obj : collection){
-			try {
-				removeElement(obj, color);
-			} catch (Exception e) {
-				// log error here
-			}
-		}
+	public void removeAllElements(Collection<CanvasObject> collection) {
+		if(collection == null) return;
+		objects.removeAll(collection);
 	}
 	
 	public void clear(){
@@ -147,29 +127,24 @@ public class JACanvas extends JPanel {
 	
 	public int getDisplayX(double longitude){		
 		double Pmin = imageTopLeftX;
-		double Pmax = map.getImage().getWidth() - imageTopLeftX;
-		double Cmin = map.getSW().getLongitude();
-		double Cmax = map.getNE().getLongitude();
-		//System.out.println(String.format("Pmin %f Pmax %f Cmin %f Cmax %f longitude %f",Pmin, Pmax, Cmin, Cmax, longitude));
+		double Pmax = display.map.getImage().getWidth() + imageTopLeftX;
+		double Cmin = display.map.getSW().getLongitude();
+		double Cmax = display.map.getNE().getLongitude();
 		
 		return proportion(Pmin, Pmax, Cmin, Cmax, longitude);
 	}
 	
 	public int getDisplayY(double latitude){
 		double Pmin = imageTopLeftY;
-		double Pmax = map.getImage().getHeight() - imageTopLeftY;
-		double Cmin = map.getSW().getLatitude();
-		double Cmax = map.getNE().getLatitude();
-		
-		return map.getImage().getHeight() - proportion(Pmin, Pmax, Cmin, Cmax, latitude);
+		double Pmax = display.map.getImage().getHeight() + imageTopLeftY;
+		double Cmin = display.map.getNE().getLatitude();
+		double Cmax = display.map.getSW().getLatitude();
+		//logger.info(String.format("Pmin %f Pmax %f Cmin %f Cmax %f longitude %f",Pmin, Pmax, Cmin, Cmax, latitude));
+		return proportion(Pmin, Pmax, Cmin, Cmax, latitude);
 	}
 	
 	private int proportion(double Pmin, double Pmax, double Cmin, double Cmax, double coordinate){
 		return new java.lang.Double((Pmax - Pmin) * (coordinate - Cmin) / (Cmax - Cmin) + Pmin).intValue();
-	}
-	
-	public Map getMap() {
-		return map;
 	}
 	
 }

@@ -1,26 +1,48 @@
 package datasource;
 
-import java.io.File;
 import java.util.List;
 
 import geometry.Point;
 import geometry.Segment;
 
-public interface DataSource {
-	public List<Point> getFormPoints();
+public class DataSource{
 
-	public void setFormPoints(List<Point> formPoints) ;
-
-	public Segment getBase() ;
-
-	public void setBase(Segment base);
-
-	public int getDevidor() ;
-
-	public void setDevidor(int devidor) ;
-
-	public File getPath();
-
-	public void setPath(File path);
-	public boolean isValid();
+	private List<Point> formPoints;
+	private Segment base;
+	private int devidor;
+	
+	
+	public DataSource(List<Point> formPoints, Segment base, int devidor) {
+		super();
+		this.formPoints = formPoints;
+		this.base = base;
+		this.devidor = devidor;
+		
+		if(formPoints == null || base == null || devidor == 0) 
+			throw new IllegalArgumentException("DataSource is not ready");
+	}
+	public List<Point> getFormPoints() {
+		return formPoints;
+	}
+	public void setFormPoints(List<Point> formPoints) {
+		this.formPoints = formPoints;
+	}
+	public Segment getBase() {
+		return base;
+	}
+	public void setBase(Segment base) {
+		this.base = base;
+	}
+	public int getDevidor() {
+		return devidor;
+	}
+	public void setDevidor(int devidor) {
+		this.devidor = devidor;
+	}
+	@Override
+	public String toString() {
+		return "DataSourceImpl [formPoints=" + formPoints + ", base=" + base + ", devidor=" + devidor + "]";
+	}	
+	
+	
 }

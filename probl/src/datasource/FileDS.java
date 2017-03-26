@@ -10,23 +10,17 @@ import geometry.Point;
 import geometry.Segment;
 import logginig.Logger;
 
-public class FileDS  implements DataSource{
+public class FileDS{
 	private static Logger logger = Logger.getLogger(FileDS.class);
 	
 	private static String separator = ",";
+
+	public static Segment base;
+	public static int devidor;	
 	
-	private List<Point> formPoints;
-	private Segment base;
-	private int devidor;
-	
-	public FileDS(File file) throws IOException {
-		formPoints = new ArrayList<>();
-		base = null;
-		devidor = 1;
-		readFile(file);
-	}	
-	
-	private void readFile(File file) throws IOException {
+	public static List<Point> readFile(File file) throws IOException {
+		List<Point> formPoints = new ArrayList<>();
+		
 		try(Scanner sc = new Scanner(file)){			
 			String line = "-1";
 			
@@ -38,6 +32,7 @@ public class FileDS  implements DataSource{
 				String[] pair = line.split(separator);
 				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
 				logger.info(String.format("  Adding point to list: %s", p));
+				
 				formPoints.add(p);
 			}
 
@@ -71,54 +66,8 @@ public class FileDS  implements DataSource{
 			throw e; 
 		}
 		logger.info("\n");
-		logger.info(this.toString());
 		logger .info("#######################################################");
-	}
-
-	public List<Point> getFormPoints() {
 		return formPoints;
 	}
 
-	public void setFormPoints(List<Point> formPoints) {
-		this.formPoints = formPoints;
-	}
-
-	public Segment getBase() {
-		return base;
-	}
-
-	public void setBase(Segment base) {
-		this.base = base;
-	}
-
-	public int getDevidor() {
-		return devidor;
-	}
-
-	public void setDevidor(int devidor) {
-		this.devidor = devidor;
-	}
-
-	@Override
-	public String toString() {
-		return "FileDS [formPoints=" + formPoints + ", base=" + base + ", devidor=" + devidor + "]";
-	}
-
-	@Override
-	public File getPath() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setPath(File path) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

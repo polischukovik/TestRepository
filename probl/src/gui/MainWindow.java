@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -20,6 +20,7 @@ import javax.swing.border.BevelBorder;
 
 import datasource.DataSource;
 import datasource.SemiFileDS;
+import geometry.Displayable;
 import geometry.Path;
 import geometry.Point;
 import geometry.Polygon;
@@ -39,9 +40,11 @@ public class MainWindow  extends JFrame {
 	private JAInteger sections;
 	private JADisplay display;	
 
-	private DataSource ds;
-	
 	private WaypointFinder wpf;
+	
+	public static final String GROUP_FIELD = "field";
+	public static final String GROUP_WP = "waypoints";
+	public static final String GROUP_SEGMENT = "segment";
 	
 	public MainWindow() throws HeadlessException {
 		super();	
@@ -91,29 +94,21 @@ public class MainWindow  extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				ds.setDevidor(sections.getSections());
-				logger.info("Invoking building waypoints");
+				DataSource ds = new DataSource(pointList.getFormPointList(), segmentPanel.getSegment(), sections.getSections());
+				logger.info("Invoking building waypoints"); 
 				logger.info(ds.toString());
+				logger.info(ds.toString());
+			
+				logger.info("Datasource ready"); 
+				wpf = new WaypointFinder(ds);
 				
-				if(ds.isValid()){
-					logger.info("Datasource ready");
-					WaypointFinder oldWpf = wpf; 
-					wpf = new WaypointFinder(ds);
-					
-					if(oldWpf != null){
-						display.getCanvas().removeElement(oldWpf.ovf, Color.RED);
-						display.getCanvas().removeElement(oldWpf.getWaypoints(), Color.YELLOW);
-						display.getCanvas().removeElement(oldWpf.getWaypoints(), Color.ORANGE);
-					}
-					display.getCanvas().createElement(wpf.ovf, Color.RED);
-					display.getCanvas().createElement(new Path(wpf.getWaypoints()), Color.YELLOW);
-					display.getCanvas().createElement(new Path(wpf.getWaypoints()), Color.ORANGE);
-					
-					display.getCanvas().render();
-				}else{
-					logger .info("Datasource is not ready");
-				}
+				display.clearDisplayObject(GROUP_WP);
+
+				display.addDisplayObject(GROUP_WP, wpf.ovf, Color.RED);
+				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.YELLOW);
+				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.ORANGE);
+				
+				display.render();
 			}
 		});
         
@@ -127,22 +122,25 @@ public class MainWindow  extends JFrame {
     	        	
     	        	logger.info("Opening: " + fc.getSelectedFile().getName() + ".");
     	        	
+    	        	Polygon polygon;
     	        	try {
-    	        		ds = new SemiFileDS(fc.getSelectedFile());
+    	        		polygon = new Polygon(SemiFileDS.readFile(fc.getSelectedFile()));
 					} catch (IOException e1) {
 						logger.info(e1.getMessage());
 						return;
-					}   
-    	        	Polygon polygon = new Polygon(ds.getFormPoints());
+					}       	        	
 					pointList.setListData(polygon);
-					
 					//create map area relative to polygon
-					display.getCanvas().setMapForArea(polygon.getDimention());
+					display.setMapForArea(polygon.getDimention());
+					
+					segmentPanel.setSegment(null);
+					sections.setSections(0);
 					
 					display.getCanvas().clear();
-					List<Point> fieldPoints = ds.getFormPoints();
-					display.getCanvas().createAllElements(fieldPoints, new Color(0, 255, 0, 127));
-					display.getCanvas().createElement(polygon, new Color(50, 30, 210, 32));
+					
+					display.addDisplayObject(GROUP_FIELD, (ArrayList<Point>) polygon, new Color(0, 255, 0, 127));
+					display.addDisplayObject(GROUP_FIELD, (Displayable) polygon, new Color(50, 30, 210, 32));
+					
 					display.getCanvas().render();
     	        } else {
     	        	logger.info("Open command cancelled by user." + "\n");
@@ -154,16 +152,11 @@ public class MainWindow  extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(pointList != null && pointList.getSelectedPoints().size() == 2){
-					Segment segment = new Segment(pointList.getSelectedPoints().get(0), pointList.getSelectedPoints().get(1));
-					Segment oldBase = ds.getBase();
-					
-					if(oldBase != null){
-						display.getCanvas().removeElement(oldBase, Color.GREEN);
-					}					
-					ds.setBase(segment);
+					Segment segment = new Segment(pointList.getSelectedPoints().get(0), pointList.getSelectedPoints().get(1));					
 					segmentPanel.setSegment(segment);
 					
-					display.getCanvas().createElement(segment, Color.GREEN);
+					display.clearDisplayObject(GROUP_SEGMENT);
+					display.addDisplayObject(GROUP_SEGMENT, segment, Color.GREEN);
 					display.getCanvas().render();
 				}							
 			}
