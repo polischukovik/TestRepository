@@ -8,7 +8,7 @@ import graphics.Dimention;
 import logginig.Logger;
 
 @SuppressWarnings("serial")
-public class Polygon extends ArrayList<Point> implements Displayable{
+public class Polygon extends ArrayList<GeoPoint> implements Displayable{
 
 	private static Logger logger = Logger.getLogger(Polygon.class);
 
@@ -17,7 +17,7 @@ public class Polygon extends ArrayList<Point> implements Displayable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Polygon(Collection<Point> c) {
+	public Polygon(Collection<GeoPoint> c) {
 		super(c);
 	}
 	

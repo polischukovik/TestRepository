@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 
 import geometry.Path;
 import graphics.strokes.ShapeStroke;
@@ -30,7 +31,7 @@ public class JGPath extends Path2D.Float implements CanvasObject {
 	@Override
 	public void show(Graphics g) {
 		this.reset();
-		if(waypoints == null && waypoints.getWaypoints().size() < 2){
+		if(waypoints == null || waypoints.getWaypoints().size() < 2){
 			return;
 		}
 		this.moveTo(canvas.getDisplayX(waypoints.getWaypoints().get(0).getLongitude()), 

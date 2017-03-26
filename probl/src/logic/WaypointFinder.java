@@ -5,7 +5,7 @@ import java.util.List;
 
 import datasource.DataSource;
 import geometry.Line;
-import geometry.Point;
+import geometry.GeoPoint;
 import geometry.Polygon;
 import geometry.Segment;
 import logginig.Logger;
@@ -14,9 +14,9 @@ public class WaypointFinder {
 
 	private static Logger logging = Logger.getLogger(WaypointFinder.class);
 	
-	private List<Point> waypoints = new ArrayList<>(); 
-	private List<Point> devisionPoints;
-	private List<Point> intersections = new ArrayList<>();
+	private List<GeoPoint> waypoints = new ArrayList<>(); 
+	private List<GeoPoint> devisionPoints;
+	private List<GeoPoint> intersections = new ArrayList<>();
 	private List<Line> devisionLines = new ArrayList<>();
 	public Segment ovf;
 	
@@ -33,7 +33,7 @@ public class WaypointFinder {
 		 * Отримаємо пряму на якій ледить відр. base
 		 */
 		Segment base = ds.getBase();
-		ovf = base.getLine().getProjection(ds.getFormPoints().toArray(new Point[0]));
+		ovf = base.getLine().getProjection(ds.getFormPoints().toArray(new GeoPoint[0]));
 		
 		/*
 		 * 3) Поділити відрізок ovf на devidor, знайти координати точок поділу: devisionPoints[u-1]
@@ -45,8 +45,8 @@ public class WaypointFinder {
 		 * 4) Для кожної з прямих devisionLines[m] для кожної з ліній на яких лежать відрізки formSegments[n] Визначити точки перетину які вони утвоюють...
 		 * Для кожної точки перетину визначити чи належить вона відрізку formSegments[n]
 		 */		
-		for(Point dp : devisionPoints){
-			List<Point> allIntersections = new ArrayList<>();
+		for(GeoPoint dp : devisionPoints){
+			List<GeoPoint> allIntersections = new ArrayList<>();
 			
 			logging.info(String.format("\nCreating perpendicular for devision point %s", dp));
 			Line dl = ovf.getLine().getPerprndicularAtPoint(dp);
@@ -56,7 +56,7 @@ public class WaypointFinder {
 			for(Segment segment : formSegments){
 				
 				logging.info(String.format("  Find intersection point with segment line %s:\t", segment));
-				Point p = segment.getLine().getInterctionWithLine(dl);
+				GeoPoint p = segment.getLine().getInterctionWithLine(dl);
 				if(p == null){
 					logging.info(String.format("  Parallel"));
 					continue;
@@ -69,26 +69,26 @@ public class WaypointFinder {
 				}
 			}
 			
-			allIntersections.sort(Point.getPointNameComparator(base.getLine()));
+			allIntersections.sort(GeoPoint.getPointComparator(base.getLine()));
 			intersections.addAll(allIntersections);
 			waypoints.addAll(allIntersections);
 		}
 		logging.info(String.format("---------------------------"));
 				
-		for(Point p : waypoints){
+		for(GeoPoint p : waypoints){
 			logging.info(p.toString());
 		}	
 	}
 
-	public List<Point> getWaypoints() {
+	public List<GeoPoint> getWaypoints() {
 		return waypoints;
 	}
 
-	public List<Point> getDevisionPoints() {
+	public List<GeoPoint> getDevisionPoints() {
 		return devisionPoints;
 	}
 
-	public List<Point> getIntersections() {
+	public List<GeoPoint> getIntersections() {
 		return intersections;
 	}
 

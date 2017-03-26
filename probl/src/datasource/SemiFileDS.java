@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import geometry.Point;
+import geometry.GeoPoint;
 import logginig.Logger;
 
 public class SemiFileDS{
@@ -14,8 +14,8 @@ public class SemiFileDS{
 	
 	private static String separator = ",";
 
-	public static List<Point> readFile(File path) throws IOException {
-		List<Point> formPoints = new ArrayList<>();
+	public static List<GeoPoint> readFile(File path) throws IOException {
+		List<GeoPoint> formPoints = new ArrayList<>();
 		try(Scanner sc = new Scanner(path)){			
 			String line = "-1";
 			
@@ -25,7 +25,7 @@ public class SemiFileDS{
 				if("".equals(line)) continue;
 				logger.info(String.format("Reading line: %s", line));
 				String[] pair = line.split(separator);
-				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
+				GeoPoint p = new GeoPoint(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
 				logger.info(String.format("  Adding point to list: %s", p));
 				formPoints.add(p);
 			}

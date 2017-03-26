@@ -8,7 +8,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import geometry.Point;
+import geometry.GeoPoint;
 import graphics.Dimention;
 import logginig.Logger;
 
@@ -20,7 +20,7 @@ public class GoogleTools {
 	final static String URL_PATTERN = "https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=%d&size=%dx%d&scale=2&maptype=hybrid&format=jpg";
 
 
-	public static int getBoundsZoomLevel(Point northeast,Point southwest, int width, int height) {
+	public static int getBoundsZoomLevel(GeoPoint northeast,GeoPoint southwest, int width, int height) {
 	    double latFraction = (latRad(northeast.getLatitude()) - latRad(southwest.getLatitude())) / Math.PI;
 	    double lngDiff = northeast.getLongitude() - southwest.getLongitude();
 	    double lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;

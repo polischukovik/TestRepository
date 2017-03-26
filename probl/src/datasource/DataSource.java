@@ -2,17 +2,17 @@ package datasource;
 
 import java.util.List;
 
-import geometry.Point;
+import geometry.GeoPoint;
 import geometry.Segment;
 
 public class DataSource{
 
-	private List<Point> formPoints;
+	private List<GeoPoint> formPoints;
 	private Segment base;
 	private int devidor;
 	
 	
-	public DataSource(List<Point> formPoints, Segment base, int devidor) {
+	public DataSource(List<GeoPoint> formPoints, Segment base, int devidor) {
 		super();
 		this.formPoints = formPoints;
 		this.base = base;
@@ -21,10 +21,10 @@ public class DataSource{
 		if(formPoints == null || base == null || devidor == 0) 
 			throw new IllegalArgumentException("DataSource is not ready");
 	}
-	public List<Point> getFormPoints() {
+	public List<GeoPoint> getFormPoints() {
 		return formPoints;
 	}
-	public void setFormPoints(List<Point> formPoints) {
+	public void setFormPoints(List<GeoPoint> formPoints) {
 		this.formPoints = formPoints;
 	}
 	public Segment getBase() {

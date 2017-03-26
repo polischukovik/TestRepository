@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Logger {
-	private static int logLevel = 0;
+	private static int logLevel = 4;
 	
 	private Class<?> clazz;
 	private static Set<LogListener> listeners = new HashSet<>();

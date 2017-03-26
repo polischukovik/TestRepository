@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import geometry.Line;
 import geometry.Path;
-import geometry.Point;
+import geometry.GeoPoint;
 import geometry.Polygon;
 import geometry.Segment;
 import graphics.CanvasObject;
@@ -39,7 +39,7 @@ public class JACanvas extends JPanel {
 	public JADisplay display;
 	
 	public static enum CanvasElements{
-		Point,
+		GeoPoint,
 		Line,
 		Segment,
 		Polygon,
@@ -91,8 +91,8 @@ public class JACanvas extends JPanel {
 		}
 		
 		switch (co) {
-		case Point:
-			return new JGPoint((Point) obj, this, color);
+		case GeoPoint:
+			return new JGPoint((GeoPoint) obj, this, color);
 		case Line:
 			return new JGLine((Line) obj, this, color);
 		case Segment:

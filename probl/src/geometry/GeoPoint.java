@@ -6,30 +6,20 @@ import calculator.App;
 import logginig.Logger;
 import tools.GoogleTools;
 
-public class Point implements Displayable{
+public class GeoPoint implements Displayable{
 	//public static final Point HOME = new Point(50.392621, 30.496226);
-	protected static Logger logger = Logger.getLogger(Point.class);
+	protected static Logger logger = Logger.getLogger(GeoPoint.class);
 	
 	private double latitude;
 	private double longitude;
 
-	public Point(double latitude, double longitude) {
+	public GeoPoint(double latitude, double longitude) {
 		super();
 		this.latitude = round(latitude,App.COORDINATE_PRECISION);
 		this.longitude = round(longitude,App.COORDINATE_PRECISION);
 	}
 	
-	/*
-	 * d=sqlrt((x2−x1)^2+(y2−y1)^2)
-	 */
-//	public double distanceTo(Point p){
-//		App.log.info(this.getClass(), String.format("    Finding distance from %s to %s", this, p));		
-//		double d = round(Math.sqrt(Math.pow((p.getX() - this.x), 2) + Math.pow((p.getY() - this.y), 2)), App.COORDINATE_PRECISION);
-//		App.log.info(this.getClass(), String.format("    Distance is sqlrt((x2−x1)^2+(y2−y1)^2) = %f", d));
-//		return d;
-//	}
-	
-	public double distanceTo(Point p){
+	public double distanceTo(GeoPoint p){
 		
 		double R = GoogleTools.RADIUS; // metres
 		double φ1 = Math.toRadians(this.getLatitude());
@@ -47,25 +37,7 @@ public class Point implements Displayable{
 		return d;
 	}
 	
-//	public Point moveTo(double direction, double distance){
-//		double tc = direction;
-//		double lat = Math.asin(Math.sin(this.getLatitude()) * Math.cos(distance) 
-//				+ Math.cos(this.getLatitude()) * Math.sin(distance) * Math.cos(tc));
-//		double dlon = Math.atan2(Math.sin(tc) * Math.sin(distance) * Math.cos(this.getLatitude()), Math.cos(distance) 
-//				- Math.sin(this.getLatitude()) * Math.sin(lat));
-//		double lon = mod((this.getLatitude() - dlon + Math.PI), 2 * Math.PI) - Math.PI;
-//		return new Point(this.getLatitude() + lat, this.getLongitude() + lon);
-//	}
-//	
-//	private double mod(double y, double x){
-//		double mod = y - x * (int)(y/x); ///mood
-//		if(mod < 0){
-//			mod = mod + x;
-//		}
-//		return mod;
-//	}
-	
-	public Point moveTo(double direction, double distance){
+	public GeoPoint moveTo(double direction, double distance){
 		double dist = distance / GoogleTools.RADIUS;  
 		double brng = toRad(direction);  
 		
@@ -82,22 +54,22 @@ public class Point implements Displayable{
 		
 		if (Double.isNaN(lat2) || Double.isNaN(lon2)) return null;
 		
-		return new Point(toDeg(lat2), toDeg(lon2));
+		return new GeoPoint(toDeg(lat2), toDeg(lon2));
 	}
 	
-	private double toRad(double degree){
+	public static double toRad(double degree){
 		return degree * Math.PI / 180;
 	}
 	
-	private double toDeg(double radians) {
+	public static double toDeg(double radians) {
 		return radians * 180 / Math.PI;
 	}
 
-	public static Comparator<Point> getPointNameComparator(Line base){
-		return new Comparator<Point>() {
+	public static Comparator<GeoPoint> getPointComparator(Line base){
+		return new Comparator<GeoPoint>() {
 			@Override
-			public int compare(Point o1, Point o2) {
-				Point intersection = base.getInterctionWithLine(base.getPerprndicularAtPoint(o1));
+			public int compare(GeoPoint o1, GeoPoint o2) {
+				GeoPoint intersection = base.getInterctionWithLine(base.getPerprndicularAtPoint(o1));
 				if(!intersection.equals(base.getInterctionWithLine(base.getPerprndicularAtPoint(o2)))){
 					logger.info("Impossible condition");
 				}
@@ -107,18 +79,6 @@ public class Point implements Displayable{
 		};
 	}
 	
-//	public Point translateCoordinates(final double distance, final Point origpoint, final double angle) {
-//        final double distanceNorth = Math.sin(angle) * distance;
-//        final double distanceEast = Math.cos(angle) * distance;
-//
-//        final double earthRadius = 6371000;
-//
-//        final double newLat = origpoint.latitude + (distanceNorth / earthRadius) * 180 / Math.PI;
-//        final double newLon = origpoint.longitude + (distanceEast / (earthRadius * Math.cos(newLat * 180 / Math.PI))) * 180 / Math.PI;
-//
-//        return new Point(newLat, newLon);
-//}
-	
 	public static double round(double value, int places) {
 	    if (places < 0) throw new IllegalArgumentException();
 	
@@ -126,6 +86,19 @@ public class Point implements Displayable{
 	    value = value * factor;
 	    long tmp = Math.round(value);
 	    return (double) tmp / factor;
+	}
+	
+	public Vector getVector(GeoPoint p){
+//		CartesianPoint cOther = new CartesianPoint(GoogleTools.RADIUS, p);
+//		CartesianPoint cThis = new CartesianPoint(GoogleTools.RADIUS, this);
+//		
+//		double componentA = cOther.x - cThis.x;
+//		double componentB = cOther.y - cThis.y;
+//		double componentC = cOther.z - cThis.z;
+//		
+//		return new Vector(componentA, componentB, componentC);
+		
+		return new Vector(0, p.latitude - this.latitude, p.longitude - this.longitude);
 	}
 
 	@Override
@@ -136,7 +109,7 @@ public class Point implements Displayable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Point other = (Point) obj;
+		GeoPoint other = (GeoPoint) obj;
 		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
 			return false;
 		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
@@ -161,25 +134,12 @@ public class Point implements Displayable{
 		return "Point [" + latitude + ", " + longitude + "]";
 	}
 	
-	public static Point getCenterOfMass(Point ...points){
+	public static GeoPoint getCenterOfMass(GeoPoint ...points){
 		double sumLat = 0, sumLong = 0;
 		for (int i = 0; i < points.length; i++) {
 			sumLat += points[i].getLatitude();
 			sumLong += points[i].getLongitude();
 		}
-		return new Point(sumLat/points.length, sumLong/points.length);
-	}
-
-	public int relatesTo(Point a, Segment base) {
-		if(this.equals(a)){
-			return 0;
-		}
-		
-		if(this.distanceTo(base.getA()) + this.distanceTo(base.getB()) > 
-			a.distanceTo(base.getA()) + a.distanceTo(base.getB())){
-			return 1;
-		}else{
-			return -1;
-		}
+		return new GeoPoint(sumLat/points.length, sumLong/points.length);
 	}
 }

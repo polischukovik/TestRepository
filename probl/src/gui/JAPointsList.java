@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -12,15 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import geometry.Point;
-import graphics.CanvasObject;
+import geometry.GeoPoint;
 
 @SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
 
-	private List<Point> formPointList;
+	private List<GeoPoint> formPointList;
 	private JButton showDialogButton;
-	private JList<Point> defaultList;
+	private JList<GeoPoint> defaultList;
 	
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -41,16 +39,16 @@ public class JAPointsList extends JPanel{
 		return showDialogButton;
 	}
 
-	public List<Point> getSelectedPoints() {
+	public List<GeoPoint> getSelectedPoints() {
 		return defaultList.getSelectedValuesList();
 	}
 
-	public List<Point> getFormPointList() {
+	public List<GeoPoint> getFormPointList() {
 		return formPointList;
 	}
 
-	public void setListData(List<Point> list) {
-		Point[] pointArray = new Point[list.size()];
+	public void setListData(List<GeoPoint> list) {
+		GeoPoint[] pointArray = new GeoPoint[list.size()];
 		formPointList = list;
 		defaultList.setListData(list.toArray(pointArray));		
 	}

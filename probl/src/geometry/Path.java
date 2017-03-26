@@ -3,17 +3,17 @@ package geometry;
 import java.util.List;
 
 public class Path implements Displayable{
-	private List<Point> waypoints;
+	private List<GeoPoint> waypoints;
 
-	public Path(List<Point> waypoints) {
+	public Path(List<GeoPoint> waypoints) {
 		this.waypoints = waypoints;
 	}
 
-	public List<Point> getWaypoints() {
+	public List<GeoPoint> getWaypoints() {
 		return waypoints;
 	}
 
-	public void setWaypoints(List<Point> waypoints) {
+	public void setWaypoints(List<GeoPoint> waypoints) {
 		this.waypoints = waypoints;
 	}
 

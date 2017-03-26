@@ -37,12 +37,14 @@ public class JADisplay extends JPanel{
 	}
 	
 	public void addDisplayObject(String objectGroupName, List<? extends Displayable> obj, Color color){
+		if(obj == null) return;
 		for(Displayable o : obj){
 			addDisplayObject(objectGroupName, o, color);
 		}
 	}
 	
 	public void addDisplayObject(String objectGroupName, Displayable obj, Color color){
+		if(obj == null) return;
 		List<CanvasObject> list = objectGroups.get(objectGroupName);
 		if(list == null){
 			list = new ArrayList<>();

@@ -22,7 +22,7 @@ import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Displayable;
 import geometry.Path;
-import geometry.Point;
+import geometry.GeoPoint;
 import geometry.Polygon;
 import geometry.Segment;
 import logginig.Logger;
@@ -105,6 +105,9 @@ public class MainWindow  extends JFrame {
 				display.clearDisplayObject(GROUP_WP);
 
 				display.addDisplayObject(GROUP_WP, wpf.ovf, Color.RED);
+				display.addDisplayObject(GROUP_WP, wpf.getDevisionPoints(), Color.PINK);
+				display.addDisplayObject(GROUP_WP, wpf.getDevisionLines(), Color.MAGENTA);
+				
 				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.YELLOW);
 				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.ORANGE);
 				
@@ -138,7 +141,7 @@ public class MainWindow  extends JFrame {
 					
 					display.getCanvas().clear();
 					
-					display.addDisplayObject(GROUP_FIELD, (ArrayList<Point>) polygon, new Color(0, 255, 0, 127));
+					display.addDisplayObject(GROUP_FIELD, (ArrayList<GeoPoint>) polygon, new Color(0, 255, 0, 127));
 					display.addDisplayObject(GROUP_FIELD, (Displayable) polygon, new Color(50, 30, 210, 32));
 					
 					display.getCanvas().render();
