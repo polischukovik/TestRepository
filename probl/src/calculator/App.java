@@ -21,7 +21,7 @@ public class App{
     
 	public static void main(String[] args) throws IOException{		
 
-		Logger.setLogLevel(LogLevel.INFO.getMask() | LogLevel.DEBUG.getMask());
+		//Logger.setLogLevel(LogLevel.INFO.getMask() | LogLevel.DEBUG.getMask());
 		Logger.subscribe(new StdOutLogger());
 		//ds = new SemiFileDS(new File("ds.txt"));
 

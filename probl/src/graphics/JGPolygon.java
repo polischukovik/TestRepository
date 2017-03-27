@@ -7,7 +7,7 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.util.List;
 
-import geometry.GeoPoint;
+import geometry.Point;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
@@ -16,7 +16,7 @@ public class JGPolygon extends Polygon implements CanvasObject {
 	private JACanvas canvas;
 	private geometry.Polygon polygon;
 	
-	public JGPolygon(List<GeoPoint> list, JACanvas canvas, Color color) {
+	public JGPolygon(List<Point> list, JACanvas canvas, Color color) {
 		super();
 		this.color = color;
 		this.polygon = new geometry.Polygon(list);
@@ -26,7 +26,7 @@ public class JGPolygon extends Polygon implements CanvasObject {
 	@Override
 	public void show(Graphics g) {
 		this.reset();
-		for(GeoPoint p : polygon){
+		for(Point p : polygon){
 			 this.addPoint(canvas.getDisplayX(p.getLongitude()), canvas.getDisplayY(p.getLatitude()));
 		 }
 		

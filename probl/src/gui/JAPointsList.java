@@ -11,14 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import geometry.GeoPoint;
+import geometry.Point;
 
 @SuppressWarnings("serial")
 public class JAPointsList extends JPanel{
 
-	private List<GeoPoint> formPointList;
+	private List<Point> formPointList;
 	private JButton showDialogButton;
-	private JList<GeoPoint> defaultList;
+	private JList<Point> defaultList;
 	
 	public JAPointsList() {
 	    setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -39,16 +39,16 @@ public class JAPointsList extends JPanel{
 		return showDialogButton;
 	}
 
-	public List<GeoPoint> getSelectedPoints() {
+	public List<Point> getSelectedPoints() {
 		return defaultList.getSelectedValuesList();
 	}
 
-	public List<GeoPoint> getFormPointList() {
+	public List<Point> getFormPointList() {
 		return formPointList;
 	}
 
-	public void setListData(List<GeoPoint> list) {
-		GeoPoint[] pointArray = new GeoPoint[list.size()];
+	public void setListData(List<Point> list) {
+		Point[] pointArray = new Point[list.size()];
 		formPointList = list;
 		defaultList.setListData(list.toArray(pointArray));		
 	}

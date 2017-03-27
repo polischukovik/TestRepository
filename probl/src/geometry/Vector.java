@@ -65,11 +65,11 @@ public class Vector {
 	}
 	
 	public double cos(double degree){
-		return Math.cos(GeoPoint.toRad(degree));
+		return Math.cos(Point.toRad(degree));
 	}
 	
 	public double sin(double degree){
-		return Math.sin(GeoPoint.toRad(degree));
+		return Math.sin(Point.toRad(degree));
 	}
 
 	@Override

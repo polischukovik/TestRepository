@@ -2,46 +2,35 @@ package datasource;
 
 import java.util.List;
 
-import geometry.GeoPoint;
-import geometry.Segment;
+import geometry.Point;
 
 public class DataSource{
 
-	private List<GeoPoint> formPoints;
-	private Segment base;
-	private int devidor;
+	private List<Point> formPoints;
+	private double workWidth;
 	
 	
-	public DataSource(List<GeoPoint> formPoints, Segment base, int devidor) {
+	public DataSource(List<Point> formPoints, double workWidth) {
 		super();
 		this.formPoints = formPoints;
-		this.base = base;
-		this.devidor = devidor;
+		this.workWidth = workWidth;
 		
-		if(formPoints == null || base == null || devidor == 0) 
+		if(formPoints == null || workWidth == 0) 
 			throw new IllegalArgumentException("DataSource is not ready");
 	}
-	public List<GeoPoint> getFormPoints() {
+	public List<Point> getFormPoints() {
 		return formPoints;
 	}
-	public void setFormPoints(List<GeoPoint> formPoints) {
+	public void setFormPoints(List<Point> formPoints) {
 		this.formPoints = formPoints;
-	}
-	public Segment getBase() {
-		return base;
-	}
-	public void setBase(Segment base) {
-		this.base = base;
-	}
-	public int getDevidor() {
-		return devidor;
-	}
-	public void setDevidor(int devidor) {
-		this.devidor = devidor;
 	}
 	@Override
 	public String toString() {
-		return "DataSourceImpl [formPoints=" + formPoints + ", base=" + base + ", devidor=" + devidor + "]";
+		return "DataSourceImpl [formPoints=" + formPoints + ", workWidth=" + workWidth + "]";
+	}
+	public double getWorkWidth() {
+		// TODO Auto-generated method stub
+		return this.workWidth;
 	}	
 	
 	

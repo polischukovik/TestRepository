@@ -23,6 +23,7 @@ public class JADisplay extends JPanel{
 	
 	public int zoom = 0;
 	private java.util.Map<String, List<CanvasObject>> objectGroups;
+	public double metersInPixel;
 	
 	public JADisplay() {
 		super(new BorderLayout());
@@ -63,8 +64,9 @@ public class JADisplay extends JPanel{
 	}
 
 	public void setMapForArea(Dimention dimention) {
-		zoom = GoogleTools.getBoundsZoomLevel(dimention.getNE(), dimention.getSW(), (int) canvas.getSize().getWidth(), (int)canvas.getSize().getHeight()) -1;
-		this.map = new Map(dimention, canvas.getSize(), zoom);
+		zoom = GoogleTools.getBoundsZoomLevel(dimention.getNE(), dimention.getSW(), (int) canvas.getSize().getWidth(), (int)canvas.getSize().getHeight()) - 1;
+		this.metersInPixel = GoogleTools.getMetersPerPixel(zoom, dimention.getCenter().getLatitude());
+		this.map = new Map(dimention, canvas.getSize(), this);
 	}
 
 	public JACanvas getCanvas() {

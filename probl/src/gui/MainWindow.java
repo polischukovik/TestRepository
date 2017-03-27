@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,13 +19,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import datasource.DataSource;
 import datasource.SemiFileDS;
 import geometry.Displayable;
-import geometry.Path;
-import geometry.GeoPoint;
+import geometry.Point;
 import geometry.Polygon;
-import geometry.Segment;
 import logginig.Logger;
 import logic.WaypointFinder;
 
@@ -36,7 +34,6 @@ public class MainWindow  extends JFrame {
 	final static int windowhHeight = 924;
 	
 	private JAPointsList pointList;
-	private JASegment segmentPanel;
 	private JAInteger sections;
 	private JADisplay display;	
 
@@ -45,6 +42,9 @@ public class MainWindow  extends JFrame {
 	public static final String GROUP_FIELD = "field";
 	public static final String GROUP_WP = "waypoints";
 	public static final String GROUP_SEGMENT = "segment";
+	
+	public static double workWidth = 0;
+	public static List<Point> fieldPoints = null;
 	
 	public MainWindow() throws HeadlessException {
 		super();	
@@ -61,9 +61,8 @@ public class MainWindow  extends JFrame {
         JPanel plcHldrDisp = new JPanel(new BorderLayout());    
         JPanel plcHldrConsole = new JPanel(new BorderLayout());    
         
-        pointList = new JAPointsList();  
-        segmentPanel = new JASegment("Base segment", pointList);
-        sections = new JAInteger("Sections");
+        pointList = new JAPointsList();
+        sections = new JAInteger("Work width");
         display = new JADisplay();    
         
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
@@ -76,7 +75,6 @@ public class MainWindow  extends JFrame {
 
         
         rightPanel.add(pointList);
-        rightPanel.add(segmentPanel);
         rightPanel.add(sections);
         rightPanel.add(plcHldrConsole);        
         generalPanel.add(plcHldrDisp);
@@ -94,22 +92,20 @@ public class MainWindow  extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DataSource ds = new DataSource(pointList.getFormPointList(), segmentPanel.getSegment(), sections.getSections());
+				workWidth = sections.getSections();
+				fieldPoints = pointList.getFormPointList();
+				
 				logger.info("Invoking building waypoints"); 
-				logger.info(ds.toString());
-				logger.info(ds.toString());
 			
 				logger.info("Datasource ready"); 
-				wpf = new WaypointFinder(ds);
+				wpf = new WaypointFinder(fieldPoints);
 				
 				display.clearDisplayObject(GROUP_WP);
 
 				display.addDisplayObject(GROUP_WP, wpf.ovf, Color.RED);
-				display.addDisplayObject(GROUP_WP, wpf.getDevisionPoints(), Color.PINK);
-				display.addDisplayObject(GROUP_WP, wpf.getDevisionLines(), Color.MAGENTA);
 				
-				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.YELLOW);
-				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.ORANGE);
+				display.addDisplayObject(GROUP_WP, wpf.getWaypoints(), Color.RED);
+				display.addDisplayObject(GROUP_WP, wpf.getPath(), Color.YELLOW);
 				
 				display.render();
 			}
@@ -133,15 +129,13 @@ public class MainWindow  extends JFrame {
 						return;
 					}       	        	
 					pointList.setListData(polygon);
-					//create map area relative to polygon
 					display.setMapForArea(polygon.getDimention());
 					
-					segmentPanel.setSegment(null);
 					sections.setSections(0);
 					
 					display.getCanvas().clear();
 					
-					display.addDisplayObject(GROUP_FIELD, (ArrayList<GeoPoint>) polygon, new Color(0, 255, 0, 127));
+					display.addDisplayObject(GROUP_FIELD, (ArrayList<Point>) polygon, new Color(0, 255, 0, 127));
 					display.addDisplayObject(GROUP_FIELD, (Displayable) polygon, new Color(50, 30, 210, 32));
 					
 					display.getCanvas().render();
@@ -150,20 +144,6 @@ public class MainWindow  extends JFrame {
     	        }
 		    }
 		 });	
-        
-        segmentPanel.getButtonAdd().addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(pointList != null && pointList.getSelectedPoints().size() == 2){
-					Segment segment = new Segment(pointList.getSelectedPoints().get(0), pointList.getSelectedPoints().get(1));					
-					segmentPanel.setSegment(segment);
-					
-					display.clearDisplayObject(GROUP_SEGMENT);
-					display.addDisplayObject(GROUP_SEGMENT, segment, Color.GREEN);
-					display.getCanvas().render();
-				}							
-			}
-		});
         
 		flip.addActionListener(new ActionListener() {					
 			@Override

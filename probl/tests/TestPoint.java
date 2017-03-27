@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import calculator.App;
-import geometry.GeoPoint;
+import geometry.Point;
 
 
 public class TestPoint {
