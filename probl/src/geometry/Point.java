@@ -94,7 +94,7 @@ public class Point implements Displayable{
 	    return (double) tmp / factor;
 	}
 	
-	public Vector getVector(Point p){
+//	public Vector getVector(Point p){
 //		CartesianPoint cOther = new CartesianPoint(GoogleTools.RADIUS, p);
 //		CartesianPoint cThis = new CartesianPoint(GoogleTools.RADIUS, this);
 //		
@@ -103,9 +103,9 @@ public class Point implements Displayable{
 //		double componentC = cOther.z - cThis.z;
 //		
 //		return new Vector(componentA, componentB, componentC);
-		
-		return new Vector(0, p.latitude - this.latitude, p.longitude - this.longitude);
-	}
+//		
+//		return new Vector(0, p.latitude - this.latitude, p.longitude - this.longitude);
+//	}
 
 	@Override
 	public boolean equals(Object obj) {
