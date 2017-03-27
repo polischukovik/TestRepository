@@ -51,9 +51,14 @@ public class Fields {
 		public List<Point> getFieldPoints() {
 			return fieldPoints;
 		}
+		@Override
+		public String toString() {
+			return name;
+		}
+		
 	}
 
-	public List<Field> getFields() {
+	public static List<Field> getFields() {
 		return fields;
 	}
 }

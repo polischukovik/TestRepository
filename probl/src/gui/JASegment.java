@@ -17,7 +17,7 @@ public class JASegment extends JPanel{
 	private JButton buttonAdd;
 	private JTextField segmentField;
 
-	public JASegment(String name, JAPointsList pointList){
+	public JASegment(String name, JAFieldList pointList){
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));    
         setBorder(BorderFactory.createTitledBorder(name));
         setPreferredSize(new Dimension (300, 75));

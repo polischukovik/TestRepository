@@ -42,13 +42,13 @@ public class Line implements Displayable{
 		y2= segment.getB().getLatitude();
 		
 		this.A = y1 - y2;
-		logger.info(String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
+		logger.trace(String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
 		
 		this.B = x2-x1;
-		logger.info(String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
+		logger.trace(String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
 		
 		this.C = x1*y2 - x2*y1;
-		logger.info(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
+		logger.trace(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
 	}
 	
 	/**
@@ -62,12 +62,12 @@ public class Line implements Displayable{
 	 * @return new Line perpendicular to original
 	 */
 	public Line getPerprndicularAtPoint(Point p){
-		logger.info(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
+		logger.trace(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
 		double Al = this.B;
 		double Bl = -1.0 * this.A ;
 		double Cl = (-1.0) * Al * p.getLongitude() - Bl * p.getLatitude() ;
 		Line res = new Line(Al, Bl, Cl);
-		logger.info(String.format("  Perpendicular is %s", res));
+		logger.trace(String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
@@ -84,17 +84,17 @@ public class Line implements Displayable{
 	 * @return Point value where these line intersects or null if they are parallel
 	 */
 	public Point getIntersectionWithLine(Line l){
-		logger.info(String.format("\n  Obtaining intersectionpoint for lines:"));
-		logger.info(String.format("  \\/%s", this));
-		logger.info(String.format("  /\\%s", l));
+		logger.trace(String.format("\n  Obtaining intersectionpoint for lines:"));
+		logger.trace(String.format("  \\/%s", this));
+		logger.trace(String.format("  /\\%s", l));
 		if((this.A * l.getB() - l.getA() * this.B) == 0){
-			logger.info(String.format("null"));
+			logger.trace(String.format("null"));
 			return null; //Parallel
 		}
 		double lon = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
 		double lat = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
 		Point p = new Point(lat, lon);
-		logger.info(String.format("   =%s", p));
+		logger.trace(String.format("   =%s", p));
 		return p;			
 	}
 	

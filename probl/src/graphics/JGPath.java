@@ -40,6 +40,7 @@ public class JGPath extends Path2D.Float implements CanvasObject {
 		this.moveTo(canvas.getDisplayX(waypoints.getWaypoints().get(0).getLongitude()), 
 				canvas.getDisplayY(waypoints.getWaypoints().get(0).getLatitude()));
 		for(int i=1; i < waypoints.getWaypoints().size(); i++){
+			if(waypoints.getWaypoints().get(i) == null) continue;
 			this.lineTo(canvas.getDisplayX(waypoints.getWaypoints().get(i).getLongitude()), 
 					canvas.getDisplayY(waypoints.getWaypoints().get(i).getLatitude()));			
 		 }

@@ -29,9 +29,15 @@ public class Machinery {
 		public double getWorkItemWidth() {
 			return workItemWidth;
 		}
+		@Override
+		public String toString() {
+			return name + ", ширина=" + workItemWidth;
+		}
+		
+		
 	}
 
-	public List<Machine> getMachinery() {
+	public static List<Machine> getMachinery() {
 		return machinery;
 	}
 	
