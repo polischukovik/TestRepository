@@ -27,8 +27,8 @@ public class JAInteger extends JPanel{
         add(sectionsField);
 	}
 
-	public Integer getSections() {
-		return Integer.parseInt(sectionsField.getText());
+	public Double getSections() {
+		return Double.parseDouble(sectionsField.getText());
 	}
 	
 	public void setSections(int value) {

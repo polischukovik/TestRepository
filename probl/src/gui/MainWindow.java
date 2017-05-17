@@ -6,25 +6,21 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import datasource.DataSource;
-import datasource.SemiFileDS;
 import geometry.Displayable;
-import geometry.Path;
-import geometry.GeoPoint;
+import geometry.Point;
 import geometry.Polygon;
-import geometry.Segment;
 import logginig.Logger;
 import logic.WaypointFinder;
 
@@ -35,9 +31,9 @@ public class MainWindow  extends JFrame {
 	final static int windowWidth = 1280;
 	final static int windowhHeight = 924;
 	
-	private JAPointsList pointList;
-	private JASegment segmentPanel;
-	private JAInteger sections;
+	private JAFieldList fieldList;
+	private JAMachinaryList machineList;
+//	private JAInteger sections;
 	private JADisplay display;	
 
 	private WaypointFinder wpf;
@@ -45,6 +41,9 @@ public class MainWindow  extends JFrame {
 	public static final String GROUP_FIELD = "field";
 	public static final String GROUP_WP = "waypoints";
 	public static final String GROUP_SEGMENT = "segment";
+	
+	public static double workWidth = 0;
+	public static List<Point> fieldPoints = null;
 	
 	public MainWindow() throws HeadlessException {
 		super();	
@@ -61,9 +60,9 @@ public class MainWindow  extends JFrame {
         JPanel plcHldrDisp = new JPanel(new BorderLayout());    
         JPanel plcHldrConsole = new JPanel(new BorderLayout());    
         
-        pointList = new JAPointsList();  
-        segmentPanel = new JASegment("Base segment", pointList);
-        sections = new JAInteger("Sections");
+        fieldList = new JAFieldList();
+        machineList = new JAMachinaryList();
+//        sections = new JAInteger("Work width");
         display = new JADisplay();    
         
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
@@ -75,9 +74,9 @@ public class MainWindow  extends JFrame {
         plcHldrConsole.add(new JAConsole());
 
         
-        rightPanel.add(pointList);
-        rightPanel.add(segmentPanel);
-        rightPanel.add(sections);
+        rightPanel.add(fieldList);
+        rightPanel.add(machineList);
+//        rightPanel.add(sections);
         rightPanel.add(plcHldrConsole);        
         generalPanel.add(plcHldrDisp);
         
@@ -94,76 +93,78 @@ public class MainWindow  extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DataSource ds = new DataSource(pointList.getFormPointList(), segmentPanel.getSegment(), sections.getSections());
+//				workWidth = sections.getSections();
+				
 				logger.info("Invoking building waypoints"); 
-				logger.info(ds.toString());
-				logger.info(ds.toString());
-			
+				if(workWidth == 0 || fieldPoints == null){
+					logger.info("Datasource not ready"); 
+					return;
+				}
 				logger.info("Datasource ready"); 
-				wpf = new WaypointFinder(ds);
+				wpf = new WaypointFinder(fieldPoints);
 				
 				display.clearDisplayObject(GROUP_WP);
 
 				display.addDisplayObject(GROUP_WP, wpf.ovf, Color.RED);
-				display.addDisplayObject(GROUP_WP, wpf.getDevisionPoints(), Color.PINK);
-				display.addDisplayObject(GROUP_WP, wpf.getDevisionLines(), Color.MAGENTA);
 				
-				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.YELLOW);
-				display.addDisplayObject(GROUP_WP, new Path(wpf.getWaypoints()), Color.ORANGE);
+				display.addDisplayObject(GROUP_WP, wpf.getWaypoints(), Color.RED);
+				display.addDisplayObject(GROUP_WP, wpf.getPath(), Color.YELLOW);
 				
 				display.render();
 			}
 		});
         
-        pointList.getLoadPointsButton().addActionListener(new ActionListener(){  
-        	@Override
-	    	public void actionPerformed(ActionEvent e){
-	    		JFileChooser fc = new JFileChooser(new File("."));
-    	        int returnVal = fc.showOpenDialog(getParent());
-
-    	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-    	        	
-    	        	logger.info("Opening: " + fc.getSelectedFile().getName() + ".");
-    	        	
-    	        	Polygon polygon;
-    	        	try {
-    	        		polygon = new Polygon(SemiFileDS.readFile(fc.getSelectedFile()));
-					} catch (IOException e1) {
-						logger.info(e1.getMessage());
-						return;
-					}       	        	
-					pointList.setListData(polygon);
-					//create map area relative to polygon
+        fieldList.displayList.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                if(e.getClickCount()==2 && !e.isConsumed()){
+                	e.consume();
+                	
+                	fieldPoints = fieldList.getSelected().getFieldPoints();
+                	
+                	Polygon polygon = new Polygon(fieldPoints);
 					display.setMapForArea(polygon.getDimention());
-					
-					segmentPanel.setSegment(null);
-					sections.setSections(0);
 					
 					display.getCanvas().clear();
 					
-					display.addDisplayObject(GROUP_FIELD, (ArrayList<GeoPoint>) polygon, new Color(0, 255, 0, 127));
+					display.addDisplayObject(GROUP_FIELD, (ArrayList<Point>) polygon, new Color(0, 255, 0, 127));
 					display.addDisplayObject(GROUP_FIELD, (Displayable) polygon, new Color(50, 30, 210, 32));
 					
 					display.getCanvas().render();
-    	        } else {
-    	        	logger.info("Open command cancelled by user." + "\n");
-    	        }
-		    }
-		 });	
+                }
+            }
+        });
         
-        segmentPanel.getButtonAdd().addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(pointList != null && pointList.getSelectedPoints().size() == 2){
-					Segment segment = new Segment(pointList.getSelectedPoints().get(0), pointList.getSelectedPoints().get(1));					
-					segmentPanel.setSegment(segment);
-					
-					display.clearDisplayObject(GROUP_SEGMENT);
-					display.addDisplayObject(GROUP_SEGMENT, segment, Color.GREEN);
-					display.getCanvas().render();
-				}							
-			}
-		});
+        machineList.displayList.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+            	workWidth = machineList.getSelected().getWorkItemWidth();   
+            }
+        });
+        
+//        pointList.getLoadPointsButton().addActionListener(new ActionListener(){  
+//        	@Override
+//	    	public void actionPerformed(ActionEvent e){
+//	    		JFileChooser fc = new JFileChooser(new File("."));
+//    	        int returnVal = fc.showOpenDialog(getParent());
+//
+//    	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+//    	        	
+//    	        	logger.info("Opening: " + fc.getSelectedFile().getName() + ".");
+//    	        	
+//    	        	Polygon polygon;
+//    	        	try {
+//    	        		polygon = new Polygon(SemiFileDS.readFile(fc.getSelectedFile()));
+//					} catch (IOException e1) {
+//						logger.info(e1.getMessage());
+//						return;
+//					}       	        	
+
+//    	        } else {
+//    	        	logger.info("Open command cancelled by user." + "\n");
+//    	        }
+//		    }
+//		 });	
         
 		flip.addActionListener(new ActionListener() {					
 			@Override

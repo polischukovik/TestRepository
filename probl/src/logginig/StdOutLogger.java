@@ -10,8 +10,7 @@ public class StdOutLogger implements LogListener {
 		
 	@Override
 	public void update(LogLevel level, Class<?> clazz, String message) {
-		if ((level.getMask() & Logger.getLogLevel()) > 0)
-		{
+		if ((level.getMask() & Logger.getLogLevel()) > 0){
 		    log(level, clazz, message);
 		}
 	}

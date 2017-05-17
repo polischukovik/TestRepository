@@ -1,20 +1,29 @@
 package geometry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Path implements Displayable{
-	private List<GeoPoint> waypoints;
+	private List<Point> waypoints;
 
-	public Path(List<GeoPoint> waypoints) {
+	public Path() {
+		waypoints = new ArrayList<>();
+	}
+
+	public Path(List<Point> waypoints) {
 		this.waypoints = waypoints;
 	}
 
-	public List<GeoPoint> getWaypoints() {
+	public List<Point> getWaypoints() {
 		return waypoints;
 	}
 
-	public void setWaypoints(List<GeoPoint> waypoints) {
+	public void setWaypoints(List<Point> waypoints) {
 		this.waypoints = waypoints;
+	}
+	
+	public void addWaypoint(Point p){
+		waypoints.add(p);
 	}
 
 	@Override
@@ -40,6 +49,10 @@ public class Path implements Displayable{
 		} else if (!waypoints.equals(other.waypoints))
 			return false;
 		return true;
+	}
+
+	public boolean containsAll(List<Point> waypoints2) {
+		return waypoints.containsAll(waypoints2);
 	}
 	
 	

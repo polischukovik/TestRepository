@@ -6,20 +6,26 @@ import calculator.App;
 import logginig.Logger;
 import tools.GoogleTools;
 
-public class GeoPoint implements Displayable{
+public class Point implements Displayable{
 	//public static final Point HOME = new Point(50.392621, 30.496226);
-	protected static Logger logger = Logger.getLogger(GeoPoint.class);
+	protected static Logger logger = Logger.getLogger(Point.class);
 	
 	private double latitude;
 	private double longitude;
 
-	public GeoPoint(double latitude, double longitude) {
+	public Point(double latitude, double longitude) {
 		super();
 		this.latitude = round(latitude,App.COORDINATE_PRECISION);
 		this.longitude = round(longitude,App.COORDINATE_PRECISION);
 	}
 	
-	public double distanceTo(GeoPoint p){
+	public static Point parsePoint(String latlong) {
+		String[] split = latlong.split(", ");
+		return new Point(round(Double.parseDouble(split[0]) ,App.COORDINATE_PRECISION)
+				, round(Double.parseDouble(split[1]) ,App.COORDINATE_PRECISION));
+	}
+	
+	public double distanceTo(Point p){
 		
 		double R = GoogleTools.RADIUS; // metres
 		double φ1 = Math.toRadians(this.getLatitude());
@@ -37,7 +43,7 @@ public class GeoPoint implements Displayable{
 		return d;
 	}
 	
-	public GeoPoint moveTo(double direction, double distance){
+	public Point moveTo(double direction, double distance){
 		double dist = distance / GoogleTools.RADIUS;  
 		double brng = toRad(direction);  
 		
@@ -54,7 +60,7 @@ public class GeoPoint implements Displayable{
 		
 		if (Double.isNaN(lat2) || Double.isNaN(lon2)) return null;
 		
-		return new GeoPoint(toDeg(lat2), toDeg(lon2));
+		return new Point(toDeg(lat2), toDeg(lon2));
 	}
 	
 	public static double toRad(double degree){
@@ -65,12 +71,12 @@ public class GeoPoint implements Displayable{
 		return radians * 180 / Math.PI;
 	}
 
-	public static Comparator<GeoPoint> getPointComparator(Line base){
-		return new Comparator<GeoPoint>() {
+	public static Comparator<Point> getPointComparator(Line base){
+		return new Comparator<Point>() {
 			@Override
-			public int compare(GeoPoint o1, GeoPoint o2) {
-				GeoPoint intersection = base.getInterctionWithLine(base.getPerprndicularAtPoint(o1));
-				if(!intersection.equals(base.getInterctionWithLine(base.getPerprndicularAtPoint(o2)))){
+			public int compare(Point o1, Point o2) {
+				Point intersection = base.getIntersectionWithLine(base.getPerprndicularAtPoint(o1));
+				if(!intersection.equals(base.getIntersectionWithLine(base.getPerprndicularAtPoint(o2)))){
 					logger.info("Impossible condition");
 				}
 				double diff = o1.distanceTo(intersection) - o2.distanceTo(intersection);
@@ -88,7 +94,7 @@ public class GeoPoint implements Displayable{
 	    return (double) tmp / factor;
 	}
 	
-	public Vector getVector(GeoPoint p){
+//	public Vector getVector(Point p){
 //		CartesianPoint cOther = new CartesianPoint(GoogleTools.RADIUS, p);
 //		CartesianPoint cThis = new CartesianPoint(GoogleTools.RADIUS, this);
 //		
@@ -97,9 +103,9 @@ public class GeoPoint implements Displayable{
 //		double componentC = cOther.z - cThis.z;
 //		
 //		return new Vector(componentA, componentB, componentC);
-		
-		return new Vector(0, p.latitude - this.latitude, p.longitude - this.longitude);
-	}
+//		
+//		return new Vector(0, p.latitude - this.latitude, p.longitude - this.longitude);
+//	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -109,7 +115,7 @@ public class GeoPoint implements Displayable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GeoPoint other = (GeoPoint) obj;
+		Point other = (Point) obj;
 		if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
 			return false;
 		if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
@@ -134,12 +140,20 @@ public class GeoPoint implements Displayable{
 		return "Point [" + latitude + ", " + longitude + "]";
 	}
 	
-	public static GeoPoint getCenterOfMass(GeoPoint ...points){
+	public static Point getCenterOfMass(Point ...points){
 		double sumLat = 0, sumLong = 0;
 		for (int i = 0; i < points.length; i++) {
 			sumLat += points[i].getLatitude();
 			sumLong += points[i].getLongitude();
 		}
-		return new GeoPoint(sumLat/points.length, sumLong/points.length);
+		return new Point(sumLat/points.length, sumLong/points.length);
+	}
+
+	public Point getNearest(Point[] array) {
+		if (array == null || array.length != 2) return null;
+		double length1 = this.distanceTo(array[0]);
+		double length2 = this.distanceTo(array[1]);
+		
+		return (length1 > length2) ? array[1] : array[0];
 	}
 }

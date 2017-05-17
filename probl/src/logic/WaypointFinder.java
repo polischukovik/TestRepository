@@ -1,99 +1,153 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import datasource.DataSource;
 import geometry.Line;
-import geometry.GeoPoint;
+import geometry.Path;
+import geometry.Point;
 import geometry.Polygon;
 import geometry.Segment;
+import gui.MainWindow;
 import logginig.Logger;
 
 public class WaypointFinder {
 
 	private static Logger logging = Logger.getLogger(WaypointFinder.class);
 	
-	private List<GeoPoint> waypoints = new ArrayList<>(); 
-	private List<GeoPoint> devisionPoints;
-	private List<GeoPoint> intersections = new ArrayList<>();
-	private List<Line> devisionLines = new ArrayList<>();
-	public Segment ovf;
+	private List<Point> waypoints = new ArrayList<>(); 
+	private Path path = null;
+	Map<Segment, List<Point>> intersectionsSegment = new HashMap<>();
+	Map<Line, Set<Point>> intersectionsLine = new HashMap<>();
+	Map<Point, Line> pointLine = new HashMap<>();
+	List<Line> divisionLines = new ArrayList<>();
 	
-	public WaypointFinder(DataSource ds) {
+	public Segment ovf;
+
+	private List<Segment> formSegments;
+	
+	public WaypointFinder(List<Point> formPoints) {
 		
 		/*
 		 *1) Для кожноі точки formPoints[n] і formPoints[n+1] отримати відоізки які вони утворюють: formSegments 
 		 */
-		List<Segment> formSegments = new Polygon(ds.getFormPoints()).getSegments();
+		formSegments = new Polygon(formPoints).getSegments();
 		logging.info(String.format("---------------------------"));
 		
 		/*
 		 * 2)Знайти область визначення фігури відносно відрізка base
 		 * Отримаємо пряму на якій ледить відр. base
 		 */
-		Segment base = ds.getBase();
-		ovf = base.getLine().getProjection(ds.getFormPoints().toArray(new GeoPoint[0]));
+		Segment longest = null;
+		for(Segment s : formSegments){
+			if(longest == null || s.getLength() > longest.getLength()) longest = s; 
+		}
+		Line baseLine = longest.getLine().getPerprndicularAtPoint(new Polygon(formPoints).getDimention().getCenter());
+		ovf = baseLine.getProjection(formPoints.toArray(new Point[0]));
 		
 		/*
 		 * 3) Поділити відрізок ovf на devidor, знайти координати точок поділу: devisionPoints[u-1]
 		 */
-		devisionPoints = ovf.devideSegment(ds.getDevidor());
+		int sections = (int) (ovf.getLength() / MainWindow.workWidth);
+		if(ovf.getLength() % MainWindow.workWidth != 0){
+			sections++;
+		}
+		List<Point> devisionPoints = ovf.devideSegment(sections);
 		logging.info(String.format("---------------------------"));
 				
 		/*
 		 * 4) Для кожної з прямих devisionLines[m] для кожної з ліній на яких лежать відрізки formSegments[n] Визначити точки перетину які вони утвоюють...
 		 * Для кожної точки перетину визначити чи належить вона відрізку formSegments[n]
-		 */		
-		for(GeoPoint dp : devisionPoints){
-			List<GeoPoint> allIntersections = new ArrayList<>();
+		 */				
+		
+		for(Point dp : devisionPoints){
 			
 			logging.info(String.format("\nCreating perpendicular for devision point %s", dp));
 			Line dl = ovf.getLine().getPerprndicularAtPoint(dp);
-			devisionLines.add(dl);
+			divisionLines.add(dl);
+			Set<Point> linePoint;
+			if(intersectionsLine.get(dl) == null){
+				linePoint = new HashSet<>();
+				intersectionsLine.put(dl, linePoint);
+			}else{
+				linePoint = intersectionsLine.get(dl);
+			}
 			
 			logging.info(String.format("\nDevision line %s", dl));
 			for(Segment segment : formSegments){
+				List<Point> segmentPoint;
+				if(intersectionsSegment.get(segment) == null){
+					segmentPoint = new ArrayList<>();
+					intersectionsSegment.put(segment, segmentPoint);
+				}else{
+					segmentPoint = intersectionsSegment.get(segment);
+				}
 				
-				logging.info(String.format("  Find intersection point with segment line %s:\t", segment));
-				GeoPoint p = segment.getLine().getInterctionWithLine(dl);
+				logging.debug(String.format("  Find intersection point with segment line %s:\t", segment));
+				Point p = segment.getLine().getIntersectionWithLine(dl);
 				if(p == null){
 					logging.info(String.format("  Parallel"));
 					continue;
 				}
 				if(segment.contains(p)){
 					logging.info(String.format("  Belongs to segment\n"));
-					allIntersections.add(p);			
+					segmentPoint.add(p);
+					linePoint.add(p);
+					pointLine.put(p, dl);
+					waypoints.add(p);
 				}else{
 					logging.info(String.format("  Does not belongs to segment\n"));
 				}
-			}
-			
-			allIntersections.sort(GeoPoint.getPointComparator(base.getLine()));
-			intersections.addAll(allIntersections);
-			waypoints.addAll(allIntersections);
+			}			
+						
 		}
+		
+		if(waypoints.size() > 1){
+			path = new Path();
+		}			
+		
+		Point startPoint = waypoints.get(0);
+		addSequence(startPoint);
+					
 		logging.info(String.format("---------------------------"));
 				
-		for(GeoPoint p : waypoints){
+		for(Point p : waypoints){
 			logging.info(p.toString());
 		}	
 	}
 
-	public List<GeoPoint> getWaypoints() {
+
+	private void addSequence(Point start) {		
+		Line l = pointLine.get(start);
+		path.addWaypoint(start);
+		if (start == null || path.containsAll(waypoints)) return;
+		
+		Iterator<Point> iterator = intersectionsLine.get(l).iterator();
+		while(iterator.hasNext()){
+			Point next = iterator.next();
+			if(!next.equals(start)) {
+				path.addWaypoint(next);
+								
+				if(divisionLines.indexOf(l) < divisionLines.size() - 1){
+					Point nearest = next.getNearest(intersectionsLine.get(divisionLines.get(divisionLines.indexOf(l) + 1) ).toArray(new Point[0]));
+					addSequence(nearest);
+				}
+			}
+		}
+	}
+
+
+	public List<Point> getWaypoints() {
 		return waypoints;
 	}
 
-	public List<GeoPoint> getDevisionPoints() {
-		return devisionPoints;
-	}
 
-	public List<GeoPoint> getIntersections() {
-		return intersections;
+	public Path getPath() {
+		return path;
 	}
-
-	public List<Line> getDevisionLines() {
-		return devisionLines;
-	}
-
 }

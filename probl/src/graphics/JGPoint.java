@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 
-import geometry.GeoPoint;
 import gui.JACanvas;
 
 @SuppressWarnings("serial")
@@ -15,9 +14,9 @@ public class JGPoint extends Point implements CanvasObject {
 	private Color color;
 	private int size = 5;
 	private JACanvas canvas;
-	private GeoPoint point;
+	private geometry.Point point;
 
-	public JGPoint(geometry.GeoPoint point, JACanvas canvas, Color color) {
+	public JGPoint(geometry.Point point, JACanvas canvas, Color color) {
 		super();
 		this.point = point;
 		this.color = color;
@@ -35,7 +34,7 @@ public class JGPoint extends Point implements CanvasObject {
 		g2.setPaint(color);
 		g2.fill(new Ellipse2D.Double(this.getX() - size/2, this.getY() - size/2, size, size));
 		
-		if(true){
+		if(false){
 			g2.setPaint(Color.WHITE);
 			int indentX = 10, indentY = -10;
 			g2.drawString(point.toString(), x + indentX, y + indentY);

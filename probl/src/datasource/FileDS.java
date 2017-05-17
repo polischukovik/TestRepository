@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import geometry.GeoPoint;
+import geometry.Point;
 import geometry.Segment;
 import logginig.Logger;
 
@@ -18,8 +18,8 @@ public class FileDS{
 	public static Segment base;
 	public static int devidor;	
 	
-	public static List<GeoPoint> readFile(File file) throws IOException {
-		List<GeoPoint> formPoints = new ArrayList<>();
+	public static List<Point> readFile(File file) throws IOException {
+		List<Point> formPoints = new ArrayList<>();
 		
 		try(Scanner sc = new Scanner(file)){			
 			String line = "-1";
@@ -30,7 +30,7 @@ public class FileDS{
 				if("".equals(line)) break;
 				logger.info(String.format("Reading line: %s", line));
 				String[] pair = line.split(separator);
-				GeoPoint p = new GeoPoint(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
+				Point p = new Point(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
 				logger.info(String.format("  Adding point to list: %s", p));
 				
 				formPoints.add(p);
@@ -40,12 +40,12 @@ public class FileDS{
 			
 			line = sc.nextLine();
 			logger.info(String.format("Reading line: %s", line));
-			GeoPoint a = new GeoPoint(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));			
+			Point a = new Point(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));			
 			logger.info(String.format("Setting point A: %s", a));
 			
 			line = sc.nextLine();
 			logger.info(String.format("Reading line: %s", line));
-			GeoPoint b = new GeoPoint(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));
+			Point b = new Point(Double.parseDouble(line.split(separator)[0]),Double.parseDouble(line.split(separator)[1]));
 			logger.info(String.format("Setting point B: %s",b));
 			
 			base = new Segment(a, b);

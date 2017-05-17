@@ -42,13 +42,13 @@ public class Line implements Displayable{
 		y2= segment.getB().getLatitude();
 		
 		this.A = y1 - y2;
-		logger.info(String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
+		logger.trace(String.format("  A = y1 - y2 = %f - %f = %f", y1, y2, A));
 		
 		this.B = x2-x1;
-		logger.info(String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
+		logger.trace(String.format("  B = x2 - x1 = %f - %f = %f", x2, x1, B));
 		
 		this.C = x1*y2 - x2*y1;
-		logger.info(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
+		logger.trace(String.format("  C = x1y2 - x2y1 = %f * %f - %f * %f = %f", y1, x2, y2, x1, C));
 	}
 	
 	/**
@@ -61,13 +61,13 @@ public class Line implements Displayable{
 	 * @param p - Point thetis being crossed by a perpendicular
 	 * @return new Line perpendicular to original
 	 */
-	public Line getPerprndicularAtPoint(GeoPoint p){
-		logger.info(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
+	public Line getPerprndicularAtPoint(Point p){
+		logger.trace(String.format("\n  Obtaining perpendicular for %s at %s: ", this, p));
 		double Al = this.B;
 		double Bl = -1.0 * this.A ;
 		double Cl = (-1.0) * Al * p.getLongitude() - Bl * p.getLatitude() ;
 		Line res = new Line(Al, Bl, Cl);
-		logger.info(String.format("  Perpendicular is %s", res));
+		logger.trace(String.format("  Perpendicular is %s", res));
 		return res;
 	}
 	
@@ -83,18 +83,18 @@ public class Line implements Displayable{
 	 * @param l - the other line to find intersection with
 	 * @return Point value where these line intersects or null if they are parallel
 	 */
-	public GeoPoint getInterctionWithLine(Line l){
-		logger.info(String.format("\n  Obtaining intersectionpoint for lines:"));
-		logger.info(String.format("  \\/%s", this));
-		logger.info(String.format("  /\\%s", l));
+	public Point getIntersectionWithLine(Line l){
+		logger.trace(String.format("\n  Obtaining intersectionpoint for lines:"));
+		logger.trace(String.format("  \\/%s", this));
+		logger.trace(String.format("  /\\%s", l));
 		if((this.A * l.getB() - l.getA() * this.B) == 0){
-			logger.info(String.format("null"));
+			logger.trace(String.format("null"));
 			return null; //Parallel
 		}
-		double lon = GeoPoint.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
-		double lat = GeoPoint.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
-		GeoPoint p = new GeoPoint(lat, lon);
-		logger.info(String.format("   =%s", p));
+		double lon = Point.round( -1.0 * (this.C * l.getB() - l.getC() * this.B) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
+		double lat = Point.round( -1.0 * (this.A * l.getC() - l.getA() * this.C) / (this.A * l.getB() - l.getA() * this.B), App.COORDINATE_PRECISION);
+		Point p = new Point(lat, lon);
+		logger.trace(String.format("   =%s", p));
 		return p;			
 	}
 	
@@ -105,7 +105,7 @@ public class Line implements Displayable{
 	 * @param b is a coordinate of it's top right corner
 	 * @return Segment which represents a line
 	 */
-	public Segment getSegmentForBox(GeoPoint a, GeoPoint b){
+	public Segment getSegmentForBox(Point a, Point b){
 		
 		Double x1,y1,x2,y2;
 		
@@ -134,11 +134,11 @@ public class Line implements Displayable{
 			}
 		}
 				
-		return new Segment(new GeoPoint(x1,y1), new GeoPoint(x2,y2));
+		return new Segment(new Point(x1,y1), new Point(x2,y2));
 	}
 	
-	public GeoPoint getProjection(GeoPoint p){
-		return this.getPerprndicularAtPoint(p).getInterctionWithLine(this);
+	public Point getProjection(Point p){
+		return this.getPerprndicularAtPoint(p).getIntersectionWithLine(this);
 	}
 	
 	/**
@@ -147,15 +147,15 @@ public class Line implements Displayable{
 	 * @param list - the List of the points for which determination area is calculated
 	 * @return An instance of a Segment containing the most outer points of projection on Line
 	 */
-	public Segment getProjection(GeoPoint ...list){
-		GeoPoint maxP = null, maxD = null;
+	public Segment getProjection(Point ...list){
+		Point maxP = null, maxD = null;
 		double distance, max = 0;
-		List<GeoPoint> proj = new ArrayList<>();
-		for(GeoPoint p : list){
+		List<Point> proj = new ArrayList<>();
+		for(Point p : list){
 			proj.add(this.getProjection(p));
 		}
-		for(GeoPoint p : proj){
-			for(GeoPoint d : proj){
+		for(Point p : proj){
+			for(Point d : proj){
 				distance = p.distanceTo(d);
 				if(distance > max){
 					max = distance;
@@ -174,9 +174,9 @@ public class Line implements Displayable{
 	 * @param p - Point which in crossed by vertical
 	 * @return an instance of the Line
 	 */
-	public static Line getHorizontal(GeoPoint p){
+	public static Line getHorizontal(Point p){
 		double A = 0, B = 1, C;
-		C = GeoPoint.round( (-1.0) * A * p.getLongitude() - B * p.getLatitude() , App.COORDINATE_PRECISION);
+		C = Point.round( (-1.0) * A * p.getLongitude() - B * p.getLatitude() , App.COORDINATE_PRECISION);
 		return new Line(A, B, C);
 	}
 	
@@ -187,7 +187,7 @@ public class Line implements Displayable{
 	 * @param p - Point which in crossed by vertical
 	 * @return an instance of the Line
 	 */
-	public static Line getVertical(GeoPoint p){
+	public static Line getVertical(Point p){
 		double A = 1, B = 0, C;
 		C =  (-1.0) * A * p.getLongitude() - B * p.getLatitude();
 		return new Line(A, B, C); 

@@ -11,7 +11,7 @@ public class CartesianPoint {
 		this.z = z;
 	}
 	
-	public CartesianPoint(double r, GeoPoint p) {
+	public CartesianPoint(double r, Point p) {
 		double φ = p.getLatitude();
 		double θ = p.getLongitude();
 		x = r * Math.sin(φ) * Math.cos(θ);
