@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,8 +17,7 @@ public class LogoController implements Initializable {
 
 	@FXML private Label status;
 	@FXML private ImageView image;
-	@FXML private Button buttonAbort;
-	
+
 	public void initData(double width) {
 		Image logoImage = null; 
 		try {
@@ -26,15 +26,20 @@ public class LogoController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		image.setImage(logoImage);
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		System.err.println("asd");
+	public void initialize(URL location, ResourceBundle resources) {		
+		
 	}
-	
-	
-	
+
+	@FXML private void handleButtonAction(ActionEvent event) {
+		Platform.exit();
+	}
+
+	public void setStatus(String string) {
+		status.setText(string);
+	}
 }
