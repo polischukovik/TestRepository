@@ -13,25 +13,34 @@
       <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
       </ImageView>
-      <StackPane layoutX="110.0" layoutY="214.0" prefHeight="35.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <StackPane layoutX="110.0" layoutY="214.0" prefHeight="50.0" style="-fx-background-color: lightgray;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <AnchorPane prefWidth="600.0">
+            <VBox>
                <children>
-                  <Label fx:id="status" layoutX="15.0" layoutY="9.0" text="Apllication is loading..." AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="2.0">
-                     <font>
-                        <Font name="Arial" size="14.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="buttonAbort" layoutY="11.0" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="22.0" prefWidth="39.0" text="Abort" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="6.0">
-                     <font>
-                        <Font size="12.0" />
-                     </font>
-                     <padding>
-                        <Insets left="5.0" right="5.0" top="2.0" />
-                     </padding>
-                  </Button>
+                  <AnchorPane prefHeight="6.0" prefWidth="600.0">
+                     <children>
+                        <ProgressBar id="progressBar" layoutX="246.0" layoutY="5.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <Label fx:id="status" layoutX="0.0205078125" layoutY="3.0" text="Apllication is loading..." AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="buttonAbort" layoutX="261.0205078125" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="23.0" prefWidth="63.0" text="Abort" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" right="5.0" top="2.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
+            </VBox>
          </children>
       </StackPane>
    </children>

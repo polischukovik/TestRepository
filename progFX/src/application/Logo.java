@@ -1,5 +1,8 @@
 package application;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -8,6 +11,9 @@ import javafx.stage.Screen;
 import javafx.stage.StageStyle;
 
 public class Logo {
+	public static String APPLICATION_ICON = null;
+    public static String SPLASH_IMAGE = null;
+
 	private double[] scale = new double[]{0.30, 0.30};
 	private int width = (int) (Main.screeSize.width * scale[0]);
 	private int height = (int) (Main.screeSize.height * scale[1]);
@@ -15,7 +21,13 @@ public class Logo {
 	private LogoController controller;
 	
 	public Logo() {
-				
+
+		try {
+			APPLICATION_ICON = new File(Properties.getString("logo_image_path")).toURI().toURL().toString();
+			SPLASH_IMAGE = new File(Properties.getString("logo_image_path")).toURI().toURL().toString();
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		}
 		
 		
 		try {			

@@ -12,6 +12,12 @@ public class Main extends Application {
 	public static Dimension screeSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	@Override
+	public void init() throws Exception {
+		// TODO Auto-generated method stub
+		super.init();
+	}
+
+	@Override
 	public void start(Stage primaryStage) {
 		Main.primaryStage = primaryStage;
 		new Logo();
