@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
@@ -7,7 +8,7 @@ import java.util.Set;
 
 public class ChatServer extends Thread implements Runnable{
 	private int port;
-	private Set<ChatClient> clients = new HashSet<>();
+	private static Set<ChatUser> users = new HashSet<>();
 
 	public ChatServer(int port) {
 		this.port = port;
@@ -21,7 +22,7 @@ public class ChatServer extends Thread implements Runnable{
 			welcomeSocket = new ServerSocket(port);		
 		
 			while(true){
-				this.register(welcomeSocket.accept());
+				register(welcomeSocket.accept());
 			}			
 			
 		} catch (IOException e) {
@@ -30,8 +31,29 @@ public class ChatServer extends Thread implements Runnable{
 	}
 
 	private void register(Socket socket) {
-		clients.add(new ChatClient(socket));
-		System.out.println(Thread.currentThread() + ": New client Connected");
+		try {
+			ChatUser user = new ChatUser(socket);
+			users.add(user);
+			System.out.println(Thread.currentThread() + ": New client connected: " + user);
+		} catch (ProtocolException e) {
+			System.out.println("Error trying to register user.");
+			e.printStackTrace();
+		}
+	}
+	
+	private void listUsers(){
+		System.out.println("Listing registered users:");
+		for(ChatUser chatUser : users){
+			System.out.println("\t" + chatUser);
+		}
 	}
 
+	public static void process(String message) {
+		//if SEND_TO_ALL
+		System.out.println(String.format("Server: Message from user was recieved <<%s>>", message));
+		for(ChatUser user : users){
+			user.send(message);
+			
+		}
+	}
 }
