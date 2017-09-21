@@ -6,7 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.ProtocolException;
 import java.net.Socket;
 
-public class ChatUser extends Thread implements Runnable{
+public class ChatUser extends Thread implements Runnable, EventConsumer{
 	public static IdGenerator generator = new IdGenerator();
 	
 	Socket socket = null;
@@ -28,7 +28,7 @@ public class ChatUser extends Thread implements Runnable{
 		
 		id = generator.createID();
 		userName = chatProtocol.getValue("username");
-		new Thread(this).start();;
+		new Thread(this).start();
 	}
 	
 	public void run(){
@@ -72,6 +72,12 @@ public class ChatUser extends Thread implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void consumeEvent(ChatEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
