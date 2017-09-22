@@ -1,12 +1,17 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class IdGenerator {
-	private Set<String> idCounter = new HashSet<>();
+import org.apache.commons.lang3.RandomStringUtils;
 
-	public long createID()
+public class IdGenerator {
+	private Set<String> idSet = new HashSet<>();
+
+	public synchronized String createID()
 	{
-		RandomStringUtils.random(8, "0123456789abcdef")
-	    return idCounter.getAndIncrement();
+		String newId = "";
+		while(!idSet.contains((newId = RandomStringUtils.random(8, "0123456789abcdef")))){
+			idSet.add(newId);
+		}
+	    return newId;
 	}
 }

@@ -9,16 +9,15 @@ import java.net.ProtocolException;
 import java.net.Socket;
 import java.time.Instant;
 
-public class UserListener{
+public abstract class UserListener extends User{
 	public static IdGenerator generator = new IdGenerator();
 	
 	Socket socket = null;
 	OutputStream out = null;
 	InputStream in = null;
 	
-	private String userName;
-	private long id;
-
+	String welcome_options = "Welcome to chat applications: login send";
+	
 	public UserListener(Socket clientSocket) throws ProtocolException {		
 		this.socket = clientSocket;
 		try {
@@ -27,44 +26,57 @@ public class UserListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ChatProtocol chatProtocol = new ChatProtocol(this.socket);
-		
-		id = generator.createID();
-		userName = chatProtocol.getValue("username");
+	
 		new Thread(() -> {
-			String text = "";
-			BufferedReader reader = new BufferedReader( new InputStreamReader(in));			
-			try {
-				while(!text.equals("quit")){
-					text = reader.readLine();
-					ChatServer.process(new Message(id, -1, text, Instant.now().getEpochSecond()));
+			Command cmd = null;
+			CommandReader reader = new CommandReader(in);
+					
+			try {				
+				while(!(Command.ACTION_EXIT == (cmd = reader.readCommand()).getAction())){
+					switch (cmd.getAction()) {
+					case Command.ACTION_LOGIN:
+						LoginCommand login;
+						try {
+							login = LoginCommand.valueOf(cmd);
+							login(login);
+						} catch (UnformattedException e) {
+							e.printStackTrace();
+						}	
+						break;
+						
+					case Command.ACTION_PRIVATE_MESSAGE:
+						PrivateMessageCommand message;
+						try {
+							message = PrivateMessageCommand.valueOf(cmd);
+							sendPrivate(message);
+						} catch (UnformattedException e) {
+							e.printStackTrace();
+						}						
+						break;
+						
+					case Command.ACTION_GROUP_MESSAGE:
+						GroupMessageCommand messageGroup;
+						try {
+							messageGroup = GroupMessageCommand.valueOf(cmd);
+							sendGroup(messageGroup);
+						} catch (UnformattedException e) {
+							e.printStackTrace();
+						}						
+						break;
+						
+					default:
+						break;
+					}	
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				unregiserUser(id);
+				logout();
 			}			
 		}).start();
 	}
 
-	private void unregiserUser(long id) {
-		ChatServer.unregister(id);
-		
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + "]";
-	}
-
-	public void send(Message message) {
+	public void send(PrivateMessageCommand message){
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
 			writer.write(message.toJSON() + "\n");
@@ -73,5 +85,15 @@ public class UserListener{
 			e.printStackTrace();
 		}
 	}
+
+	abstract void sendPrivate(PrivateMessageCommand message);
+	
+	abstract void sendGroup(GroupMessageCommand messageGroup);
+	
+	abstract void login(LoginCommand login);
+	
+	abstract void logout();
+	
+	abstract void register();
 
 }
