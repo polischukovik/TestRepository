@@ -66,8 +66,14 @@ public class ChatServer extends Thread implements Runnable{
 		}
 	}
 
-	private static UserListener getUserById(long recipientId) {
-		List<UserListener> user = users.stream().filter(s -> s.getId() == recipientId).collect(Collectors.toList());
+	private static UserListener getUserById(long id) {
+		List<UserListener> user = users.stream().filter(s -> s.getId() == id).collect(Collectors.toList());
 		return user.size() == 0 ? null : null;
+	}
+
+	public static void unregister(long id) {
+		UserListener user = getUserById(id);
+		users.remove(user);
+		System.out.println("Unregistering user: " + user);
 	}
 }
