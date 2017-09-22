@@ -61,7 +61,7 @@ public class UserListener{
 	public void send(Message message) {
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
-			writer.write(message.toJSON());
+			writer.write(message.toJSON() + "\n" + "\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

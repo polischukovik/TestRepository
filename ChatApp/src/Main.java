@@ -25,7 +25,7 @@ public class Main {
 			while(true){
 				String inputStr;
 				StringBuilder result = new StringBuilder();
-				while ((inputStr = reader.readLine()) != null){
+				while (!(inputStr = reader.readLine()).equals("\n")){
 					result.append(inputStr);
 				}
 				gson.fromJson(result.toString(), Message.class);
