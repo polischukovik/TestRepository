@@ -41,8 +41,14 @@ public class UserListener{
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+				unregiserUser(id);
 			}			
 		}).start();
+	}
+
+	private void unregiserUser(long id) {
+		ChatServer.unregister(id);
+		
 	}
 
 	public String getUserName() {
@@ -61,7 +67,7 @@ public class UserListener{
 	public void send(Message message) {
 		try{
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
-			writer.write(message.toJSON());
+			writer.write(message.toJSON() + "\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
