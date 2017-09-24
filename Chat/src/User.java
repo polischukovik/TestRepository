@@ -1,18 +1,25 @@
 public class User{
 
-	protected String userName;
 	protected String id;
+	protected String email;
+	protected String name;
+	protected String password;
 	
-	public String getUserName() {
-		return userName;
+	public User(String id, String email, String name, String password) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.password = password;
 	}
-
 	public String getId() {
 		return id;
 	}
-	
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", userName=" + userName + "]";
+	public String getEmail() {
+		return email;
 	}
+	public String getName() {
+		return name;
+	}
+	
 }

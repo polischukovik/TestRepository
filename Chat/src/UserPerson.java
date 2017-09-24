@@ -10,28 +10,24 @@ public class UserPerson extends UserListener{
 	private static Set<UserPerson> users = new HashSet<>();
 	private static IdGenerator generator = new IdGenerator();
 
-	public UserPerson(Socket clientSocket) throws ProtocolException {
-		super(clientSocket);
-		id = generator.createID();
+	public UserPerson(RegisterCommand register) throws ProtocolException{
+		super(register);
+		id = generator.next();
+		
 	}
-
-	@Override
-	void sendPrivate(PrivateMessageCommand message) {
-		ChatServer.process(message);
-	}
-
+	
 	@Override
 	void logout() {
 		unregister(id);
 	}
 	
-	public static UserPerson getUserPersonById(String id) {
+	public static UserPerson getById(String id) {
 		List<UserPerson> user = users.stream().filter(s -> id.equals(s.getId())).collect(Collectors.toList());
 		return user.size() == 0 ? null : null;
 	}
 	
 	public static void unregister(String id) {
-		UserPerson user = UserPerson.getUserPersonById(id);
+		UserPerson user = UserPerson.getById(id);
 		users.remove(user);
 		System.out.println("Unregistering user: " + user);
 	}
@@ -40,16 +36,11 @@ public class UserPerson extends UserListener{
 		return users;
 	}
 
-	public static void register(Socket accept) {
-		try {
-			UserPerson user = new UserPerson(accept);
-			users.add(user);
-			System.out.println(Thread.currentThread() + ": New client connected: " + user);
-			listUserPersons();
-		} catch (ProtocolException e) {
-			System.out.println("Error trying to register user.");
-			e.printStackTrace();
-		}
+	public static UserPerson register(RegisterCommand register) {
+		UserPerson user = new UserPerson(register);
+		users.add(user);
+		System.out.println(Thread.currentThread() + ": User has registered: " + user);
+		listUserPersons();
 	}
 	
 	private static void listUserPersons(){
@@ -65,14 +56,12 @@ public class UserPerson extends UserListener{
 		
 	}
 
-	@Override
-	void login(LoginCommand login) {
-		// TODO Auto-generated method stub
+	public static UserPerson login(LoginCommand login) {
+		return null;
 		
 	}
 
-	@Override
-	void register() {
+	public static void connect(Socket accept) {
 		// TODO Auto-generated method stub
 		
 	}
