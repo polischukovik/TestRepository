@@ -8,6 +8,7 @@ import java.net.ProtocolException;
 import java.net.Socket;
 
 import command.Command;
+import command.CommandImpl;
 import command.CommandReader;
 import command.RegisterCommand;
 
@@ -47,7 +48,7 @@ public abstract class UserListener extends User{
 	
 		new Thread(() -> {
 			System.out.println("Strting input thread for user: " + this);
-			Command cmd = null;
+			CommandImpl cmd = null;
 			CommandReader reader = new CommandReader(clientSocket);
 			
 			try {

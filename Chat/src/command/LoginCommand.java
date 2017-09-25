@@ -4,7 +4,7 @@ import java.net.ProtocolException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class LoginCommand extends Command{
+public class LoginCommand extends CommandImpl{
 	private String username;
 	private String password;
 

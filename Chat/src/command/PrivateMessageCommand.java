@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 
 import user.UserPerson;
 
-public class PrivateMessageCommand extends Command{
+public class PrivateMessageCommand extends CommandImpl{
 	String recipientId;
 	String text = "";
 	

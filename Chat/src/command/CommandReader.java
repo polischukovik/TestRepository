@@ -12,7 +12,7 @@ public class CommandReader {
 		this.socket = socket;
 	}
 
-	public Command readCommand() throws IOException, ProtocolException{
+	public CommandImpl readCommand() throws IOException, ProtocolException{
 		BufferedReader reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 		StringBuilder res = new StringBuilder();
 		String line = "";
@@ -25,7 +25,7 @@ public class CommandReader {
 			throw new ProtocolException("Empty Command");
 		}
 		
-		return new Command(res.toString(), socket);
+		return new CommandImpl(res.toString(), socket);
 	}
 
 }

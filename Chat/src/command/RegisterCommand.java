@@ -4,7 +4,7 @@ import java.net.ProtocolException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class RegisterCommand extends Command{
+public class RegisterCommand extends CommandImpl{
 	private String email;
 	private String username;
 	private String password;
