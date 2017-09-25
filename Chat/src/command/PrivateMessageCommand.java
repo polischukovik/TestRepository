@@ -1,18 +1,17 @@
+package command;
 import java.net.ProtocolException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import user.UserPerson;
+
 public class PrivateMessageCommand extends Command{
-	private static IdGenerator generator = new IdGenerator();
-	
 	String recipientId;
 	String text = "";
 	
-	public PrivateMessageCommand(String senderId, String recipientId, String text, long timestamp) {
-		super(generator.next(), UserPerson.getById(senderId));
-		this.recipientId = recipientId;
-		this.text = text;
+	public PrivateMessageCommand(String str) throws ProtocolException {
+		super(str, null);
 	}
 	
 	public String getRecipientId() {
@@ -35,13 +34,13 @@ public class PrivateMessageCommand extends Command{
 	
 	@Override 
 	public void validate() throws ProtocolException{
-		if(this.sender == null || this.recipientId == null || this.text == null){
+		if(this.getSender() == null || this.recipientId == null || this.text == null){
 			throw new ProtocolException();
 		};
 	}
 
 	@Override
-	void execute() throws ProtocolException {
+	public void execute() throws ProtocolException {
 		PrivateMessageCommand privateMessage = PrivateMessageCommand.valueOf(this);
 		UserPerson recipient = UserPerson.getById(privateMessage.getRecipientId());
 		if (recipient == null){

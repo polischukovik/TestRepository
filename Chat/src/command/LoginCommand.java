@@ -1,16 +1,17 @@
+package command;
 import java.net.ProtocolException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class LoginCommand extends Command{
-	public LoginCommand(String id, UserPerson person) {
-		super(id, person);
-	}
-
 	private String username;
 	private String password;
 
+	private LoginCommand(String str) throws ProtocolException {
+		super(str, null);
+	}
+	
 	public static LoginCommand valueOf(Command cmd) throws ProtocolException{
 		String value = cmd.getValue();
 		Gson gson = new GsonBuilder()
@@ -19,6 +20,14 @@ public class LoginCommand extends Command{
 		LoginCommand command = gson.fromJson(value, LoginCommand.class);
 		command.validate();
 		return command;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 	@Override 
@@ -29,8 +38,9 @@ public class LoginCommand extends Command{
 	}
 
 	@Override
-	void execute() throws ProtocolException {
-		LoginCommand login = LoginCommand.valueOf(this);
-		UserPerson user = UserPerson.login(login);
+	public void execute() throws ProtocolException {
+		throw new IllegalStateException("This method is not permited for LoginCommand");
 	}
+	
+	
 }

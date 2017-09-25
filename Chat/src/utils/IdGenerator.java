@@ -1,3 +1,4 @@
+package utils;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,10 +9,11 @@ public class IdGenerator {
 
 	public synchronized String next()
 	{
-		String newId = "";
-		while(!idSet.contains((newId = RandomStringUtils.random(8, "0123456789abcdef")))){
-			idSet.add(newId);
+		String newId = RandomStringUtils.random(8, "0123456789abcdef");
+		while(idSet.contains(newId)){
+			newId = RandomStringUtils.random(8, "0123456789abcdef");
 		}
+		idSet.add(newId);
 	    return newId;
 	}
 }
