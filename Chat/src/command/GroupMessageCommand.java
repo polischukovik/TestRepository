@@ -4,7 +4,7 @@ import java.net.ProtocolException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class GroupMessageCommand extends CommandImpl{
+public class GroupMessageCommand extends ServerCommand{
 	String senderId;
 	String groupId;
 	String text;

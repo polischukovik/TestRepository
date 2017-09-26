@@ -18,26 +18,16 @@ import utils.IdGenerator;
  *   "value": "{...}"
  * }
  */
-public class CommandImpl extends Command {
+public class ServerCommand extends Command {
 	public static IdGenerator generator = new IdGenerator();
 
-	public transient String json;
-	public CommandImpl(String json, Socket socket) throws ProtocolException {	
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.create();
-		CommandImpl command = null;
-		try{
-			command = gson.fromJson(json, CommandImpl.class);
-		} catch (JsonSyntaxException e){
-			throw new ProtocolException("Incorrect json format");
-		}
-		
+	public String id;
+	public String sender;
+	public long time;
+	
+	public ServerCommand() throws ProtocolException {		
 		this.id = generator.next();
-		this.time = new Date().getTime();
-		this.action = command.getAction();
-		this.json = json;
-		
+		this.time = new Date().getTime();		
 	}
 	
 	@Override
@@ -45,16 +35,10 @@ public class CommandImpl extends Command {
 		throw new IllegalStateException("Method must be overriden");
 	};
 	
-	@Override
 	public String toJSON(){
 		Gson gson = new GsonBuilder()
 				.setPrettyPrinting()
 				.create();
 		return gson.toJson(this);
 	}
-	
-	public void validate() throws ProtocolException {
-		// TODO Auto-generated method stub
-		
-	};
 }

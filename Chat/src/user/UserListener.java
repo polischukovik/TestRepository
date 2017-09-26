@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 import java.net.ProtocolException;
 
 import command.Command;
-import command.CommandImpl;
+import command.ServerCommand;
 import command.CommandReader;
 import command.RegisterCommand;
 
@@ -41,7 +41,7 @@ public abstract class UserListener extends User{
 	
 		new Thread(() -> {
 			System.out.println("Starting input thread for user: " + this);
-			CommandImpl cmd = null;
+			ServerCommand cmd = null;
 			
 			try {
 				while(!Command.ACTION_LOGOUT.equals((cmd = reader.readCommand()).getAction())){

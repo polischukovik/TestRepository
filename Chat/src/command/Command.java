@@ -4,21 +4,15 @@ import java.net.ProtocolException;
 
 import user.UserListener;
 
-public abstract class Command {
+public class Command {
 
 	public static final String ACTION_EXIT = "exit";
-
-	public abstract String toJSON();
-
-	public abstract void execute(UserListener source) throws ProtocolException;
-
 	public static final String ACTION_LOGIN = "login";
 	public static final String ACTION_PRIVATE_MESSAGE = "private_message";
 	public static final String ACTION_GROUP_MESSAGE = "group_message";
 	public static final String ACTION_REGISTER = "register";
 	public static final String ACTION_LOGOUT = "logout";
-	public transient String id;
-	public transient long time;
+	
 	public String action;
 
 	public Command() {
@@ -29,13 +23,8 @@ public abstract class Command {
 		return action;
 	}
 
-	public long getTime() {
-		return time;
-	}
-
-	@Override
-	public String toString() {
-		return "Message[" + id + "]";
-	}
+	public void execute(UserListener source) throws ProtocolException{
+		new IllegalStateException("This method is not allowed");
+	};
 
 }
