@@ -4,6 +4,7 @@ import java.net.ProtocolException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import user.UserListener;
 import user.UserPerson;
 
 public class PrivateMessageCommand extends CommandImpl{
@@ -40,9 +41,11 @@ public class PrivateMessageCommand extends CommandImpl{
 	}
 
 	@Override
-	public void execute() throws ProtocolException {
+	public void execute(UserListener source) throws ProtocolException {
 		PrivateMessageCommand privateMessage = PrivateMessageCommand.valueOf(this);
+		
 		UserPerson recipient = UserPerson.getById(privateMessage.getRecipientId());
+		recipient.send(privateMessage);
 		if (recipient == null){
 			throw new IllegalArgumentException("Recipient user was not found: id=" + privateMessage.getRecipientId());
 		}

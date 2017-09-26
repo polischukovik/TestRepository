@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.ProtocolException;
-import java.net.Socket;
 
 import command.Command;
 import command.CommandImpl;
@@ -13,18 +12,12 @@ import command.CommandReader;
 import command.RegisterCommand;
 
 public abstract class UserListener extends User{	
-	Socket socket = null;
+	CommandReader reader = null;
 	OutputStream out = null;
 	InputStream in = null;
 	
-	protected UserListener(RegisterCommand cmd) {
+	protected UserListener(RegisterCommand cmd) throws ProtocolException{
 		super(cmd);
-	}
-	
-	
-
-	public Socket getSocket() {
-		return socket;
 	}
 
 	public void send(Command message){
@@ -37,29 +30,29 @@ public abstract class UserListener extends User{
 		}
 	}
 	
-	public void initiateSocket(Socket clientSocket){
-		this.socket = clientSocket;
+	public void startInputLoop(CommandReader reader){
+		this.reader = reader;
 		try {
-			this.in = socket.getInputStream();
-			this.out = socket.getOutputStream();
+			this.in = reader.getSocket().getInputStream();
+			this.out = reader.getSocket().getOutputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	
 		new Thread(() -> {
-			System.out.println("Strting input thread for user: " + this);
+			System.out.println("Starting input thread for user: " + this);
 			CommandImpl cmd = null;
-			CommandReader reader = new CommandReader(clientSocket);
 			
 			try {
-				while(!(cmd = reader.readCommand()).getAction().equals(Command.ACTION_LOGOUT)){
+				while(!Command.ACTION_LOGOUT.equals((cmd = reader.readCommand()).getAction())){
 					try {
-						cmd.execute();
+						cmd.execute(this);
 					} catch (ProtocolException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
+				
+				reader.getSocket().close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

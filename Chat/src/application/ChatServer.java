@@ -42,26 +42,31 @@ public class ChatServer extends Thread implements Runnable{
 		System.out.println("Client has connected");
 		
 		CommandReader reader = new CommandReader(accept);
+		/**
+		 * Command in the json string terminated by empty string.
+		 * 
+		 */
 		Command cmd = reader.readCommand();
 		
 		if (Command.ACTION_LOGIN.equals(cmd.getAction()) || Command.ACTION_REGISTER.equals(cmd.getAction())) {
 			LoginCommand loginCommand= LoginCommand.valueOf(cmd);
-			try{
-				UserPerson user = UserPerson.authenticate(loginCommand);
-				user.login(accept);
-			} catch (NullPointerException e){
+			
+			UserPerson user = UserPerson.authenticate(loginCommand);
+			if(user ==  null){
 				System.out.println("Such combination of username/password has not accepted");
+				return;
 			}
+			user.login(reader);
 			
 		} else if(Command.ACTION_REGISTER.equals(cmd.getAction())){
 			RegisterCommand register = RegisterCommand.valueOf(cmd);
 			UserPerson user = UserPerson.register(register);
-			user.login(accept);
+			user.login(reader);
 			
 		} else if(Command.ACTION_EXIT.equals(cmd.getAction())){
 			accept.close();
 		} else{
-			throw new ProtocolException("Unexpected communication");
+			throw new ProtocolException("On this state Command should have attribute 'action'=[login, regiser, exit]");
 		}
 	}
 

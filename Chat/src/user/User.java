@@ -1,4 +1,6 @@
 package user;
+import javax.xml.ws.ProtocolException;
+
 import command.RegisterCommand;
 
 public abstract class User{
@@ -8,12 +10,26 @@ public abstract class User{
 	protected String name;
 	protected String password;
 	
-	protected User(RegisterCommand register) {
+	/**
+	 * {
+	 *   id: "a1gww3"
+	 *   email: "dummy@email.com"
+	 *   name: "username"
+	 *   password: "Hy$SK_Q)"
+	 * }
+	 * @param register
+	 */
+	protected User(RegisterCommand register) throws ProtocolException{
 		super();
 		this.id = generateId();
 		this.email = register.getEmail();
 		this.name = register.getUsername();
 		this.password = register.getPassword();
+		
+		if(email == null || name == null || password == null){
+			throw new ProtocolException("Missing mandatry attribute of RegisterCommand");
+		}
+		
 	}
 	public String getId() {
 		return id;

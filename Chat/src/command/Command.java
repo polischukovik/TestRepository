@@ -2,13 +2,15 @@ package command;
 
 import java.net.ProtocolException;
 
+import user.UserListener;
+
 public abstract class Command {
 
 	public static final String ACTION_EXIT = "exit";
 
 	public abstract String toJSON();
 
-	public abstract void execute() throws ProtocolException;
+	public abstract void execute(UserListener source) throws ProtocolException;
 
 	public static final String ACTION_LOGIN = "login";
 	public static final String ACTION_PRIVATE_MESSAGE = "private_message";
@@ -25,10 +27,6 @@ public abstract class Command {
 
 	public String getAction() {
 		return action;
-	}
-
-	public String getValue() {
-		return json;
 	}
 
 	public long getTime() {

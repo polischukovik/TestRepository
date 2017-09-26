@@ -28,4 +28,8 @@ public class CommandReader {
 		return new CommandImpl(res.toString(), socket);
 	}
 
+	public Socket getSocket() {
+		return socket;
+	}
+
 }

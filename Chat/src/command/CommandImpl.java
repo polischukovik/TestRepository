@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import user.UserListener;
 import user.UserPerson;
 import utils.IdGenerator;
 
@@ -40,7 +41,7 @@ public class CommandImpl extends Command {
 	}
 	
 	@Override
-	public void execute() throws ProtocolException{
+	public void execute(UserListener source) throws ProtocolException{
 		throw new IllegalStateException("Method must be overriden");
 	};
 	
