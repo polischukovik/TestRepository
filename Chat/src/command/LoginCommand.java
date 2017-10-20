@@ -1,27 +1,20 @@
 package command;
 import java.net.ProtocolException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class LoginCommand extends ServerCommand{
 	private String username;
 	private String password;
+	requiredKeys = Arrays.	
+			
+	private LoginCommand(Map<String, String> params) throws ProtocolException {
 
-	private LoginCommand(String str) throws ProtocolException {
-		super(str, null);
+
 	}
-	
-	public static LoginCommand valueOf(Command cmd) throws ProtocolException{
-		String value = cmd.getValue();
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.create();
-		LoginCommand command = gson.fromJson(value, LoginCommand.class);
-		command.validate();
-		return command;
-	}
-	
+		
 	public String getUsername() {
 		return username;
 	}

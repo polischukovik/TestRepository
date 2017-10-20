@@ -2,8 +2,9 @@ package command;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ProtocolException;
 import java.net.Socket;
+
+import utils.JsonUtils;
 
 public class CommandReader {
 	Socket socket = null;
@@ -12,7 +13,25 @@ public class CommandReader {
 		this.socket = socket;
 	}
 
-	public ServerCommand readCommand() throws IOException, ProtocolException{
+	public ServerCommand readCommand() throws IOException, ChatProtocolException{
+		String json = readRawData();
+		
+		ServerCommand serverCommand = JsonUtils.gson.fromJson(json, ServerCommand.class);
+		
+		switch (serverCommand.getAction()) {
+		case "login":
+			new LoginCommand(serverCommand.getParams());
+			break;
+
+		default:
+			break;
+		}
+		
+		
+		return null;
+	}
+
+	private String readRawData() throws IOException, ChatProtocolException {
 		BufferedReader reader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 		StringBuilder res = new StringBuilder();
 		String line = "";
@@ -22,10 +41,9 @@ public class CommandReader {
 		}
 		
 		if(res.length() == 0){
-			throw new ProtocolException("Empty Command");
+			throw new ChatProtocolException("Empty Command");
 		}
-		
-		return new ServerCommand(res.toString(), socket);
+		return res.toString();
 	}
 
 	public Socket getSocket() {

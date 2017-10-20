@@ -44,17 +44,12 @@ public abstract class UserListener extends User{
 			ServerCommand cmd = null;
 			
 			try {
-				while(!Command.ACTION_LOGOUT.equals((cmd = reader.readCommand()).getAction())){
-					try {
-						cmd.execute(this);
-					} catch (ProtocolException e) {
-						e.printStackTrace();
-					}
-				}
-				
+				cmd.execute(this);				
 				reader.getSocket().close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ProtocolException e) {
 				e.printStackTrace();
 			}
 			

@@ -1,44 +1,51 @@
 package command;
 import java.net.ProtocolException;
-import java.net.Socket;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-
-import user.UserListener;
-import user.UserPerson;
+import application.ClientSocket;
 import utils.IdGenerator;
+import utils.JsonUtils;
 
 /***
- * Command is basic-level class for client communication.
+ * ServerCommand is basic-level class for server communication.
  * {
  *   "action": "login",
- *   "value": "{...}"
+ *   "params": "[...]"
  * }
  */
 public class ServerCommand extends Command {
 	public static IdGenerator generator = new IdGenerator();
+	public List<String> requiredKeys; 
 
-	public String id;
-	public String sender;
-	public long time;
+	public transient String id;
+	public transient String sender;
+	public transient long time;
+	
+	public String action;
+	public Map<String, String> params;
 	
 	public ServerCommand() throws ProtocolException {		
 		this.id = generator.next();
 		this.time = new Date().getTime();		
 	}
-	
+			
+	public String getAction() {
+		return action;
+	}
+
 	@Override
-	public void execute(UserListener source) throws ProtocolException{
+	public void execute(ClientSocket clientSocket) throws ChatProtocolException{
 		throw new IllegalStateException("Method must be overriden");
 	};
 	
 	public String toJSON(){
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.create();
-		return gson.toJson(this);
+		
+		return JsonUtils.gson.toJson(this);
+	}
+
+	public Map<String, String> getParams() {
+		return params;
 	}
 }
