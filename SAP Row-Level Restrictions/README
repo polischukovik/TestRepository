@@ -1,0 +1,4 @@
+File name is the name of data security profile
+each file line is a row level restriction
+Empty lines are ignored
+Lines that starts with -- are ignored
