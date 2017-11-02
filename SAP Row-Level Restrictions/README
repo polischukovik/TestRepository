@@ -1,3 +1,7 @@
+java -jar restrictions.jar CMS_NAME CMS_USER CMS_PASS UNX_PATH SCRIPTS_DIR
+Example:
+java -jar restrictions.jar "vmws02:6400" "Administrator" "Password" "/Interactive Insights/8.5.0/GI2_Universe.unx" "scripts"
+
 File name is the name of data security profile
 each file line is a row level restriction
 Empty lines are ignored

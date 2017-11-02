@@ -49,9 +49,9 @@ public class Main {
 			directoryPath = Paths.get(args[4]);
 		} catch (ArrayIndexOutOfBoundsException e){
 			System.out.println("Invalid arguments");
-			System.out.println("java -jar restrictions.jar CMS_NAME CMS_USER CMS_PASS UNX_PATH FILE_PATH");
+			System.out.println("java -jar restrictions.jar CMS_NAME CMS_USER CMS_PASS UNX_PATH SCRIPTS_DIR");
 			System.out.println("Example:");
-			System.out.println("java -jar restrictions.jar \"vmws02:6400\" \"Administrator\" \"Password\" \"/Interactive Insights/8.5.0/GI2_Universe.unx\" \"UKCC restrictions file.sql\"");
+			System.out.println("java -jar restrictions.jar \"vmws02:6400\" \"Administrator\" \"Password\" \"/Interactive Insights/8.5.0/GI2_Universe.unx\" \"scripts\"");
 			throw new IllegalArgumentException("Invalid arguments");
 		}
 		
@@ -75,7 +75,7 @@ public class Main {
 			if(Files.list(directoryPath).count() > 0){
 				setUp();
 			} else{
-				throw new IOException("No script files detected");
+				throw new IOException("\nNo script files detected");
 			}
 			
 			for(Path script : Files.newDirectoryStream(directoryPath, r -> Files.isRegularFile(r))){
@@ -88,7 +88,7 @@ public class Main {
 		        
 			}
 		} catch(IOException | SDKException e){
-			e.printStackTrace();
+			log(e.getMessage());
 		} finally {
 			tearDown();
 		}
@@ -118,10 +118,6 @@ public class Main {
 	}
 
 	private static void createDataSecurityProfile(String dataSecurityProfileName, String[] rowLevelRestrictions) {
-		if(rowLevelRestrictions == null || rowLevelRestrictions.length == 0){
-			log("No restrictions specified. Security profile would not be created");
-			return;
-		}
 		// Creates the data security profile 
         log(String.format("\nCreate new data security profile \t[%s]", dataSecurityProfileName));
         DataSecurityProfile dataSecurityProfile = securityFactory.createDataSecurityProfile();
