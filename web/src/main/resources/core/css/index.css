@@ -1,0 +1,49 @@
+/* * { */
+/*   margin: 0; */
+/* } */
+
+#container {
+    width: 960px;
+/*     margin: 0 auto; */
+}
+
+#primary {
+    float: left;
+    width: 25%;
+    background: #fff5dd;
+}
+
+#content {
+    float: left;
+    width: 50%;
+    background: #fce2a6;
+}
+
+#secondary {
+    float: left;
+    width: 25%;
+    background: #ffd87f;
+}
+
+#footer, #header {
+    clear: both;
+}
+
+html, body {
+  height: 100%;
+}
+.page-wrap {
+  min-height: 100%;
+  /* equal to footer height *2*/
+  margin-bottom: -284px; 
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+}
+.site-footer, .site-header, .page-wrap:after {
+  height: 142px; 
+}
+.site-footer, .site-header {
+  background: orange;
+}
